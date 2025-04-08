@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+.center {
+    text-align: center;
+  }
+
+.round-button {
+    border-radius: 50%;
+    font-size: large;
+}
+
+.round-button:hover {
+    background-color: #008CBA;
+    color: white;
+}
