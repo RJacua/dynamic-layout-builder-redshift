@@ -3,7 +3,7 @@ import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
 
-import { LayoutElement, ContainerData, HeaderData } from '../interfaces/layout-elements';
+import { LayoutElement, ContainerData } from '../interfaces/layout-elements';
 
 @Component({
   selector: 'app-area',
@@ -16,6 +16,7 @@ import { LayoutElement, ContainerData, HeaderData } from '../interfaces/layout-e
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
 })
+
 export class ContainerComponent implements LayoutElement<ContainerData>{
   type = "area";
   @ViewChild('container', { read: ViewContainerRef }) container!: ViewContainerRef;

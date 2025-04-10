@@ -8,8 +8,9 @@ export interface ParagraphData {
 }
 
 export interface HeaderData {
-  text?: string;
-  size?: string;
+  text: string;
+  size: number;
+  alignment?: string;
 }
 
 export interface ContainerData {

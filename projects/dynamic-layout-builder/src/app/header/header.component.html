@@ -1,9 +1,15 @@
-<ng-container [ngSwitch]="data.size">
-  <h1 *ngSwitchCase="'h1'" [contentEditable]="true" class="editable-content">{{ data.text }}</h1>
-  <h2 *ngSwitchCase="'h2'" [contentEditable]="true" class="editable-content">{{ data.text }}</h2>
-  <h3 *ngSwitchCase="'h3'" [contentEditable]="true" class="editable-content">{{ data.text }}</h3>
-  <h4 *ngSwitchCase="'h4'" [contentEditable]="true" class="editable-content">{{ data.text }}</h4>
-  <h5 *ngSwitchCase="'h5'" [contentEditable]="true" class="editable-content">{{ data.text }}</h5>
-  <h6 *ngSwitchCase="'h6'" [contentEditable]="true" class="editable-content">{{ data.text }}</h6>
-  <p *ngSwitchDefault [contentEditable]="true" class="editable-content">{{ data.text }}</p>
+<ng-container [ngSwitch]="size()">
+  <h1 *ngSwitchCase="1" [contentEditable]="true" class="editable-content">{{ textContent() }}</h1>
+  <h2 *ngSwitchCase="2" [contentEditable]="true" class="editable-content">{{ textContent() }}</h2>
+  <h3 *ngSwitchCase="3" [contentEditable]="true" class="editable-content">{{ textContent() }}</h3>
+  <h4 *ngSwitchCase="4" [contentEditable]="true" class="editable-content">{{ textContent() }}</h4>
+  <h5 *ngSwitchCase="5" [contentEditable]="true" class="editable-content">{{ textContent() }}</h5>
+  <h6 *ngSwitchCase="6" [contentEditable]="true" class="editable-content">{{ textContent() }}</h6>
+  <p *ngSwitchDefault [contentEditable]="true" class="editable-content">{{ textContent() }}</p>
 </ng-container>
+
+<button class="round-button" (click)="setSize1()">1</button>
+<button class="round-button" (click)="setSize3()">3</button>
+<button class="round-button" (click)="setSize6()">6</button>
+<br>
+<br>

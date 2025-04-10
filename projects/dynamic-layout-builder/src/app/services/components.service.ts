@@ -7,7 +7,6 @@ import { LayoutElement } from '../interfaces/layout-elements';
 })
 
 export class ComponentsService {
-
   readonly registry = inject(ComponentRegistryService);
 
   addComponent<T extends {}>(type: string, container: ViewContainerRef, data?: T) {
