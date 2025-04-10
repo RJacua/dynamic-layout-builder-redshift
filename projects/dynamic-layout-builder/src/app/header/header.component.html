@@ -1,1 +1,9 @@
-<h1 [contentEditable]="true">Your Title Here</h1>
+<ng-container [ngSwitch]="data.size">
+  <h1 *ngSwitchCase="'h1'" [contentEditable]="true" class="editable-content">{{ data.text }}</h1>
+  <h2 *ngSwitchCase="'h2'" [contentEditable]="true" class="editable-content">{{ data.text }}</h2>
+  <h3 *ngSwitchCase="'h3'" [contentEditable]="true" class="editable-content">{{ data.text }}</h3>
+  <h4 *ngSwitchCase="'h4'" [contentEditable]="true" class="editable-content">{{ data.text }}</h4>
+  <h5 *ngSwitchCase="'h5'" [contentEditable]="true" class="editable-content">{{ data.text }}</h5>
+  <h6 *ngSwitchCase="'h6'" [contentEditable]="true" class="editable-content">{{ data.text }}</h6>
+  <p *ngSwitchDefault [contentEditable]="true" class="editable-content">{{ data.text }}</p>
+</ng-container>

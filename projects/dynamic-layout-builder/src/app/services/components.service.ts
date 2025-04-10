@@ -1,32 +1,31 @@
-import { Injectable, ViewContainerRef } from '@angular/core';
-import { ParagraphComponent } from '../paragraph/paragraph.component';
-import { AreaComponent } from '../container/container.component';
-import { HeaderComponent } from '../header/header.component';
+import { inject, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRegistryService } from './component-registry.service';
+import { LayoutElement } from '../interfaces/layout-elements';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class ComponentsService {
-  //addAnyComponent, like addComponent but now abstracting the type on usage
-  addComponent(componentType: string, container: ViewContainerRef) {
+
+  readonly registry = inject(ComponentRegistryService);
+
+  addComponent<T extends {}>(type: string, container: ViewContainerRef, data?: T) {
     if (!container) {
-      console.error("No div Container found");
+      console.error("Nenhum container fornecido.");
       return;
     }
-    switch (componentType) {
-      case 'area':
-        container.createComponent(AreaComponent);
-        break;
-      case 'header':
-        container.createComponent(HeaderComponent);
-        break;
-      case 'paragraph':
-        container.createComponent(ParagraphComponent);
-        break;
-      default:
-        console.error("Component type not found");
-        break;
+
+    const componentClass = this.registry.getComponent(type);
+
+    if (!componentClass) {
+      console.error(`Componente do tipo '${type}' não registrado.`);
+      return;
+    }
+
+    const componentRef = container.createComponent<LayoutElement<any>>(componentClass);
+    if (data) {
+      componentRef.instance.data = data;
     }
   }
-
 }

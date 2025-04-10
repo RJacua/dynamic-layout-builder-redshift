@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, ViewChild, ViewContainerRef } from '@angular/core';
-import { AreaComponent as ContainerComponent } from "../container/container.component";
+import { ContainerComponent as ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
 
 @Component({
   selector: 'app-canvas',
+  standalone: true,
   imports: [CommonModule, ContainerComponent],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss'
@@ -17,9 +18,9 @@ export class CanvasComponent {
     console.log("open new area dialog");
   }
 
-  addArea(){
+  addContainer(){
     console.log("add new area");
-    this.componentsSvc.addComponent('area', this.container);
+    this.componentsSvc.addComponent('container', this.container);
   }
 
 }

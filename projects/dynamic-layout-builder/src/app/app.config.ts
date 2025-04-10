@@ -1,8 +1,22 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
+import { ComponentRegistryService } from './services/component-registry.service';
+import { ContainerComponent } from './container/container.component';
+import { HeaderComponent } from './header/header.component';
+import { ParagraphComponent } from './paragraph/paragraph.component';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideAppInitializer(() => {
+      const registry = inject(ComponentRegistryService);
+
+      registry.register('paragraph', ParagraphComponent);
+      registry.register('header', HeaderComponent);
+      registry.register('container', ContainerComponent);
+    })
+  ]
 };

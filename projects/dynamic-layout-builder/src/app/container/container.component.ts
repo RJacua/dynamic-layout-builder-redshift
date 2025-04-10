@@ -1,31 +1,35 @@
-import { Component, ElementRef, inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
 
+import { LayoutElement, ContainerData, HeaderData } from '../interfaces/layout-elements';
+
 @Component({
   selector: 'app-area',
-  imports: [HeaderComponent, ParagraphComponent],
+  standalone: true,
+  imports: [
+    HeaderComponent,
+    ParagraphComponent,
+    ContainerComponent,
+  ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
 })
-export class AreaComponent {
+export class ContainerComponent implements LayoutElement<ContainerData>{
+  type = "area";
   @ViewChild('container', { read: ViewContainerRef }) container!: ViewContainerRef;
   htmlContent: string = '[{ "type": "paragraph", "content": "Olá mundo" }]';
 
   readonly componentsSvc = inject(ComponentsService);
   constructor(private host: ElementRef) { }
 
-  addArea() {
-    this.componentsSvc.addComponent('area', this.container);
+  addLayoutElement(componentType: string) {
+    this.componentsSvc.addComponent(componentType.toLowerCase(), this.container);
   }
 
-  addParagraph() {
-    this.componentsSvc.addComponent('paragraph', this.container);
-  }
-
-  addHeader() {
-    this.componentsSvc.addComponent('header', this.container);
-  }
+  @Input() data: ContainerData = {
+    alignment: "center"
+  };
 
 }
