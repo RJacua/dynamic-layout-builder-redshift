@@ -1,6 +1,8 @@
 <div class="canvas">
     <div class="center">
-        <button class="round-button" (click)="openNewAreaDialog()">+</button>
+        <!-- <button class="round-button" (click)="openNewAreaDialog()">+</button> -->
+        <!-- <button class="round-button" [matMenuTriggerFor]="newAreaMenu">+</button> -->
+        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true"></app-menu>
         <button class="round-button" (click)="addNewArea()">A</button>
     </div>
 </div>

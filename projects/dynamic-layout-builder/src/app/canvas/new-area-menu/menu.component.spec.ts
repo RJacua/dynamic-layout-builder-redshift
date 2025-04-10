@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NewAreaDialogComponent } from './new-area-dialog.component';
+import { MenuComponent } from './menu.component';
 
-describe('NewAreaDialogComponent', () => {
-  let component: NewAreaDialogComponent;
-  let fixture: ComponentFixture<NewAreaDialogComponent>;
+describe('MenuComponent', () => {
+  let component: MenuComponent;
+  let fixture: ComponentFixture<MenuComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NewAreaDialogComponent]
+      imports: [MenuComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NewAreaDialogComponent);
+    fixture = TestBed.createComponent(MenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
