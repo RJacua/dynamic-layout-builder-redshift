@@ -1,5 +1,5 @@
 import { Component, computed, Input, Signal, signal } from '@angular/core';
-import { LayoutElement, HeaderData, MemoryContent } from '../interfaces/layout-elements';
+import { LayoutElement, HeaderData, LayoutModel } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,10 +16,10 @@ export class HeaderComponent implements LayoutElement<HeaderData> {
   type = 'header';
   @Input() data: HeaderData = { type: 'header', text: 'Your Title Here', style: { size: 1 } };
 
-  text = signal<string>(this.data.text);
+  text = signal<string>(this.data.text || '');
   size = signal<number>(this.data.style?.size || 1);
 
-  memoryContent: Signal<MemoryContent<HeaderData>> = computed(
+  memoryContent: Signal<LayoutModel<HeaderData>> = computed(
     () => ({
       data: {
         type: 'header',
@@ -36,7 +36,6 @@ export class HeaderComponent implements LayoutElement<HeaderData> {
     console.log("memoryContent", this.memoryContent());
   }
 
-  // Evita reatribuição visual constante
   textSyncOnBlur(event: Event) {
     const element = event.target as HTMLElement;
     const value = (event.target as HTMLElement).innerText;

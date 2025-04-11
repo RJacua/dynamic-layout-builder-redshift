@@ -1,6 +1,14 @@
+import { ElementRef, ViewContainerRef } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
+
+export type AtomicElementData = HeaderData | ParagraphData;
 export interface LayoutElement<T> {
-  type: string;
   data: T;
+
+}
+
+interface LayoutData {
+  type: string;
 }
 
 export interface Styles {
@@ -11,27 +19,24 @@ export interface Styles {
 
 }
 
-export interface ParagraphData {
-  type: 'paragraph';
+export interface ParagraphData extends LayoutData {
   text?: string;
   style?: Styles;
 }
 
-export interface HeaderData {
-  type: 'header';
-  text: string;
+export interface HeaderData extends LayoutData {
+  text?: string;
   style?: Styles;
 }
 
-export interface ContainerData {
-  type: 'container';
+export interface ContainerData extends LayoutData {
+  containerDiv?: ViewContainerRef;
   alignment?: string;
-
   children?: LayoutElement<any>[];
-
+  elementRef?: BehaviorSubject<ViewContainerRef | null>;
 }
 
-export interface MemoryContent<T> {
+export interface LayoutModel<T> {
   data: T;
-  children?: MemoryContent<ParagraphData | HeaderData | ContainerData>[];
+  children?: (LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[];
 }
