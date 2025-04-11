@@ -15,15 +15,17 @@ import { CommonModule } from '@angular/common';
 
 export class ParagraphComponent implements LayoutElement<ParagraphData> {
   type = 'paragraph';
-  @Input() data: ParagraphData = { text: 'Lorem ipsum dolor sit amet consectetur...' };
+  @Input() data: ParagraphData = { type: 'paragraph', text: 'Lorem ipsum dolor sit amet consectetur...' };
 
   alignment = signal('align-center ');
-  menuIsOn = signal(false);
-
+  
   setAlignment(value: string) {
     this.alignment.set(`align-${value} `);
-
+    
   }
+
+  //Lógica do Menu, passar para um serviço depois
+  menuIsOn = signal(false);
 
   hideMenu(event: Event) {
     const related = (event as FocusEvent).relatedTarget as HTMLElement | null;
@@ -31,7 +33,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData> {
     if (!related || !(event.currentTarget as HTMLElement).contains(related)) {
       this.menuIsOn.set(false);
     }
-    
+
   }
 
   showMenu(event: Event) {

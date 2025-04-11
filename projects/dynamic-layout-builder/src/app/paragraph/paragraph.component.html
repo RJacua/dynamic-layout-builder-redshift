@@ -2,7 +2,7 @@
     <p [contentEditable]="true" [ngClass]="'paragraph editable-content ' + alignment()" (focus)="showMenu($event)">{{ data.text }}</p>
     <br>
     
-    <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
+    <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()">
         <button class="round-button" (click)="setAlignment('left')">←</button>
         <button class="round-button" (click)="setAlignment('center')">⨀</button>
         <button class="round-button" (click)="setAlignment('right')">→</button>

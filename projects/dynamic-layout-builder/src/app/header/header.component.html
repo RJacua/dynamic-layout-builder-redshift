@@ -1,15 +1,28 @@
-<ng-container [ngSwitch]="size()">
-  <h1 *ngSwitchCase="1" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h1>
-  <h2 *ngSwitchCase="2" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h2>
-  <h3 *ngSwitchCase="3" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h3>
-  <h4 *ngSwitchCase="4" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h4>
-  <h5 *ngSwitchCase="5" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h5>
-  <h6 *ngSwitchCase="6" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h6>
-  <p *ngSwitchDefault (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></p>
-</ng-container>
+<div class="main" (focusout)="hideMenu($event)">
+  <ng-container [ngSwitch]="size()">
+    <h1 *ngSwitchCase="1" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+      [innerText]="text()" (focus)="showMenu($event)"></h1>
+    <h2 *ngSwitchCase="2" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+      [innerText]="text()" (focus)="showMenu($event)"></h2>
+    <h3 *ngSwitchCase="3" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+      [innerText]="text()" (focus)="showMenu($event)"></h3>
+    <h4 *ngSwitchCase="4" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+      [innerText]="text()" (focus)="showMenu($event)"></h4>
+    <h5 *ngSwitchCase="5" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+      [innerText]="text()" (focus)="showMenu($event)"></h5>
+    <h6 *ngSwitchCase="6" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+      [innerText]="text()" (focus)="showMenu($event)"></h6>
+    <p *ngSwitchDefault (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+      [innerText]="text()" (focus)="showMenu($event)"></p>
+  </ng-container>
 
-<button class="round-button" (click)="setSize(1)">1</button>
-<button class="round-button" (click)="setSize(3)">3</button>
-<button class="round-button" (click)="setSize(6)">6</button>
-<br>
-<br>
+  <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
+    <button class="round-button" (click)="setSize(1)">1</button>
+    <button class="round-button" (click)="setSize(3)">3</button>
+    <button class="round-button" (click)="setSize(6)">6</button>
+  </div>
+
+  <br>
+  <br>
+
+</div>

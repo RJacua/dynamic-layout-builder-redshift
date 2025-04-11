@@ -30,7 +30,12 @@ export class ContainerComponent implements LayoutElement<ContainerData>{
   }
 
   @Input() data: ContainerData = {
+    type: 'container',
     alignment: "center"
   };
+
+  createLayoutFromMemory() {
+
+  }
 
 }
