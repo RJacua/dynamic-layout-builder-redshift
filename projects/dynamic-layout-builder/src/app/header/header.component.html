@@ -1,15 +1,15 @@
 <ng-container [ngSwitch]="size()">
-  <h1 *ngSwitchCase="1" [contentEditable]="true" class="editable-content">{{ textContent() }}</h1>
-  <h2 *ngSwitchCase="2" [contentEditable]="true" class="editable-content">{{ textContent() }}</h2>
-  <h3 *ngSwitchCase="3" [contentEditable]="true" class="editable-content">{{ textContent() }}</h3>
-  <h4 *ngSwitchCase="4" [contentEditable]="true" class="editable-content">{{ textContent() }}</h4>
-  <h5 *ngSwitchCase="5" [contentEditable]="true" class="editable-content">{{ textContent() }}</h5>
-  <h6 *ngSwitchCase="6" [contentEditable]="true" class="editable-content">{{ textContent() }}</h6>
-  <p *ngSwitchDefault [contentEditable]="true" class="editable-content">{{ textContent() }}</p>
+  <h1 *ngSwitchCase="1" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h1>
+  <h2 *ngSwitchCase="2" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h2>
+  <h3 *ngSwitchCase="3" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h3>
+  <h4 *ngSwitchCase="4" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h4>
+  <h5 *ngSwitchCase="5" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h5>
+  <h6 *ngSwitchCase="6" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></h6>
+  <p *ngSwitchDefault (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content" [innerText]="text()"></p>
 </ng-container>
 
-<button class="round-button" (click)="setSize1()">1</button>
-<button class="round-button" (click)="setSize3()">3</button>
-<button class="round-button" (click)="setSize6()">6</button>
+<button class="round-button" (click)="setSize(1)">1</button>
+<button class="round-button" (click)="setSize(3)">3</button>
+<button class="round-button" (click)="setSize(6)">6</button>
 <br>
 <br>

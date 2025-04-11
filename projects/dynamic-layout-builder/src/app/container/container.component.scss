@@ -1,9 +1,13 @@
-.area {
+.container {
     margin: .5% .5%;
     padding: 5% 1% 1%;
     border: 1px solid #81828555;
 }
 
-.area:hover {
+.container:hover {
     border: 1px solid #818285;
+}
+
+.left {
+    align-items: flex-end;
 }

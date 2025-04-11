@@ -5,6 +5,8 @@ export interface LayoutElement<T> {
 
 export interface ParagraphData {
   text?: string;
+  
+  alignment?: string;
 }
 
 export interface HeaderData {
@@ -15,4 +17,7 @@ export interface HeaderData {
 
 export interface ContainerData {
   alignment?: string;
+
+  children?: LayoutElement<any>[];
+
 }

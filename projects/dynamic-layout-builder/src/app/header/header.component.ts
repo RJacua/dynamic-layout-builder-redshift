@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-header',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -16,29 +16,31 @@ export class HeaderComponent implements LayoutElement<HeaderData>{
   type = 'header';
   @Input() data: HeaderData = {text: 'Your Title Here', size: 1};
 
-  textContent = signal<string>(this.data.text);
+  text = signal<string>(this.data.text);
   size = signal<number>(this.data.size);
   
   memoryContent: Signal<HeaderData> = computed(
     () => ({
-      text: this.textContent(),
+      text: this.text(),
       size: this.size()
     })
   );
 
-  setSize1() {
-    this.size.set(1);
-    setTimeout(() => console.log("1", this.memoryContent()),1000);
+  setSize(size: number) {
+    this.size.set(size);
+    console.log("memoryContent", this.memoryContent());
   }
   
-  setSize3() {
-    this.size.set(3);
-    setTimeout(() => console.log("3", this.memoryContent()), 1000);
-  }
-  
-  setSize6() {
-    this.size.set(6);
-    setTimeout(() => console.log("6", this.memoryContent()), 1000);
+  // Evita reatribuição visual constante
+  textSyncOnBlur(event: Event) {
+    const element = event.target as HTMLElement;
+    const value = (event.target as HTMLElement).innerText;
+    if (value !== this.text()) {
+      this.text.set(value);
+    }
+    if (element.innerText !== this.text()) {
+      element.innerText = this.text();
+    }
   }
 
 }
