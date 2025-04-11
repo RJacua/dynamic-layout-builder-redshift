@@ -1,4 +1,4 @@
-import { Component, computed, Input, Signal, signal } from '@angular/core';
+import { AfterContentInit, Component, computed, Input, OnInit, Signal, signal } from '@angular/core';
 import { LayoutElement, HeaderData, LayoutModel } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 
@@ -12,12 +12,16 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.scss'
 })
 
-export class HeaderComponent implements LayoutElement<HeaderData> {
+export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   type = 'header';
   @Input() data: HeaderData = { type: 'header', text: 'Your Title Here', style: { size: 1 } };
+  text = signal<string>('');
+  size = signal<number>(1);
 
-  text = signal<string>(this.data.text || '');
-  size = signal<number>(this.data.style?.size || 1);
+  ngOnInit(): void {
+    this.text.set(this.data.text || '');
+    this.size.set(this.data.style?.size || 1);
+  }
 
   memoryContent: Signal<LayoutModel<HeaderData>> = computed(
     () => ({

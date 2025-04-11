@@ -1,6 +1,7 @@
 import { ComponentRef, inject, Injectable, ViewContainerRef } from '@angular/core';
 import { ComponentRegistryService } from './component-registry.service';
-import { LayoutElement } from '../interfaces/layout-elements';
+import { AtomicElementData, ContainerData, LayoutElement, LayoutModel } from '../interfaces/layout-elements';
+import { BehaviorSubject, filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,4 +30,26 @@ export class ComponentsService {
 
     return componentRef;
   }
+
+    createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container: ViewContainerRef) {
+  
+      const element = this.addComponent(model.data.type, container, model.data);
+  
+      if (element && model.data.type === 'container') {
+        ((element.instance as any).elementRef as BehaviorSubject<ViewContainerRef | null>).pipe(
+          filter((value) => !!value)
+        ).subscribe((elementRef) => {
+  
+          console.log(element);
+          model.children?.map(
+            (c) => {
+              if (c.data.type === 'container') {
+                this.createLayoutFromModel(c, elementRef);
+              }
+              else this.addComponent(c.data.type, elementRef, c.data)
+            }
+          )
+        })
+      }
+    }
 }

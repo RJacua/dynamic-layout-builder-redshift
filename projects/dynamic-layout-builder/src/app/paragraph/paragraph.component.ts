@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { LayoutElement, ParagraphData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 
@@ -13,19 +13,25 @@ import { CommonModule } from '@angular/common';
 })
 
 
-export class ParagraphComponent implements LayoutElement<ParagraphData> {
+export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit {
   type = 'paragraph';
   @Input() data: ParagraphData = { type: 'paragraph', text: 'Lorem ipsum dolor sit amet consectetur...' };
 
   alignment = signal('align-center ');
+  text = signal<string>('');
+  size = signal<number>(1);
   
+  menuIsOn = signal(false);
+  
+  ngOnInit(): void {
+    this.text.set(this.data.text || '');
+    this.size.set(this.data.style?.size || 1);
+  }
+  
+  //Lógica do Menu, passar para um serviço depois
   setAlignment(value: string) {
     this.alignment.set(`align-${value} `);
-    
   }
-
-  //Lógica do Menu, passar para um serviço depois
-  menuIsOn = signal(false);
 
   hideMenu(event: Event) {
     const related = (event as FocusEvent).relatedTarget as HTMLElement | null;

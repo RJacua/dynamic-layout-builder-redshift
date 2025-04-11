@@ -1,5 +1,5 @@
 <div class="main" (focusout)="hideMenu($event)">
-    <p [contentEditable]="true" [ngClass]="'paragraph editable-content ' + alignment()" (focus)="showMenu($event)">{{ data.text }}</p>
+    <p [contentEditable]="true" [ngClass]="'paragraph editable-content ' + alignment()" (focus)="showMenu($event)">{{ text() }}</p>
     <br>
     
     <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()">

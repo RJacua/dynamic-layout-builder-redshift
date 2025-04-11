@@ -35,41 +35,23 @@ export class ContainerComponent implements LayoutElement<ContainerData>, AfterVi
     alignment: "center"
   };
 
-  model: LayoutModel<ContainerData> = {
-    data: { type: 'container' },
-    children: [
-      { data: { type: 'header', text: 'Título' } },
-      { data: { type: 'paragraph', text: 'Teste Teste Teste' } },
-      { data: { type: 'container' } },
-    ]
-  }
-
+  
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
 
   ngAfterViewInit() {
     this.elementRef.next(this.containerDiv);
   }
 
+  model: LayoutModel<ContainerData> = {
+    data: { type: 'container' },
+    children: [
+      { data: { type: 'header', text: 'Coiso' } },
+      { data: { type: 'paragraph', text: 'Teste Teste Teste' } },
+      { data: { type: 'container' } },
+    ]
+  }
   createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container: ViewContainerRef) {
-
-    const element = this.componentsSvc.addComponent(model.data.type, container, model.data);
-
-    if (element && model.data.type === 'container') {
-      ((element.instance as any).elementRef as BehaviorSubject<ViewContainerRef | null>).pipe(
-        filter((value) => !!value)
-      ).subscribe((elementRef) => {
-
-        console.log(element);
-        model.children?.map(
-          (c) => {
-            if (c.data.type === 'container') {
-              this.createLayoutFromModel(c, elementRef);
-            }
-            else this.componentsSvc.addComponent(c.data.type, elementRef, c.data)
-          }
-        )
-      })
-    }
+    this.componentsSvc.createLayoutFromModel(model, container);
   }
 
 }
