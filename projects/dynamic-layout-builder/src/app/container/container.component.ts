@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
 
-import { LayoutElement, ContainerData, LayoutModel, AtomicElementData } from '../interfaces/layout-elements';
+import { LayoutElement, ContainerData, LayoutModel, AtomicElementData, LayoutData } from '../interfaces/layout-elements';
 import { BehaviorSubject, filter } from 'rxjs';
+
+import { layoutModels } from '../model'
 
 @Component({
   selector: 'app-area',
@@ -18,40 +20,55 @@ import { BehaviorSubject, filter } from 'rxjs';
   styleUrl: './container.component.scss'
 })
 
-export class ContainerComponent implements LayoutElement<ContainerData>, AfterViewInit {
+export class ContainerComponent implements LayoutElement<ContainerData>, OnInit, AfterViewInit {
+  model = layoutModels[0]; //mock model para testes, tirar depois;
   type = "container";
-  @ViewChild('container', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
+  @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
+
+  direction = signal('container-flex-column ');
+  //Lógica do Menu, passar para um serviço depois
+  setDirection(value: string) {
+    this.direction.set(`container-flex-${value} `);
+  }
+
 
   readonly componentsSvc = inject(ComponentsService);
   constructor(private host: ElementRef) { }
 
-  addLayoutElement(componentType: string) {
-    this.componentsSvc.addComponent(componentType.toLowerCase(), this.containerDiv);
+  addLayoutElement(componentType: string, data?: LayoutData) {
+    this.componentsSvc.addComponent(componentType.toLowerCase(), this.containerDiv, data);
   }
 
   @Input() data: ContainerData = {
     containerDiv: this.containerDiv,
     type: 'container',
-    alignment: "center"
   };
 
   
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
 
+
+  ngOnInit() {
+    this.setDirection(this.data.style?.direction || 'column');
+  }
   ngAfterViewInit() {
     this.elementRef.next(this.containerDiv);
   }
 
-  model: LayoutModel<ContainerData> = {
-    data: { type: 'container' },
-    children: [
-      { data: { type: 'header', text: 'Coiso' } },
-      { data: { type: 'paragraph', text: 'Teste Teste Teste' } },
-      { data: { type: 'container' } },
-    ]
-  }
-  createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container: ViewContainerRef) {
-    this.componentsSvc.createLayoutFromModel(model, container);
+  createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container?: ViewContainerRef) {
+    
+    if(this.elementRef.value){
+      container = this.elementRef.value ;
+    }
+
+    if(container){
+      this.componentsSvc.createLayoutFromModel(model, container);
+    }
+    else {
+      console.error("Container não definido");
+      return;
+    }
+    
   }
 
 }

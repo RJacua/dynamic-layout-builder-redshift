@@ -7,12 +7,13 @@ export interface LayoutElement<T> {
 
 }
 
-interface LayoutData {
+export interface LayoutData {
   type: string;
 }
 
 export interface Styles {
   alignment?: string;
+  direction?: string;
   color?: string;
   font?: string;
   size?: number;
@@ -31,7 +32,7 @@ export interface HeaderData extends LayoutData {
 
 export interface ContainerData extends LayoutData {
   containerDiv?: ViewContainerRef;
-  alignment?: string;
+  style?: Styles;
   children?: LayoutElement<any>[];
   elementRef?: BehaviorSubject<ViewContainerRef | null>;
 }

@@ -1,18 +1,18 @@
 <div class="main" (focusout)="hideMenu($event)">
   <ng-container [ngSwitch]="size()">
-    <h1 *ngSwitchCase="1" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+    <h1 *ngSwitchCase="1" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
       [innerText]="text()" (focus)="showMenu($event)"></h1>
-    <h2 *ngSwitchCase="2" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+    <h2 *ngSwitchCase="2" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
       [innerText]="text()" (focus)="showMenu($event)"></h2>
-    <h3 *ngSwitchCase="3" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+    <h3 *ngSwitchCase="3" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
       [innerText]="text()" (focus)="showMenu($event)"></h3>
-    <h4 *ngSwitchCase="4" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+    <h4 *ngSwitchCase="4" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
       [innerText]="text()" (focus)="showMenu($event)"></h4>
-    <h5 *ngSwitchCase="5" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+    <h5 *ngSwitchCase="5" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
       [innerText]="text()" (focus)="showMenu($event)"></h5>
-    <h6 *ngSwitchCase="6" (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+    <h6 *ngSwitchCase="6" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
       [innerText]="text()" (focus)="showMenu($event)"></h6>
-    <p *ngSwitchDefault (blur)="textSyncOnBlur($event)" [contentEditable]="true" class="editable-content"
+    <p *ngSwitchDefault (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
       [innerText]="text()" (focus)="showMenu($event)"></p>
   </ng-container>
 

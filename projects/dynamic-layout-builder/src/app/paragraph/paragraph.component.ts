@@ -30,7 +30,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   
   //Lógica do Menu, passar para um serviço depois
   setAlignment(value: string) {
-    this.alignment.set(`align-${value} `);
+    this.alignment.set(`paragraph-align-${value} `);
   }
 
   hideMenu(event: Event) {

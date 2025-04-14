@@ -1,35 +1,73 @@
-.round-button {
-    border-radius: 50%;
-    font-size: large;
+.container-border {
+    margin: .5% .5%;
+    padding: 5% 1% 1%;
+    border: 1px solid #81828555;
+}
+.element {
+    border: 1px solid rgba(0, 0, 0, 0);
+}
+.container-border:hover, .element:hover {
+    border: 1px solid #818285;
 }
 
+.round-button {
+    border-radius: 25%;
+    font-size: large;
+}
 .round-button:hover {
     background-color: #008CBA;
     color: white;
 }
 
-.editable-content:focus {
-    outline: none;
-    border: none;
-    background-color: rgba(255,0,0,0.1);
-}
-
-.align-left {
+.align-left, .paragraph-align-left, .header-alignment-left {
     text-align: left;
 }
-
-.align-right {
+.align-right, .paragraph-align-right, .header-alignment-right {
     text-align: right;
 }
-
-.align-center {
+.align-center, .paragraph-align-center, .header-alignment-center {
     text-align: center;
 }
 
 .hidden {
     display: none;
 }
-
 .in-focus {
     display: block;
+}
+.editable-content:focus {
+    border: 1px solid rgba(0, 0, 0, 0);
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.paragraph-block,
+.header-block {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+
+.left {
+    align-items: flex-end;
+}
+
+.container-flex {
+    display: flex;
+    
+    justify-content: center;
+    align-items: stretch;
+    gap: 2px;
+}
+.container-flex >* {
+    flex: 1 1 0%;
+    min-width: 0;
+}
+
+.container-flex-row {
+    flex-direction: row;
+}
+
+.container-flex-column {
+    flex-direction: column;
 }
