@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, computed, Input, OnInit, Signal, signal } from '@angular/core';
+import { AfterContentInit, Component, computed, EventEmitter, Input, OnInit, Output, Signal, signal } from '@angular/core';
 import { LayoutElement, HeaderData, LayoutModel } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 
@@ -14,30 +14,23 @@ import { CommonModule } from '@angular/common';
 
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   type = 'header';
-  @Input() data: HeaderData = { type: 'header', text: 'Your Title Here', style: { size: 1 } };
+  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], type: 'header', text: 'Your Title Here', style: { size: 1 } };
+  @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   text = signal<string>('');
   size = signal<number>(1);
+  id = signal('0');
 
   ngOnInit(): void {
     this.text.set(this.data.text || '');
     this.size.set(this.data.style?.size || 1);
+    this.id.set(this.data.id);
+
+    console.log(`componente do tipo ${this.type} e id ${this.id()} criado`)
   }
-
-  memoryContent: Signal<LayoutModel<HeaderData>> = computed(
-    () => ({
-      data: {
-        type: 'header',
-        text: this.text(),
-        style: {
-          size: this.size()
-        }
-      }
-    })
-  );
-
+  
   setSize(size: number) {
     this.size.set(size);
-    console.log("memoryContent", this.memoryContent());
+    console.log("memoryContent", this.dataSignal());
   }
 
   textSyncOnBlur(event: Event) {
@@ -65,6 +58,26 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
 
   showMenu(event: Event) {
     this.menuIsOn.set(true);
+  }
+
+  
+  dataSignal: Signal<LayoutModel<HeaderData>> = computed(
+    () => ({
+      data: {
+        id: this.id(),
+        type: 'header',
+        text: this.text(),
+        style: {
+          size: this.size()
+        }
+      }
+    })
+  );
+
+  emitModel() {
+    this.modelChange.emit({
+      data: this.dataSignal(),
+    });
   }
 
 }

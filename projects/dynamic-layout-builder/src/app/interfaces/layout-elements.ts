@@ -8,6 +8,7 @@ export interface LayoutElement<T> {
 }
 
 export interface LayoutData {
+  id: string;
   type: string;
 }
 

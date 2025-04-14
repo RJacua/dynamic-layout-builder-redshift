@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, computed, inject, Signal, signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { ContainerComponent as ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
+import { AtomicElementData, ContainerData, LayoutElement, LayoutModel } from '../interfaces/layout-elements';
 
 @Component({
   selector: 'app-canvas',
@@ -14,13 +15,19 @@ export class CanvasComponent {
   @ViewChild('container', { read: ViewContainerRef }) container!: ViewContainerRef;
   readonly componentsSvc = inject(ComponentsService);
 
+  layoutModel = signal<LayoutModel<LayoutModel<ContainerData> | LayoutElement<AtomicElementData>>[]>([]);
+  layoutModelString: Signal<string> = computed(
+    () => JSON.stringify(this.layoutModel())
+  )
   openNewAreaDialog() {
     console.log("open new area dialog");
   }
 
   addContainer(){
-    console.log("add new area");
-    this.componentsSvc.addComponent('container', this.container);
-  }
+    const ref = this.componentsSvc.addComponent('container', this.container, crypto.randomUUID().split("-")[0]);
 
+    if(ref) {
+
+    }
+  }
 }

@@ -1,12 +1,12 @@
 <div class="main" (focusout)="hideMenu($event)">
-    <p [contentEditable]="true" [ngClass]="'element paragraph editable-content ' + alignment()" (focus)="showMenu($event)">{{ text() }}</p>
+    <p [contentEditable]="true" [ngClass]="'element paragraph editable-content ' + alignment()" (focus)="showMenu($event)" (blur)="textSyncOnBlur($event)">{{ text() }}</p>
     <br>
     <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()">
         <button class="round-button" (click)="setAlignment('left')">←</button>
         <button class="round-button" (click)="setAlignment('center')">⨀</button>
         <button class="round-button" (click)="setAlignment('right')">→</button>
     </div>
-    
+    <p>{{ layoutModelString() }}</p>
     
     <br>
     <br>

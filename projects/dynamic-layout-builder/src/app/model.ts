@@ -5,19 +5,19 @@ import { LayoutElement, ContainerData, LayoutModel, AtomicElementData } from "./
 
 export const layoutModels: LayoutModel<ContainerData>[] = [
     {
-        data: { type: 'container', style: {direction: 'column'} },
+        data: {id: 'aikb5', type: 'container', style: {direction: 'column'} },
         children: [
-            { data: { type: 'header', text: 'Coiso' } },
-            { data: { type: 'paragraph', text: 'Teste Teste Teste' } },
-            { data: { type: 'container' } },
+            { data: {id: 'mo6av', type: 'header', text: 'Coiso' } },
+            { data: {id: 'plq01', type: 'paragraph', text: 'Teste Teste Teste' } },
+            { data: {id: '1bu89', type: 'container' } },
         ]
     },
     {
-        data: { type: 'container', style: {direction: 'row'} },
+        data: {id: 'aikb5', type: 'container', style: {direction: 'row'} },
         children: [
-            { data: { type: 'header', text: 'Coiso' } },
-            { data: { type: 'paragraph', text: 'Teste Teste Teste' } },
-            { data: { type: 'container' } },
+            { data: {id: 'mo6av', type: 'header', text: 'Coiso' } },
+            { data: {id: 'plq01', type: 'paragraph', text: 'Teste Teste Teste' } },
+            { data: {id: '1bu89', type: 'container' } },
         ]
     }
 ]
