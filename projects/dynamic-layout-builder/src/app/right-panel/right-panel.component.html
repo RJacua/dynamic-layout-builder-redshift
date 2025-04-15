@@ -1,16 +1,26 @@
 <ng-container *ngIf="!(selectedElement$ | async)">
-    <app-general-options></app-general-options>
+    <app-background-styles-options></app-background-styles-options>
 </ng-container>
 
 <ng-container *ngIf="selectedElement$ | async as selected">
     <ng-container [ngSwitch]="selected.type">
-        <!-- <app-paragraph-properties *ngSwitchCase="'paragraph'" [element]="selected"></app-paragraph-properties> -->
-        <!-- <app-header-properties *ngSwitchCase="'header'" [element]="selected"></app-header-properties> -->
-        <!-- <app-container-properties *ngSwitchCase="'container'" [element]="selected"></app-container-properties> -->
-        <app-general-options *ngSwitchCase="'canvas'"></app-general-options>
 
-        <div *ngSwitchCase="'header'">Header Options</div>
-        <div *ngSwitchCase="'paragraph'">Paragraph Options</div>
+        <div *ngSwitchCase="'canvas'">
+            <app-background-styles-options></app-background-styles-options>
+        </div>
+
+        <div *ngSwitchCase="'header'">
+            <app-background-styles-options></app-background-styles-options>
+            <app-text-styles-options></app-text-styles-options>
+            <app-border-styles-options></app-border-styles-options>
+        </div>
+
+        <div *ngSwitchCase="'paragraph'">
+            <app-background-styles-options></app-background-styles-options>
+            <app-text-styles-options></app-text-styles-options>
+            <app-border-styles-options></app-border-styles-options>
+        </div>
+
         <div *ngSwitchDefault>No element selected!</div>
     </ng-container>
 </ng-container>

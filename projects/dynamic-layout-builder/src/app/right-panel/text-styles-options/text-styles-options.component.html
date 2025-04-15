@@ -1,0 +1,25 @@
+<mat-card>
+    <mat-list>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+            <h3 class="center">Text Options</h3>
+        </mat-list-item>
+        <form [formGroup]="fontOptions">
+            <label for="fontSize">Font Size:</label><br>
+            <input type="number" id="fontSize" name="fontSize" formControlName="fontSize"><br><br>
+
+            <label for="fontWeight">Font Weight:</label><br>
+            <input type="range" id="fontWeight" name="fontWeight" min="100" max="900" step="100"
+                formControlName="fontWeight">
+            <span>{{fontOptions.controls.fontWeight.value}}</span><br><br>
+
+            <label for="fontColor">Font Color:</label><br>
+            <input type="color" id="fontColor" name="fontColor" formControlName="fontColor"><br><br>
+
+            <label for="hAlign">Horizontal Alignment:</label>
+            <select name="hAlign" id="hAlign" formControlName="horizontalAlign">
+                <option *ngFor="let hOption of hOptions" [ngValue]="hOption">{{ hOption }}</option>
+            </select><br><br>
+        </form>
+    </mat-list>
+</mat-card>

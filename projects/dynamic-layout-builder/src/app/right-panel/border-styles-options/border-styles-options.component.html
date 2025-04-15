@@ -1,41 +1,11 @@
 <mat-card>
-    <h2 class="center">General Options</h2>
     <mat-list>
-
-        <mat-list-item>Background Color</mat-list-item>
-
-        <label for="bgColor">Background Color:</label><br>
-        <input type="color" id="bgColor" name="bgColor" [formControl]="bgColor"><br><br>
-
-        <label for="bgOpacity">Background Opacity:</label><br>
-        <input type="number" id="bgOpacity" name="bgOpacity" [formControl]="bgOpacity"><br><br>
-
         <mat-divider></mat-divider>
-
-        <mat-list-item>Font</mat-list-item>
-
-        <form [formGroup]="fontOptions">
-            <label for="fontSize">Font Size:</label><br>
-            <input type="number" id="fontSize" name="fontSize" formControlName="fontSize"><br><br>
-
-            <label for="fontWeight">Font Weight:</label><br>
-            <input type="range" id="fontWeight" name="fontWeight" min="100" max="900" step="100"
-                formControlName="fontWeight">
-            <span>{{fontOptions.controls.fontWeight.value}}</span><br><br>
-
-            <label for="fontColor">Font Color:</label><br>
-            <input type="color" id="fontColor" name="fontColor" formControlName="fontColor"><br><br>
-
-            <label for="hAlign">Horizontal Alignment:</label>
-            <select name="hAlign" id="hAlign" formControlName="horizontalAlign">
-                <option *ngFor="let hOption of hOptions" [ngValue]="hOption">{{ hOption }}</option>
-            </select><br><br>
-        </form>
-
-        <mat-divider></mat-divider>
-
-        <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke"
-                [formControl]="addStroke"></mat-list-item>
+        <mat-list-item>
+            <h3 class="center">Border Options</h3>
+        </mat-list-item>
+        <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke" [formControl]="enableStroke">
+        </mat-list-item>
 
         <div *ngIf="addStrokeValue$ | async">
             <form [formGroup]="strokeOptions">
@@ -47,7 +17,7 @@
                     formControlName="strokeRadius">
                 <span>{{strokeOptions.controls.strokeRadius.value}}</span>
                 <span><input type="checkbox" id="individualCorner" name="individualCorner"
-                        formControlName="individualCorner"></span><br><br>
+                        formControlName="enableIndividualCorner"></span><br><br>
 
                 <form [formGroup]="cornerOptions">
                     <div *ngIf="individualCorner$ | async"
@@ -89,6 +59,5 @@
                 <input type="number" id="strokeWidth" name="strokeWidth" formControlName="strokeWidth"><br><br>
             </form>
         </div>
-
     </mat-list>
 </mat-card>

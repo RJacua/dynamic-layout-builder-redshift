@@ -1,19 +1,14 @@
-<div class="canvas" [ngStyle]="{
-    'background-color': (bgColor$ | async),
-    opacity: (bgOpacity$ | async),
-    'font-size': (fontSize$ | async) + 'px',
-    'font-weight': (fontWeight$ | async),
-    color: (fontColor$ | async),
-    'text-align': (horizontalAlign$ | async),
-    }" 
-    [style.border]="(addStrokeValue$ | async) ? `${(strokeWidth$ | async)}px ${(strokeStyle$ | async)} ${(strokeColor$ | async)}` :'1px solid #81828555'"
-    [style.border-radius]="(addStrokeValue$ | async) ? (strokeRadius$ | async) + 'px' : '0'"
+<div class="canvas" [ngStyle]="dynamicStyles$ | async" 
+
+    [style.border]="dynamicBorder$ | async"
+
+    [style.border-radius]="dynamicBorderRadius$ | async"
     
-    [style.border-top-left-radius]="(individualCorner$ | async) ? (topLeft$ | async) + 'px' : `${(strokeRadius$ | async)}`"
-    [style.border-top-right-radius]="(individualCorner$ | async) ? (topRight$ | async) + 'px' : `${(strokeRadius$ | async)}`"
-    [style.border-bottom-left-radius]="(individualCorner$ | async) ? (bottomLeft$ | async) + 'px' : `${(strokeRadius$ | async)}`"
-    [style.border-bottom-right-radius]="(individualCorner$ | async) ? (bottomRight$ | async) + 'px' : `${(strokeRadius$ | async)}`"
-    
+    [style.border-top-left-radius]="(individualDynamicCornerRadius$ | async)?.['border-top-left-radius']"
+    [style.border-top-right-radius]="(individualDynamicCornerRadius$ | async)?.['border-top-right-radius']"
+    [style.border-bottom-left-radius]="(individualDynamicCornerRadius$ | async)?.['border-bottom-left-radius']"
+    [style.border-bottom-right-radius]="(individualDynamicCornerRadius$ | async)?.['border-bottom-right-radius']"
+  
     (click)="onElementClick($event, {  type: 'canvas' })">
 
     <div>

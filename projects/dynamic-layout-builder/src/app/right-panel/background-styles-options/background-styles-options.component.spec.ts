@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GeneralOptionsComponent } from './general-options.component';
+import { BackgroundStylesOptionsComponent } from './background-styles-options.component';
 
 describe('GeneralOptionsComponent', () => {
-  let component: GeneralOptionsComponent;
-  let fixture: ComponentFixture<GeneralOptionsComponent>;
+  let component: BackgroundStylesOptionsComponent;
+  let fixture: ComponentFixture<BackgroundStylesOptionsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GeneralOptionsComponent]
+      imports: [BackgroundStylesOptionsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GeneralOptionsComponent);
+    fixture = TestBed.createComponent(BackgroundStylesOptionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

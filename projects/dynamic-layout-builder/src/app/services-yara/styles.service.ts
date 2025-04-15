@@ -1,108 +1,90 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BackgroundStylesService } from './backgroundStyles.service';
+import { BorderStylesService } from './borderStyles.service';
+import { CornerStylesService } from './cornerStyles.service';
+import { SelectionService } from './selection.service';
+import { TextStylesService } from './textStyles.service';
+import { combineLatest, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StylesService {
+  private bgStylesService = inject(BackgroundStylesService)
+  private textStylesService = inject(TextStylesService)
+  private borderStylesService = inject(BorderStylesService)
+  private cornerStylesService = inject(CornerStylesService)
 
-  constructor() { }
-
-  private bgColorSubject = new BehaviorSubject<string>('#ffffff');
-  private bgOpacitySubject = new BehaviorSubject<number>(1);
-  bgColor$ = this.bgColorSubject.asObservable();
-  bgOpacity$ = this.bgOpacitySubject.asObservable();
-
+  // Background Styles
+  bgColor$ = this.bgStylesService.bgColor$;
+  bgOpacity$ = this.bgStylesService.bgOpacity$;
   // Text Styles
-  private fontSizeSubject = new BehaviorSubject<number>(24);
-  private fontWeightSubject = new BehaviorSubject<number>(400);
-  private fontColorSubject = new BehaviorSubject<string>('#000000');
-  private horizontalAlignSubject = new BehaviorSubject<string>('center');
-  fontSize$ = this.fontSizeSubject.asObservable();
-  fontWeight$ = this.fontWeightSubject.asObservable();
-  fontColor$ = this.fontColorSubject.asObservable();
-  horizontalAlign$ = this.horizontalAlignSubject.asObservable();
+  fontSize$ = this.textStylesService.fontSize$;
+  fontWeight$ = this.textStylesService.fontWeight$;
+  fontColor$ = this.textStylesService.fontColor$;
+  horizontalAlign$ = this.textStylesService.horizontalAlign$;
+  // Border Styles
+  enableStroke$ = this.borderStylesService.enableStroke$;
+  strokeColor$ = this.borderStylesService.strokeColor$;
+  strokeRadius$ = this.borderStylesService.strokeRadius$;
+  strokeStyle$ = this.borderStylesService.strokeStyle$;
+  strokeWidth$ = this.borderStylesService.strokeWidth$;
+  // Corner Styles
+  enableIndividualCorner$ = this.cornerStylesService.enableIndividualCorner$;
+  topLeft$ = this.cornerStylesService.topLeft$;
+  topRight$ = this.cornerStylesService.topRight$;
+  bottomLeft$ = this.cornerStylesService.bottomLeft$;
+  bottomRight$ = this.cornerStylesService.bottomRight$;
 
+  readonly defaultBorder = '1px solid #81828555';
+  readonly dynamicStyles$ = combineLatest([
+    this.bgColor$,
+    this.bgOpacity$,
+    this.fontSize$,
+    this.fontWeight$,
+    this.fontColor$,
+    this.horizontalAlign$
+  ]).pipe(
+    map(([bgColor, bgOpacity, fontSize, fontWeight, fontColor, horizontalAlign]) => ({
+      'background-color': bgColor,
+      'opacity': bgOpacity,
+      'font-size': fontSize + 'px',
+      'font-weight': fontWeight,
+      'color': fontColor,
+      'text-align': horizontalAlign,
+    }))
+  );
 
-  // Stroke Styles
-  private addStrokeSubject = new BehaviorSubject<boolean>(false);
-  private strokeColorSubject = new BehaviorSubject<string>('#000000');
-  private strokeRadiusSubject = new BehaviorSubject<number>(0);
-  private strokeStyleSubject = new BehaviorSubject<string>('solid');
-  private strokeWidthSubject = new BehaviorSubject<number>(1);
-  addStroke$ = this.addStrokeSubject.asObservable();
-  strokeColor$ = this.strokeColorSubject.asObservable();
-  strokeRadius$ = this.strokeRadiusSubject.asObservable();
-  strokeStyle$ = this.strokeStyleSubject.asObservable();
-  strokeWidth$ = this.strokeWidthSubject.asObservable();
+  readonly dynamicBorder$ = combineLatest([
+    this.enableStroke$,
+    this.strokeColor$,
+    this.strokeStyle$,
+    this.strokeWidth$
+  ]).pipe(
+    map(([enabled, strokeColor, strokeStyle, strokeWidth]) =>
+      enabled ? `${strokeWidth}px ${strokeStyle} ${strokeColor}` : `${this.defaultBorder}`)
+  );
 
-
-  private individualCornerSubject = new BehaviorSubject<boolean>(false);
-  individualCorner$ = this.individualCornerSubject.asObservable();
-  // Stroke Corner
-  private topLeftSubject = new BehaviorSubject<number>(0);
-  private topRightSubject = new BehaviorSubject<number>(0);
-  private bottomLeftSubject = new BehaviorSubject<number>(0);
-  private bottomRightSubject = new BehaviorSubject<number>(0);
-
-  topLeft$ = this.topLeftSubject.asObservable();
-  topRight$ = this.topRightSubject.asObservable();
-  bottomLeft$ = this.bottomLeftSubject.asObservable();
-  bottomRight$ = this.bottomRightSubject.asObservable();
-
-
-  setBgColor(bgColor: string) {
-    this.bgColorSubject.next(bgColor);
-  }
-
-  setBgOpacity(bgOpacity: number) {
-    this.bgOpacitySubject.next(bgOpacity / 100);
-  }
-  setfontSize(fontSize: number) {
-    this.fontSizeSubject.next(fontSize);
-  }
-
-  setfontWeight(fontWeight: number) {
-    this.fontWeightSubject.next(fontWeight);
-  }
-
-  setfontColor(fontColor: string) {
-    this.fontColorSubject.next(fontColor);
-  }
-  setHorizontalAlign(horizontalAlign: string) {
-    this.horizontalAlignSubject.next(horizontalAlign);
-  }
-
-  setAddStroke(addStroke: boolean) {
-    this.addStrokeSubject.next(addStroke);
-  }
-  setIndividualCorner(individualCorner: boolean) {
-    this.individualCornerSubject.next(individualCorner);
-  }
-  setStrokeColor(strokeColor: string) {
-    this.strokeColorSubject.next(strokeColor);
-  }
-  setStrokeRadius(strokeRadius: number) {
-    this.strokeRadiusSubject.next(strokeRadius);
-  }
-  setStrokeStyle(strokeStyle: string) {
-    this.strokeStyleSubject.next(strokeStyle);
-  }
-  setStrokeWidth(strokeWidth: number) {
-    this.strokeWidthSubject.next(strokeWidth);
-  }
-  setTopLeft(topLeft: number) {
-    this.topLeftSubject.next(topLeft);
-  }
-  setTopRight(topRight: number) {
-    this.topRightSubject.next(topRight);
-  }
-  setBottomLeft(bottomLeft: number) {
-    this.bottomLeftSubject.next(bottomLeft);
-  }
-  setBottomRight(bottomRight: number) {
-    this.bottomRightSubject.next(bottomRight);
-  }
-
+  readonly dynamicBorderRadius$ = combineLatest([
+    this.enableStroke$,
+    this.strokeRadius$
+  ]).pipe(
+    map(([enabled, strokeRadius]) => 
+      enabled ? `${strokeRadius}px` : '0')
+  );
+  readonly individualDynamicCornerRadius$ = combineLatest([
+    this.enableIndividualCorner$,
+    this.topLeft$,
+    this.topRight$,
+    this.bottomLeft$,
+    this.bottomRight$
+  ]).pipe(
+    map(([enable, topLeft, topRight, bottomLeft, bottomRight]) => ({
+      'border-top-left-radius': enable ? `${topLeft}px` : '0',
+      'border-top-right-radius': enable ? `${topRight}px` : '0',
+      'border-bottom-left-radius': enable ? `${bottomLeft}px` : '0',
+      'border-bottom-right-radius': enable ? `${bottomRight}px` : '0',
+    }))
+  );
 
 }
