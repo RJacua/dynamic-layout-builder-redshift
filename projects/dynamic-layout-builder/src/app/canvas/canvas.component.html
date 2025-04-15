@@ -1,12 +1,11 @@
 <div class="canvas">
     <div class="align-center">
         
-        <ng-template #container [class]="'container-border'"></ng-template>
+        <ng-template #containerDiv [class]="'container-border'"></ng-template>
         <br>
-        <button class="round-button" (click)="openNewAreaDialog()">+</button>
         <button class="round-button" (click)="addContainer()">A</button>
     
     </div>
 </div>
 
-<p>{{ layoutModelString() }}</p>
+<pre>{{ layoutModelString() }}</pre>

@@ -34,7 +34,7 @@ export interface HeaderData extends LayoutData {
 export interface ContainerData extends LayoutData {
   containerDiv?: ViewContainerRef;
   style?: Styles;
-  children?: LayoutElement<any>[];
+  children?: LayoutModel<LayoutModel<ContainerData> | LayoutElement<AtomicElementData>>[];
   elementRef?: BehaviorSubject<ViewContainerRef | null>;
 }
 

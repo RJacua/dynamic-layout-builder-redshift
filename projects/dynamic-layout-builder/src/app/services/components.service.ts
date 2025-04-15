@@ -1,4 +1,4 @@
-import { ComponentRef, inject, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, inject, Injectable, Signal, ViewContainerRef, WritableSignal } from '@angular/core';
 import { ComponentRegistryService } from './component-registry.service';
 import { AtomicElementData, ContainerData, LayoutElement, LayoutModel } from '../interfaces/layout-elements';
 import { BehaviorSubject, filter } from 'rxjs';
@@ -13,7 +13,7 @@ export class ComponentsService {
   private components: ComponentRef<any>[] = [];
 
   addComponent<T extends {}>(type: string, container: ViewContainerRef, id:string, data?: T): ComponentRef<LayoutElement<any>> | null {
-    console.log(`criando componente do tipo ${type} e id ${id}`);
+    // console.log(`criando componente do tipo ${type} e id ${id}`);
     if (!container) {
       console.error("Nenhum container fornecido.");
       return null;
@@ -69,6 +69,37 @@ export class ComponentsService {
   //   }
   // }
 
+
+  onChildModelUpdate(childModel: (LayoutModel<ContainerData> | LayoutElement<AtomicElementData>), childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>) ) {
+    childrenModels.update(() =>
+      childrenModels().map((cm) => {
+        console.log("cm: ", cm, ", childModel: ", childModel);
+        return (cm.data.id === (childModel.data as any).data.id || cm.data.id === (childModel as any).data.id) ? childModel : cm
+      }
+      )
+    );
+  }
+
+  addContainer(childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>), container: ViewContainerRef) {
+    const id = crypto.randomUUID().split('-')[0];
+    const ref = this.addComponent('container', container, id);
+
+    if (ref) {
+      (ref.instance as any).modelChange.subscribe((childModel: LayoutModel<any>) => {
+        this.onChildModelUpdate(childModel, childrenModels);
+      });
+
+      childrenModels.update((children: any) => [
+        ...children,
+        {
+          id,
+          type: 'container',
+          data: ref.instance.data,
+          children: []
+        }
+      ]);
+    }
+  }
 
   isContainer(element: LayoutData) {
     return element.type === 'container';

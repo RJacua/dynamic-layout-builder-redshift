@@ -30,7 +30,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   
   setSize(size: number) {
     this.size.set(size);
-    console.log("memoryContent", this.dataSignal());
+    console.log("memoryContent", this.layoutModel());
   }
 
   textSyncOnBlur(event: Event) {
@@ -61,7 +61,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   }
 
   
-  dataSignal: Signal<LayoutModel<HeaderData>> = computed(
+  layoutModel: Signal<LayoutModel<HeaderData>> = computed(
     () => ({
       data: {
         id: this.id(),
@@ -74,9 +74,14 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
     })
   );
 
+  
+  layoutModelString: Signal<string> = computed(
+    () => JSON.stringify(this.layoutModel(), null, 2)
+  )
+
   emitModel() {
     this.modelChange.emit({
-      data: this.dataSignal(),
+      data: this.layoutModel(),
     });
   }
 

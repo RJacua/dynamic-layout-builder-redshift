@@ -81,7 +81,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   );
 
   layoutModelString: Signal<string> = computed(
-    () => JSON.stringify(this.layoutModel())
+    () => JSON.stringify(this.layoutModel(), null, 2)
   )
 
   emitModel() {
