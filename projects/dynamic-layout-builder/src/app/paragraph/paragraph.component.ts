@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, EventEmitter, inject, Input, OnInit, Output, Signal, signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, EventEmitter, inject, Input, OnInit, Output, Signal, signal } from '@angular/core';
 import { LayoutElement, LayoutModel, ParagraphData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
@@ -26,6 +26,12 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   size = signal<number>(1);
 
   menuIsOn = signal(false);
+
+  constructor() {
+    effect(() => {
+      this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
+    })
+  }
 
   ngOnInit(): void {
     this.id.set(this.data.id);
@@ -63,6 +69,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     if (element.innerText !== this.text()) {
       element.innerText = this.text();
     }
+
+    
+
   }
 
 
@@ -83,12 +92,6 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   layoutModelString: Signal<string> = computed(
     () => JSON.stringify(this.layoutModel(), null, 2)
   )
-
-  emitModel() {
-    this.modelChange.emit({
-      data: this.layoutModel(),
-    });
-  }
 
 }
 

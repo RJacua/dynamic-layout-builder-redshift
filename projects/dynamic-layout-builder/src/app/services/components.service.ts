@@ -43,33 +43,6 @@ export class ComponentsService {
     }
   }
 
-  // createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container: ViewContainerRef) {
-
-  //   const element = this.addComponent(model.data.type, container, model.data);
-
-  //   if (!element) {
-  //     return;
-  //   }
-
-  //   if (this.isContainer(model.data)) {
-  //     ((element.instance as any).elementRef as BehaviorSubject<ViewContainerRef | null>).pipe(
-  //       filter((value) => !!value)
-  //     ).subscribe((elementRef) => {
-
-  //       console.log(element);
-  //       model.children?.map(
-  //         (c) => {
-  //           if (this.isContainer(c.data)) {
-  //             this.createLayoutFromModel(c, elementRef);
-  //           }
-  //           else this.addComponent(c.data.type, elementRef, c.data)
-  //         }
-  //       )
-  //     })
-  //   }
-  // }
-
-
   emitModel(layoutModel: Signal<LayoutModel<ContainerData>>, modelChange: EventEmitter<LayoutModel<any>>) {
     console.log("Emiting ", layoutModel());
     modelChange.emit({
@@ -77,7 +50,7 @@ export class ComponentsService {
     });
   }
 
-  onChildModelUpdate(childModel: (LayoutModel<ContainerData> | LayoutElement<AtomicElementData>), childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>), layoutModel?: Signal<LayoutModel<ContainerData>>, modelChange?: EventEmitter<LayoutModel<any>>) {
+  onChildModelUpdate(childModel: (LayoutModel<ContainerData> | LayoutElement<AtomicElementData>), childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>)) {
     childrenModels.update(() =>
       childrenModels().map((cm) => {
         console.log("cm: ", cm, ", childModel: ", childModel);
@@ -86,9 +59,7 @@ export class ComponentsService {
       )
     );
     console.log(childrenModels());
-    if(layoutModel && modelChange){
-      this.emitModel(layoutModel, modelChange);
-    }
+
   }
 
   addContainer(childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>), containerDiv: ViewContainerRef) {
@@ -118,7 +89,7 @@ export class ComponentsService {
 
     if (ref) {
       (ref.instance as any).modelChange.subscribe((childModel: LayoutModel<any>) => {
-        this.onChildModelUpdate(childModel, childrenModels, layoutModel, modelChange);
+        this.onChildModelUpdate(childModel, childrenModels);
       });
 
       if(componentType.toLowerCase() === 'container'){
@@ -147,4 +118,30 @@ export class ComponentsService {
   isContainer(element: LayoutData) {
     return element.type === 'container';
   }
+
+    // createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container: ViewContainerRef) {
+
+  //   const element = this.addComponent(model.data.type, container, model.data);
+
+  //   if (!element) {
+  //     return;
+  //   }
+
+  //   if (this.isContainer(model.data)) {
+  //     ((element.instance as any).elementRef as BehaviorSubject<ViewContainerRef | null>).pipe(
+  //       filter((value) => !!value)
+  //     ).subscribe((elementRef) => {
+
+  //       console.log(element);
+  //       model.children?.map(
+  //         (c) => {
+  //           if (this.isContainer(c.data)) {
+  //             this.createLayoutFromModel(c, elementRef);
+  //           }
+  //           else this.addComponent(c.data.type, elementRef, c.data)
+  //         }
+  //       )
+  //     })
+  //   }
+  // }
 }

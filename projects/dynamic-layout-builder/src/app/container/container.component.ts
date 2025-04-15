@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, ElementRef, EventEmitter, inject, input, Input, OnInit, Output, Signal, signal, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, OnInit, Output, Signal, signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
@@ -37,7 +37,12 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   childrenModels = signal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>([]);
 
   readonly componentsSvc = inject(ComponentsService);
-  constructor(private host: ElementRef) { }
+  constructor(private host: ElementRef) {
+    effect(() => {
+      this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
+    })
+   }
+
 
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
 
@@ -51,23 +56,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   ngAfterViewInit() {
     this.elementRef.next(this.containerDiv);
   }
-
-  // createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container?: ViewContainerRef) {
-
-  //   if (this.elementRef.value) {
-  //     container = this.elementRef.value;
-  //   }
-
-  //   if (container) {
-  //     this.componentsSvc.createLayoutFromModel(model, container);
-  //   }
-  //   else {
-  //     console.error("Container não definido");
-  //     return;
-  //   }
-
-  // }
-
 
   layoutModel: Signal<LayoutModel<ContainerData>> = computed(
     () => ({
@@ -85,13 +73,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   layoutModelString: Signal<string> = computed(
     () => JSON.stringify(this.layoutModel(), null, 2)
   )
-
-  // emitModel() {
-  //   console.log("Emiting ", this.layoutModel());
-  //   this.modelChange.emit({
-  //     data: this.layoutModel(),
-  //   });
-  // }
 
   addLayoutElement(componentType: string) {
     this.componentsSvc.addLayoutElement(componentType, this.childrenModels, this.containerDiv, this.layoutModel, this.modelChange)
