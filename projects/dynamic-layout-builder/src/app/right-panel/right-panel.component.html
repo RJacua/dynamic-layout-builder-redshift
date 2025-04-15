@@ -1,5 +1,5 @@
 <ng-container *ngIf="!(selectedElement$ | async)">
-    <div>General Options</div>
+    <app-general-options></app-general-options>
 </ng-container>
 
 <ng-container *ngIf="selectedElement$ | async as selected">
@@ -7,7 +7,8 @@
         <!-- <app-paragraph-properties *ngSwitchCase="'paragraph'" [element]="selected"></app-paragraph-properties> -->
         <!-- <app-header-properties *ngSwitchCase="'header'" [element]="selected"></app-header-properties> -->
         <!-- <app-container-properties *ngSwitchCase="'container'" [element]="selected"></app-container-properties> -->
-        <div *ngSwitchCase="'canvas'">General Options</div>
+        <app-general-options *ngSwitchCase="'canvas'"></app-general-options>
+
         <div *ngSwitchCase="'header'">Header Options</div>
         <div *ngSwitchCase="'paragraph'">Paragraph Options</div>
         <div *ngSwitchDefault>No element selected!</div>

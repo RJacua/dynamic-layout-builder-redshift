@@ -12,6 +12,8 @@ import { NewAreaMenuService } from '../services-yara/new-area-menu.service';
 import { MenuComponent } from './new-area-menu/menu.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LayoutElement, SelectionService } from '../services-yara/selection.service';
+import { StylesService } from '../services-yara/styles.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-canvas',
@@ -31,6 +33,24 @@ import { LayoutElement, SelectionService } from '../services-yara/selection.serv
 })
 export class CanvasComponent {
   private selectionService = inject(SelectionService)
+  private stylesService = inject(StylesService)
+  bgColor$ = this.stylesService.bgColor$;
+  bgOpacity$ = this.stylesService.bgOpacity$;
+  fontSize$ = this.stylesService.fontSize$;
+  fontWeight$ = this.stylesService.fontWeight$;
+  fontColor$ = this.stylesService.fontColor$;
+  horizontalAlign$ = this.stylesService.horizontalAlign$;
+  addStrokeValue$ = this.stylesService.addStroke$;
+  strokeColor$ = this.stylesService.strokeColor$;
+  strokeRadius$ = this.stylesService.strokeRadius$;
+  strokeStyle$ = this.stylesService.strokeStyle$;
+  strokeWidth$ = this.stylesService.strokeWidth$;
+  individualCorner$ = this.stylesService.individualCorner$;
+  topLeft$ = this.stylesService.topLeft$;
+  topRight$ = this.stylesService.topRight$;
+  bottomLeft$ = this.stylesService.bottomLeft$;
+  bottomRight$ = this.stylesService.bottomRight$;
+
   initialData: string[] = [];
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
     this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
@@ -40,22 +60,10 @@ export class CanvasComponent {
     event.stopPropagation(); 
     this.selectionService.select(element);
   }
-
-
-
-  // readonly dialog = inject(MatDialog);
-  // openNewAreaDialog() {
-  // const dialogRef = 
-  // this.dialog.open(NewAreaDialogComponent, {
-  // });
-
-  // dialogRef.afterClosed().subscribe(result => {
-  //   console.log('The dialog was closed');
-  // });
-  // }
-
   addNewArea() {
     console.log("add new area");
   }
+
+  
 
 }

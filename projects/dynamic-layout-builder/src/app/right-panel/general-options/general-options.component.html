@@ -1,0 +1,94 @@
+<mat-card>
+    <h2 class="center">General Options</h2>
+    <mat-list>
+
+        <mat-list-item>Background Color</mat-list-item>
+
+        <label for="bgColor">Background Color:</label><br>
+        <input type="color" id="bgColor" name="bgColor" [formControl]="bgColor"><br><br>
+
+        <label for="bgOpacity">Background Opacity:</label><br>
+        <input type="number" id="bgOpacity" name="bgOpacity" [formControl]="bgOpacity"><br><br>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>Font</mat-list-item>
+
+        <form [formGroup]="fontOptions">
+            <label for="fontSize">Font Size:</label><br>
+            <input type="number" id="fontSize" name="fontSize" formControlName="fontSize"><br><br>
+
+            <label for="fontWeight">Font Weight:</label><br>
+            <input type="range" id="fontWeight" name="fontWeight" min="100" max="900" step="100"
+                formControlName="fontWeight">
+            <span>{{fontOptions.controls.fontWeight.value}}</span><br><br>
+
+            <label for="fontColor">Font Color:</label><br>
+            <input type="color" id="fontColor" name="fontColor" formControlName="fontColor"><br><br>
+
+            <label for="hAlign">Horizontal Alignment:</label>
+            <select name="hAlign" id="hAlign" formControlName="horizontalAlign">
+                <option *ngFor="let hOption of hOptions" [ngValue]="hOption">{{ hOption }}</option>
+            </select><br><br>
+        </form>
+
+        <mat-divider></mat-divider>
+
+        <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke"
+                [formControl]="addStroke"></mat-list-item>
+
+        <div *ngIf="addStrokeValue$ | async">
+            <form [formGroup]="strokeOptions">
+                <label for="strokeClor">Color:</label><br>
+                <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor"><br><br>
+
+                <label for="strokeRadius">Corner Radius:</label><br>
+                <input type="range" id="strokeRadius" name="strokeRadius" min="0" max="100" step="1"
+                    formControlName="strokeRadius">
+                <span>{{strokeOptions.controls.strokeRadius.value}}</span>
+                <span><input type="checkbox" id="individualCorner" name="individualCorner"
+                        formControlName="individualCorner"></span><br><br>
+
+                <form [formGroup]="cornerOptions">
+                    <div *ngIf="individualCorner$ | async"
+                        style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: 400px;">
+
+                        <div>
+                            <label for="TopLeft">TopLeft</label>
+                            <input type="range" id="TopLeft" min="0" max="100" step="1" style="width: 50px;"
+                                formControlName="topLeft">
+                            <span>{{cornerOptions.controls.topLeft.value}}</span>
+                        </div>
+                        <div>
+                            <label for="TopRight">TopRight</label>
+                            <input type="range" id="TopRight" min="0" max="100" step="1" style="width: 50px;"
+                                formControlName="topRight">
+                            <span>{{cornerOptions.controls.topRight.value}}</span>
+                        </div>
+                        <div>
+                            <label for="BottomLeft">BottomLeft</label>
+                            <input type="range" id="BottomLeft" min="0" max="100" step="1" style="width: 50px;"
+                                formControlName="bottomLeft">
+                            <span>{{cornerOptions.controls.bottomLeft.value}}</span>
+                        </div>
+                        <div>
+                            <label for="BottomRight">BottomRight</label>
+                            <input type="range" id="BottomRight" min="0" max="100" step="1" style="width: 50px;"
+                                formControlName="bottomRight">
+                            <span>{{cornerOptions.controls.bottomRight.value}}</span>
+                        </div>
+                    </div>
+                </form><br><br>
+
+                <label for="strokeStyle">Style:</label>
+                <select name="strokeStyle" id="strokeStyle" formControlName="strokeStyle">
+                    <option *ngFor="let strokeStyle of strokeStyles" [ngValue]="strokeStyle">{{ strokeStyle }}</option>
+                </select><br><br>
+
+                <label for="strokeWidth">Width:</label><br>
+                <input type="number" id="strokeWidth" name="strokeWidth" formControlName="strokeWidth"><br><br>
+            </form>
+        </div>
+
+    </mat-list>
+</mat-card>

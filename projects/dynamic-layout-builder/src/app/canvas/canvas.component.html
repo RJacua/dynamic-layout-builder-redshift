@@ -1,17 +1,41 @@
-<div class="canvas" (click)="onElementClick($event, {  type: 'canvas' })" >
-    <div class="center">
-        
-        <div (click)="onElementClick($event, {type: 'header' })">
-            I'm a header 
-        </div>
-        <br>
-        <div (click)="onElementClick($event, {  type: 'paragraph' })">
-            I'm a paragraph 
-        </div>
-        <br>
+<div class="canvas" [ngStyle]="{
+    'background-color': (bgColor$ | async),
+    opacity: (bgOpacity$ | async),
+    'font-size': (fontSize$ | async) + 'px',
+    'font-weight': (fontWeight$ | async),
+    color: (fontColor$ | async),
+    'text-align': (horizontalAlign$ | async),
+    }" 
+    [style.border]="(addStrokeValue$ | async) ? `${(strokeWidth$ | async)}px ${(strokeStyle$ | async)} ${(strokeColor$ | async)}` :'1px solid #81828555'"
+    [style.border-radius]="(addStrokeValue$ | async) ? (strokeRadius$ | async) + 'px' : '0'"
+    
+    [style.border-top-left-radius]="(individualCorner$ | async) ? (topLeft$ | async) + 'px' : `${(strokeRadius$ | async)}`"
+    [style.border-top-right-radius]="(individualCorner$ | async) ? (topRight$ | async) + 'px' : `${(strokeRadius$ | async)}`"
+    [style.border-bottom-left-radius]="(individualCorner$ | async) ? (bottomLeft$ | async) + 'px' : `${(strokeRadius$ | async)}`"
+    [style.border-bottom-right-radius]="(individualCorner$ | async) ? (bottomRight$ | async) + 'px' : `${(strokeRadius$ | async)}`"
+    
+    (click)="onElementClick($event, {  type: 'canvas' })">
 
+    <div>
+        <h1>My Canvas 😀</h1>
+
+        <div style="background-color:rgba(255,0,0,0.2);" (click)="onElementClick($event, {type: 'header' })">
+            <h2> I'm a header</h2>
+        </div>
+        <br>
+        <div style="background-color:rgba(255,0,0,0.2);" (click)="onElementClick($event, {  type: 'paragraph' })">
+            I'm a paragraph
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint
+        </div>
+        <br>
+    </div>
+
+    <div class="center">
         <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true"
             matTooltip="Insert or Edit Element"></app-menu>
         <button class="round-button" (click)="addNewArea()">A</button>
     </div>
+
 </div>
