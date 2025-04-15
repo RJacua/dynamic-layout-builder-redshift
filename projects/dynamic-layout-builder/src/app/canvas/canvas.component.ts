@@ -35,7 +35,7 @@ export class CanvasComponent {
   readonly defaultBorder = this.stylesService.defaultBorder;
   readonly dynamicStyles$ = this.stylesService.dynamicStyles$;
   readonly dynamicBorder$ = this.stylesService.dynamicBorder$;
-  readonly dynamicBorderRadius$ = this.stylesService.dynamicBorderRadius$;
+  readonly dynamicBorderRadius$ = this.stylesService.strokeRadius$;
   readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
 
   onElementClick(event: MouseEvent, element: LayoutElement) {

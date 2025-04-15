@@ -22,34 +22,24 @@ import { distinctUntilChanged } from 'rxjs';
 })
 export class BorderStylesOptionsComponent implements OnInit {
   private borderStylesService = inject(BorderStylesService)
-  private cornerStylesService = inject(CornerStylesService)
-
+  
   strokeStyles: string[] = ["Dotted", "Dashed", "Solid", "Double"];
   strokeStyleDefault = 'Solid';
 
   enableStroke = new FormControl();
   strokeOptions = new FormGroup({
     strokeColor: new FormControl<string>('#000000'),
-    strokeRadius: new FormControl<number>(0),
     strokeStyle: new FormControl<string>(''),
     strokeWidth: new FormControl<number>(1),
-    enableIndividualCorner: new FormControl()
   })
-
-  cornerOptions = new FormGroup({
-    topLeft: new FormControl<number>(0),
-    topRight: new FormControl<number>(0),
-    bottomLeft: new FormControl<number>(0),
-    bottomRight: new FormControl<number>(0),
-  })
+ 
 
   constructor() {
     this.strokeOptions.controls.strokeStyle.setValue(this.strokeStyleDefault);
   }
 
-  addStrokeValue$ = this.borderStylesService.enableStroke$;
-  individualCorner$ = this.cornerStylesService.enableIndividualCorner$;
-
+  enableStroke$ = this.borderStylesService.enableStroke$;
+ 
   ngOnInit() {
     
     this.enableStroke.valueChanges
@@ -60,28 +50,12 @@ export class BorderStylesOptionsComponent implements OnInit {
           this.borderStylesService.setAddStroke(stroke);
       });
 
-      this.strokeOptions.controls.enableIndividualCorner.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(individualCorner => {
-        console.log('Add individualCorner:', individualCorner);
-        if (individualCorner !== null)
-          this.cornerStylesService.setIndividualCorner(individualCorner);
-      });
-
     this.strokeOptions.controls.strokeColor.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(strokeColor => {
         console.log('Add strokeColor:', strokeColor);
         if (strokeColor !== null)
           this.borderStylesService.setStrokeColor(strokeColor);
-      });
-
-      this.strokeOptions.controls.strokeRadius.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(strokeRadius => {
-        console.log('Add strokeRadius:', strokeRadius);
-        if (strokeRadius !== null)
-          this.borderStylesService.setStrokeRadius(strokeRadius);
       });
 
       this.strokeOptions.controls.strokeStyle.valueChanges
@@ -98,38 +72,6 @@ export class BorderStylesOptionsComponent implements OnInit {
         console.log('Add strokeWidth:', strokeWidth);
         if (strokeWidth !== null)
           this.borderStylesService.setStrokeWidth(strokeWidth);
-      });
-
-      this.cornerOptions.controls.topLeft.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(topLeft => {
-        console.log('Add topLeft:', topLeft);
-        if (topLeft !== null)
-          this.cornerStylesService.setTopLeft(topLeft);
-      });
-      
-      this.cornerOptions.controls.topRight.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(topRight => {
-        console.log('Add topRight:', topRight);
-        if (topRight !== null)
-          this.cornerStylesService.setTopRight(topRight);
-      });
-     
-      this.cornerOptions.controls.bottomLeft.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(bottomLeft => {
-        console.log('Add bottomLeft:', bottomLeft);
-        if (bottomLeft !== null)
-          this.cornerStylesService.setBottomLeft(bottomLeft);
-      });
-     
-      this.cornerOptions.controls.bottomRight.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(bottomRight => {
-        console.log('Add bottomRight:', bottomRight);
-        if (bottomRight !== null)
-          this.cornerStylesService.setBottomRight(bottomRight);
       });
 
   }

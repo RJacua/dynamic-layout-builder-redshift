@@ -7,48 +7,10 @@
         <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke" [formControl]="enableStroke">
         </mat-list-item>
 
-        <div *ngIf="addStrokeValue$ | async">
+        <div *ngIf="enableStroke$ | async">
             <form [formGroup]="strokeOptions">
                 <label for="strokeClor">Color:</label><br>
                 <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor"><br><br>
-
-                <label for="strokeRadius">Corner Radius:</label><br>
-                <input type="range" id="strokeRadius" name="strokeRadius" min="0" max="100" step="1"
-                    formControlName="strokeRadius">
-                <span>{{strokeOptions.controls.strokeRadius.value}}</span>
-                <span><input type="checkbox" id="individualCorner" name="individualCorner"
-                        formControlName="enableIndividualCorner"></span><br><br>
-
-                <form [formGroup]="cornerOptions">
-                    <div *ngIf="individualCorner$ | async"
-                        style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: 400px;">
-
-                        <div>
-                            <label for="TopLeft">TopLeft</label>
-                            <input type="range" id="TopLeft" min="0" max="100" step="1" style="width: 50px;"
-                                formControlName="topLeft">
-                            <span>{{cornerOptions.controls.topLeft.value}}</span>
-                        </div>
-                        <div>
-                            <label for="TopRight">TopRight</label>
-                            <input type="range" id="TopRight" min="0" max="100" step="1" style="width: 50px;"
-                                formControlName="topRight">
-                            <span>{{cornerOptions.controls.topRight.value}}</span>
-                        </div>
-                        <div>
-                            <label for="BottomLeft">BottomLeft</label>
-                            <input type="range" id="BottomLeft" min="0" max="100" step="1" style="width: 50px;"
-                                formControlName="bottomLeft">
-                            <span>{{cornerOptions.controls.bottomLeft.value}}</span>
-                        </div>
-                        <div>
-                            <label for="BottomRight">BottomRight</label>
-                            <input type="range" id="BottomRight" min="0" max="100" step="1" style="width: 50px;"
-                                formControlName="bottomRight">
-                            <span>{{cornerOptions.controls.bottomRight.value}}</span>
-                        </div>
-                    </div>
-                </form><br><br>
 
                 <label for="strokeStyle">Style:</label>
                 <select name="strokeStyle" id="strokeStyle" formControlName="strokeStyle">

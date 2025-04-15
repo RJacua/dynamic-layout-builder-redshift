@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { BackgroundStylesOptionsComponent } from './background-styles-options/background-styles-options.component';
 import { TextStylesOptionsComponent } from './text-styles-options/text-styles-options.component';
 import { BorderStylesOptionsComponent } from './border-styles-options/border-styles-options.component';
+import { CornerStylesOptionsComponent } from './corner-styles-options/corner-styles-options.component';
 
 @Component({
   selector: 'app-right-panel',
@@ -12,6 +13,7 @@ import { BorderStylesOptionsComponent } from './border-styles-options/border-sty
     BackgroundStylesOptionsComponent, 
     TextStylesOptionsComponent,
     BorderStylesOptionsComponent,
+    CornerStylesOptionsComponent
   ],
   templateUrl: './right-panel.component.html',
   styleUrl: './right-panel.component.scss'

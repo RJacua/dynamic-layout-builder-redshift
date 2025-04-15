@@ -8,14 +8,17 @@ export class TextStylesService {
 
   constructor() { }
   private fontSizeSubject = new BehaviorSubject<number>(24);
-  private fontWeightSubject = new BehaviorSubject<number>(400);
-  private fontColorSubject = new BehaviorSubject<string>('#000000');
-  private horizontalAlignSubject = new BehaviorSubject<string>('center');
-
   fontSize$ = this.fontSizeSubject.asObservable();
+
+  private fontWeightSubject = new BehaviorSubject<number>(400);
   fontWeight$ = this.fontWeightSubject.asObservable();
+  
+  private fontColorSubject = new BehaviorSubject<string>('#000000');
   fontColor$ = this.fontColorSubject.asObservable();
+  
+  private horizontalAlignSubject = new BehaviorSubject<string>('center');
   horizontalAlign$ = this.horizontalAlignSubject.asObservable();
+
 
   setfontSize(fontSize: number) {
     this.fontSizeSubject.next(fontSize);

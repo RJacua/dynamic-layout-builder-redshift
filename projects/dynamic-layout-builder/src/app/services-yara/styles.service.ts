@@ -26,7 +26,7 @@ export class StylesService {
   // Border Styles
   enableStroke$ = this.borderStylesService.enableStroke$;
   strokeColor$ = this.borderStylesService.strokeColor$;
-  strokeRadius$ = this.borderStylesService.strokeRadius$;
+  strokeRadius$ = this.cornerStylesService.strokeRadius$;
   strokeStyle$ = this.borderStylesService.strokeStyle$;
   strokeWidth$ = this.borderStylesService.strokeWidth$;
   // Corner Styles
@@ -63,14 +63,6 @@ export class StylesService {
   ]).pipe(
     map(([enabled, strokeColor, strokeStyle, strokeWidth]) =>
       enabled ? `${strokeWidth}px ${strokeStyle} ${strokeColor}` : `${this.defaultBorder}`)
-  );
-
-  readonly dynamicBorderRadius$ = combineLatest([
-    this.enableStroke$,
-    this.strokeRadius$
-  ]).pipe(
-    map(([enabled, strokeRadius]) => 
-      enabled ? `${strokeRadius}px` : '0')
   );
   readonly individualDynamicCornerRadius$ = combineLatest([
     this.enableIndividualCorner$,

@@ -9,15 +9,15 @@ export class BorderStylesService {
   constructor() { }
 
   private enableStrokeSubject = new BehaviorSubject<boolean>(false);
-  private strokeColorSubject = new BehaviorSubject<string>('#000000');
-  private strokeRadiusSubject = new BehaviorSubject<number>(0);
-  private strokeStyleSubject = new BehaviorSubject<string>('solid');
-  private strokeWidthSubject = new BehaviorSubject<number>(1);
-  
   enableStroke$ = this.enableStrokeSubject.asObservable();
+
+  private strokeColorSubject = new BehaviorSubject<string>('#000000');
   strokeColor$ = this.strokeColorSubject.asObservable();
-  strokeRadius$ = this.strokeRadiusSubject.asObservable();
+  
+  private strokeStyleSubject = new BehaviorSubject<string>('solid');
   strokeStyle$ = this.strokeStyleSubject.asObservable();
+  
+  private strokeWidthSubject = new BehaviorSubject<number>(1);
   strokeWidth$ = this.strokeWidthSubject.asObservable();
 
 
@@ -26,9 +26,6 @@ export class BorderStylesService {
   }
   setStrokeColor(strokeColor: string) {
     this.strokeColorSubject.next(strokeColor);
-  }
-  setStrokeRadius(strokeRadius: number) {
-    this.strokeRadiusSubject.next(strokeRadius);
   }
   setStrokeStyle(strokeStyle: string) {
     this.strokeStyleSubject.next(strokeStyle);

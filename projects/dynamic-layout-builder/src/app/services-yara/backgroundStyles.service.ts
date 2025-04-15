@@ -9,9 +9,9 @@ export class BackgroundStylesService {
   constructor() { }
 
   private bgColorSubject = new BehaviorSubject<string>('#ffffff');
-  private bgOpacitySubject = new BehaviorSubject<number>(1);
-
   bgColor$ = this.bgColorSubject.asObservable();
+
+  private bgOpacitySubject = new BehaviorSubject<number>(1);
   bgOpacity$ = this.bgOpacitySubject.asObservable();
 
 

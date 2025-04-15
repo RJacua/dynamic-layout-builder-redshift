@@ -2,7 +2,7 @@
 
     [style.border]="dynamicBorder$ | async"
 
-    [style.border-radius]="dynamicBorderRadius$ | async"
+    [style.border-radius]="`${(dynamicBorderRadius$ | async)}px`"
     
     [style.border-top-left-radius]="(individualDynamicCornerRadius$ | async)?.['border-top-left-radius']"
     [style.border-top-right-radius]="(individualDynamicCornerRadius$ | async)?.['border-top-right-radius']"

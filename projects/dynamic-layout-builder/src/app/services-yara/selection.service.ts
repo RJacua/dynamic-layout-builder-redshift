@@ -7,7 +7,6 @@ export interface LayoutElement {
   
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +14,7 @@ export class SelectionService {
 
   constructor() { }
 
-  private selectedElement = new BehaviorSubject<LayoutElement | null>(null);
+  private selectedElement = new BehaviorSubject<LayoutElement>({type:'canvas'});
   selectedElement$ = this.selectedElement.asObservable();
 
   select(element: LayoutElement) {
