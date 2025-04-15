@@ -3,19 +3,23 @@ import { Component, computed, inject, Signal, signal, ViewChild, ViewContainerRe
 import { ContainerComponent as ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
 import { AtomicElementData, ContainerData, LayoutElement, LayoutModel } from '../interfaces/layout-elements';
+import { ModelService } from '../services/model.service';
 
 @Component({
   selector: 'app-canvas',
   standalone: true,
   imports: [CommonModule, ContainerComponent],
   templateUrl: './canvas.component.html',
-  styleUrl: './canvas.component.scss'
+  styleUrl: './canvas.component.scss',
+  providers: [ModelService]
 })
+
 export class CanvasComponent {
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   readonly componentsSvc = inject(ComponentsService);
+  readonly modelSvc = inject(ModelService);
 
-  childrenModels = signal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>([]);
+  childrenModels = this.modelSvc.childrenModels;
   layoutModelString: Signal<string> = computed(
     () => JSON.stringify(this.childrenModels(), null, 2)
   )

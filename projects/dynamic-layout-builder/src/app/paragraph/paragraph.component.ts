@@ -2,6 +2,7 @@ import { Component, computed, effect, ElementRef, EventEmitter, inject, Input, O
 import { LayoutElement, LayoutModel, ParagraphData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
+import { ModelService } from '../services/model.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -20,6 +21,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   componentsSvc = inject(ComponentsService);
+    readonly modelSvc = inject(ModelService);
   id = signal('0');
   alignment = signal('align-center ');
   text = signal<string>('');

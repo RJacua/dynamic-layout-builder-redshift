@@ -2,6 +2,7 @@ import { AfterContentInit, Component, computed, effect, EventEmitter, inject, In
 import { LayoutElement, HeaderData, LayoutModel } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
+import { ModelService } from '../services/model.service';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,8 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   type = 'header';
   @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], type: 'header', text: 'Your Title Here', style: { size: 1 } };
   @Output() modelChange = new EventEmitter<LayoutModel<any>>();
-  componentsSvc = inject(ComponentsService);
+  readonly componentsSvc = inject(ComponentsService);
+    readonly modelSvc = inject(ModelService);
   text = signal<string>('');
   size = signal<number>(1);
   id = signal('0');

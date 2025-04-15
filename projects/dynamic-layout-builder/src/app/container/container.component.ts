@@ -7,6 +7,7 @@ import { LayoutElement, ContainerData, LayoutModel, AtomicElementData, LayoutDat
 import { BehaviorSubject, filter } from 'rxjs';
 
 import { layoutModels } from '../model'
+import { ModelService } from '../services/model.service';
 
 @Component({
   selector: 'app-area',
@@ -37,6 +38,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   childrenModels = signal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>([]);
 
   readonly componentsSvc = inject(ComponentsService);
+  readonly modelSvc = inject(ModelService);
+
+  
   constructor(private host: ElementRef) {
     effect(() => {
       this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
@@ -58,16 +62,18 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   layoutModel: Signal<LayoutModel<ContainerData>> = computed(
-    () => ({
+    () => {
+      console.log("container children models: ", this.childrenModels());
+      return ({
       data: {
         id: this.id(),
         type: 'container',
         style: {
           direction: this.direction()
         },
+        children: this.childrenModels()
       },
-      children: this.childrenModels()
-    })
+    })}
   );
 
   layoutModelString: Signal<string> = computed(

@@ -46,7 +46,7 @@ export class ComponentsService {
   emitModel(layoutModel: Signal<LayoutModel<ContainerData>>, modelChange: EventEmitter<LayoutModel<any>>) {
     console.log("Emiting ", layoutModel());
     modelChange.emit({
-      data: layoutModel(),
+      data: layoutModel().data,
     });
   }
 
@@ -54,32 +54,32 @@ export class ComponentsService {
     childrenModels.update(() =>
       childrenModels().map((cm) => {
         console.log("cm: ", cm, ", childModel: ", childModel);
-        return (cm.data.id === (childModel.data as any).data.id || cm.data.id === (childModel as any).data.id) ? childModel : cm
+        return (cm.data.id === (childModel as any).data.id) ? childModel : cm
       }
       )
     );
-    console.log(childrenModels());
-
+    console.log("onChildModelUpdate: ", childrenModels());
   }
 
   addContainer(childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>), containerDiv: ViewContainerRef) {
     const id = crypto.randomUUID().split('-')[0];
     const ref = this.addComponent('container', containerDiv, id);
 
+    
     if (ref) {
       (ref.instance as any).modelChange.subscribe((childModel: LayoutModel<any>) => {
         this.onChildModelUpdate(childModel, childrenModels);
       });
-
+      
       childrenModels.update((children: any) => [
         ...children,
         {
           id,
-          type: 'container',
-          data: ref.instance.data,
-          children: []
+          type: 'container2',
+          data: {...ref.instance.data, children: []}
         }
       ]);
+      console.log("aqui2: ", childrenModels())
     }
   }
 
@@ -92,12 +92,13 @@ export class ComponentsService {
         this.onChildModelUpdate(childModel, childrenModels);
       });
 
+      
       if(componentType.toLowerCase() === 'container'){
+        console.log("container aqui");
         childrenModels.update((children: any) => [
           ...children,
           {
-            data: ref.instance.data,
-            children: []
+            data: {...ref.instance.data, children: []}
           }
         ]);
       }
