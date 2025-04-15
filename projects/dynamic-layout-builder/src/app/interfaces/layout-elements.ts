@@ -2,6 +2,7 @@ import { ElementRef, ViewContainerRef } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
 export type AtomicElementData = HeaderData | ParagraphData;
+
 export interface LayoutElement<T> {
   data: T;
 
@@ -34,7 +35,6 @@ export interface HeaderData extends LayoutData {
 export interface ContainerData extends LayoutData {
   containerDiv?: ViewContainerRef;
   style?: Styles;
-  children?: LayoutModel<LayoutModel<ContainerData> | LayoutElement<AtomicElementData>>[];
   elementRef?: BehaviorSubject<ViewContainerRef | null>;
 }
 

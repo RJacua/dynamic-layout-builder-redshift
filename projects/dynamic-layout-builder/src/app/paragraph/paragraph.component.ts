@@ -33,7 +33,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.alignment.set(this.data.style?.alignment || 'align-center ');
     this.size.set(this.data.style?.size || 1);
 
-    console.log(`componente do tipo ${this.type} e id ${this.id()} criado`)
+    // console.log(`componente do tipo ${this.type} e id ${this.id()} criado`)
   }
 
   //Lógica do Menu, passar para um serviço depois
