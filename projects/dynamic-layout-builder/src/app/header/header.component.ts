@@ -1,5 +1,5 @@
 import { AfterContentInit, Component, computed, effect, EventEmitter, inject, Input, OnInit, Output, Signal, signal } from '@angular/core';
-import { LayoutElement, HeaderData, LayoutModel } from '../interfaces/layout-elements';
+import { HeaderData, LayoutElement } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
@@ -16,24 +16,26 @@ import { ModelService } from '../services/model.service';
 
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   type = 'header';
-  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], type: 'header', text: 'Your Title Here', style: { size: 1 } };
-  @Output() modelChange = new EventEmitter<LayoutModel<any>>();
+  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1' , type: 'header', text: 'Your Title Here', style: { size: 1 } };
+  // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   readonly componentsSvc = inject(ComponentsService);
     readonly modelSvc = inject(ModelService);
   text = signal<string>('');
   size = signal<number>(1);
   id = signal('0');
+  parentId = signal('-1')
 
   constructor() {
-    effect(() => {
-      this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
-    })
+    // effect(() => {
+    //   this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
+    // })
   }
 
   ngOnInit(): void {
     this.text.set(this.data.text || '');
     this.size.set(this.data.style?.size || 1);
     this.id.set(this.data.id);
+    this.parentId.set(this.data.parentId);
 
     console.log(`componente do tipo ${this.type} e id ${this.id()} criado`)
   }
@@ -71,10 +73,11 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   }
 
   
-  layoutModel: Signal<LayoutModel<HeaderData>> = computed(
+  layoutModel: Signal<LayoutElement<HeaderData>> = computed(
     () => ({
       data: {
         id: this.id(),
+        parentId: this.parentId(),
         type: 'header',
         text: this.text(),
         style: {

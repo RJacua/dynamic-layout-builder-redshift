@@ -1,8 +1,8 @@
-import { ComponentRef, EventEmitter, inject, Injectable, Signal, ViewContainerRef, WritableSignal } from '@angular/core';
+import { ComponentRef, inject, Injectable, Signal, ViewContainerRef, WritableSignal } from '@angular/core';
 import { ComponentRegistryService } from './component-registry.service';
-import { AtomicElementData, ContainerData, LayoutElement, LayoutModel } from '../interfaces/layout-elements';
-import { BehaviorSubject, filter } from 'rxjs';
+import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { LayoutData } from '../interfaces/layout-elements'
+import { ModelService } from './model.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +10,10 @@ import { LayoutData } from '../interfaces/layout-elements'
 
 export class ComponentsService {
   readonly registry = inject(ComponentRegistryService);
+  readonly modelSvc = inject(ModelService);
   private components: ComponentRef<any>[] = [];
 
-  addComponent<T extends {}>(type: string, container: ViewContainerRef, id:string, data?: T): ComponentRef<LayoutElement<any>> | null {
+  addComponent<T extends {}>(type: string, container: ViewContainerRef, id: string, parentId: string, data?: T): ComponentRef<LayoutElement<any>> | null {
     // console.log(`criando componente do tipo ${type} e id ${id}`);
     if (!container) {
       console.error("Nenhum container fornecido.");
@@ -30,8 +31,10 @@ export class ComponentsService {
 
     componentRef.instance.data.id = id;
 
+    componentRef.instance.data.parentId = parentId;
+
     this.components.push(componentRef);
-    
+
     return componentRef;
   }
 
@@ -43,64 +46,57 @@ export class ComponentsService {
     }
   }
 
-  emitModel(layoutModel: Signal<LayoutModel<ContainerData>>, modelChange: EventEmitter<LayoutModel<any>>) {
-    console.log("Emiting ", layoutModel());
-    modelChange.emit({
-      data: layoutModel().data,
-    });
-  }
+  // emitModel(layoutModel: Signal<LayoutModel<ContainerData>>, modelChange: EventEmitter<LayoutModel<any>>) {
+  //   console.log("Emiting ", layoutModel());
+  //   modelChange.emit({
+  //     data: layoutModel().data,
+  //   });
+  // }
 
-  onChildModelUpdate(childModel: (LayoutModel<ContainerData> | LayoutElement<AtomicElementData>), childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>)) {
-    childrenModels.update(() =>
-      childrenModels().map((cm) => {
-        console.log("cm: ", cm, ", childModel: ", childModel);
-        return (cm.data.id === (childModel as any).data.id) ? childModel : cm
+  // onChildModelUpdate(childModel: (LayoutModel<ContainerData> | LayoutElement<AtomicElementData>), childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>)) {
+  //   childrenModels.update(() =>
+  //     childrenModels().map((cm) => {
+  //       console.log("cm: ", cm, ", childModel: ", childModel);
+  //       return (cm.data.id === (childModel as any).data.id) ? childModel : cm
+  //     }
+  //     )
+  //   );
+  //   console.log("onChildModelUpdate: ", childrenModels());
+  // }
+
+  addContainer(childrenModels: (Signal<(LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]>), containerDiv: ViewContainerRef, parentId: string) {
+    const id = crypto.randomUUID().split('-')[0];
+    const ref = this.addComponent('container', containerDiv, id, parentId);
+
+    if (ref) {
+      return {
+        data: { ...ref.instance.data, children: [] }
       }
-      )
-    );
-    console.log("onChildModelUpdate: ", childrenModels());
-  }
-
-  addContainer(childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>), containerDiv: ViewContainerRef) {
-    const id = crypto.randomUUID().split('-')[0];
-    const ref = this.addComponent('container', containerDiv, id);
-
-    
-    if (ref) {
-      (ref.instance as any).modelChange.subscribe((childModel: LayoutModel<any>) => {
-        this.onChildModelUpdate(childModel, childrenModels);
-      });
-      
-      childrenModels.update((children: any) => [
-        ...children,
-        {
-          id,
-          type: 'container2',
-          data: {...ref.instance.data, children: []}
-        }
-      ]);
-      console.log("aqui2: ", childrenModels())
     }
+    return
   }
 
-  addLayoutElement(componentType: string, childrenModels: (WritableSignal<(LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[]>), containerDiv: ViewContainerRef, layoutModel: Signal<LayoutModel<ContainerData>>, modelChange: EventEmitter<LayoutModel<any>>, data?: LayoutData) {
+  addLayoutElement(componentType: string, childrenModels: (WritableSignal<(LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]>), containerDiv: ViewContainerRef, parentId: string, data?: LayoutData) {
     const id = crypto.randomUUID().split('-')[0];
-    const ref = this.addComponent(componentType.toLowerCase(), containerDiv, id, data);
+    const ref = this.addComponent(componentType.toLowerCase(), containerDiv, id, parentId, data);
 
     if (ref) {
-      (ref.instance as any).modelChange.subscribe((childModel: LayoutModel<any>) => {
-        this.onChildModelUpdate(childModel, childrenModels);
-      });
+      // (ref.instance as any).modelChange.subscribe((childModel: LayoutModel<any>) => {
+      //   this.onChildModelUpdate(childModel, childrenModels);
+      // });
 
-      
-      if(componentType.toLowerCase() === 'container'){
+
+      if (componentType.toLowerCase() === 'container') {
         console.log("container aqui");
         childrenModels.update((children: any) => [
           ...children,
           {
-            data: {...ref.instance.data, children: []}
+            data: { ...ref.instance.data, children: [] }
           }
         ]);
+        return {
+          data: { ...ref.instance.data, children: [] }
+        }
       }
       else {
         childrenModels.update((children: any) => [
@@ -109,18 +105,23 @@ export class ComponentsService {
             data: ref.instance.data,
           }
         ]);
+        return {
+          data: ref.instance.data
+        }
       }
     }
+    return
+  
 
-    this.emitModel(layoutModel, modelChange);
-  }
+  // this.emitModel(layoutModel, modelChange);
+}
 
 
-  isContainer(element: LayoutData) {
-    return element.type === 'container';
-  }
+isContainer(element: LayoutData) {
+  return element.type === 'container';
+}
 
-    // createLayoutFromModel(model: LayoutModel<AtomicElementData | ContainerData>, container: ViewContainerRef) {
+    // renderModel(model: LayoutModel<AtomicElementData | ContainerData>, container: ViewContainerRef) {
 
   //   const element = this.addComponent(model.data.type, container, model.data);
 

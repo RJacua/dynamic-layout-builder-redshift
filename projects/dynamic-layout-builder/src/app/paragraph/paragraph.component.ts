@@ -1,5 +1,5 @@
 import { Component, computed, effect, ElementRef, EventEmitter, inject, Input, OnInit, Output, Signal, signal } from '@angular/core';
-import { LayoutElement, LayoutModel, ParagraphData } from '../interfaces/layout-elements';
+import { LayoutElement, ParagraphData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
@@ -17,12 +17,13 @@ import { ModelService } from '../services/model.service';
 
 export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit {
   type = 'paragraph';
-  @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], type: 'paragraph', text: 'Lorem ipsum dolor sit amet consectetur...' };
-  @Output() modelChange = new EventEmitter<LayoutModel<any>>();
+  @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1' , type: 'paragraph', style: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
+  // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   componentsSvc = inject(ComponentsService);
     readonly modelSvc = inject(ModelService);
   id = signal('0');
+  parentId = signal('-1');
   alignment = signal('align-center ');
   text = signal<string>('');
   size = signal<number>(1);
@@ -30,13 +31,14 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   menuIsOn = signal(false);
 
   constructor() {
-    effect(() => {
-      this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
-    })
+    // effect(() => {
+    //   this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
+    // })
   }
 
   ngOnInit(): void {
     this.id.set(this.data.id);
+    this.parentId.set(this.data.parentId);
     this.text.set(this.data.text || '');
     this.alignment.set(this.data.style?.alignment || 'align-center ');
     this.size.set(this.data.style?.size || 1);
@@ -77,10 +79,11 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   }
 
 
-  layoutModel: Signal<LayoutModel<ParagraphData>> = computed(
+  layoutModel: Signal<LayoutElement<ParagraphData>> = computed(
     () => ({
       data: {
         id: this.id(),
+        parentId: this.parentId(),
         type: 'paragraph',
         text: this.text(),
         style: {

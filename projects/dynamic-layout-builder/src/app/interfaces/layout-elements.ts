@@ -10,7 +10,10 @@ export interface LayoutElement<T> {
 
 export interface LayoutData {
   id: string;
+  parentId: string;
   type: string;
+  style: Styles;
+
 }
 
 export interface Styles {
@@ -24,21 +27,20 @@ export interface Styles {
 
 export interface ParagraphData extends LayoutData {
   text?: string;
-  style?: Styles;
 }
 
 export interface HeaderData extends LayoutData {
   text?: string;
-  style?: Styles;
 }
 
 export interface ContainerData extends LayoutData {
   containerDiv?: ViewContainerRef;
-  style?: Styles;
   elementRef?: BehaviorSubject<ViewContainerRef | null>;
+  children?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[];
 }
 
-export interface LayoutModel<T> {
-  data: T;
-  children?: (LayoutModel<ContainerData> | LayoutElement<AtomicElementData>)[];
+
+export interface Canvas<T> {
+  id: string;
+  model: LayoutElement<T>;
 }
