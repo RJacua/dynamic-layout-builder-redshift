@@ -1,16 +1,5 @@
 <div class="canvas" [ngStyle]="dynamicStyles$ | async" 
-
-    [style.border]="dynamicBorder$ | async"
-
-    [style.border-radius]="`${(dynamicBorderRadius$ | async)}px`"
-    
-    [style.border-top-left-radius]="(individualDynamicCornerRadius$ | async)?.['border-top-left-radius']"
-    [style.border-top-right-radius]="(individualDynamicCornerRadius$ | async)?.['border-top-right-radius']"
-    [style.border-bottom-left-radius]="(individualDynamicCornerRadius$ | async)?.['border-bottom-left-radius']"
-    [style.border-bottom-right-radius]="(individualDynamicCornerRadius$ | async)?.['border-bottom-right-radius']"
-  
     (click)="onElementClick($event, {  type: 'canvas' })">
-
     <div>
         <h1>My Canvas 😀</h1>
 

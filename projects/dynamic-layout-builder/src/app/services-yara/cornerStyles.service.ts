@@ -1,14 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { BorderStylesService } from './borderStyles.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CornerStylesService {
-  constructor() { }
-
-  private strokeRadiusSubject = new BehaviorSubject<number>(0);
+  private strokeRadiusSubject = new BehaviorSubject<number>(50);
   strokeRadius$ = this.strokeRadiusSubject.asObservable();
 
   private enableIndividualCornerSubject = new BehaviorSubject<boolean>(false);

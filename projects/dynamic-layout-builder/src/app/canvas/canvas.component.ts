@@ -32,11 +32,11 @@ export class CanvasComponent {
     this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
   }
 
-  readonly defaultBorder = this.stylesService.defaultBorder;
+  // readonly defaultBorder = this.stylesService.defaultBorder;
   readonly dynamicStyles$ = this.stylesService.dynamicStyles$;
-  readonly dynamicBorder$ = this.stylesService.dynamicBorder$;
-  readonly dynamicBorderRadius$ = this.stylesService.strokeRadius$;
-  readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
+  // readonly dynamicBorder$ = this.stylesService.dynamicBorder$;
+  // readonly dynamicBorderRadius$ = this.stylesService.strokeRadius$;
+  // readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
 
   onElementClick(event: MouseEvent, element: LayoutElement) {
     event.stopPropagation();

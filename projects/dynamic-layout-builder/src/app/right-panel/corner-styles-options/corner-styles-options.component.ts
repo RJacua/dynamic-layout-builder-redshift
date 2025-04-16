@@ -22,7 +22,7 @@ import { distinctUntilChanged } from 'rxjs';
 export class CornerStylesOptionsComponent implements OnInit {
   private cornerStylesService = inject(CornerStylesService)
 
-  strokeRadius = new FormControl<number>(0)
+  strokeRadius = new FormControl<number>(50)
   enableIndividualCorner = new FormControl()
   cornerOptions = new FormGroup({
     topLeft: new FormControl<number>(0),
