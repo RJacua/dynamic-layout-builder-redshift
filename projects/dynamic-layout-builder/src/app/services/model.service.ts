@@ -1,45 +1,61 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { effect, Injectable, Signal, signal, untracked, ViewContainerRef, WritableSignal } from '@angular/core';
 import { ContainerData, LayoutElement, AtomicElementData, LayoutData } from '../interfaces/layout-elements';
 
 @Injectable({ providedIn: 'root' })
 export class ModelService {
 
   constructor() {
-    effect(() => console.log("no serviço: ", this.childrenModels()))
+    // effect(() => console.log("no serviço: ", this.childrenModels()))
   }
 
   childrenModels = signal<(LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]>([]);
 
-
-  addChildModel(parentId: string, child: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, layoutModels?: (LayoutElement<ContainerData>)[]) {
-    if (!layoutModels) {
-      console.log("NOT layout", layoutModels)
-      layoutModels = this.childrenModels();
+  writeElementModel(componentType: string, parentId: string, componentData?: LayoutData): LayoutElement<any> {
+    const id = crypto.randomUUID().split('-')[0];
+    let style = {};
+    if(componentData?.style){
+      style = componentData.style;
     }
 
+    if (componentType.toLowerCase() === 'container') {
+      console.log("container aqui");
+      return {
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style, children: [] }
+      }
+    }
+    else {
+      return {
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style }
+      }
+    }
+  }
+
+  addChildNode(parentId: string, childModel: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, dataStructure?: (LayoutElement<ContainerData>)[]) {
+    const currentBranch = dataStructure ?? this.childrenModels();
+
     if (parentId === 'canvas') {
-      this.childrenModels.set([...layoutModels, child]);
+      this.childrenModels.set([...currentBranch, childModel]);
       return
     }
 
-    var isDone = false;
-    this.__recursiveAddChildModel(parentId, child, layoutModels, isDone);
+    var isDone = signal(false);
+    this.__recursiveAddChildNode(parentId, childModel, currentBranch, isDone);
 
-    this.childrenModels.set([...layoutModels]);
+    this.childrenModels.set([...currentBranch]);
   }
 
-  private __recursiveAddChildModel(parentId: string, child: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, layoutModels: (LayoutElement<ContainerData>)[], isDone: boolean) {
-    if (!isDone) {
-      layoutModels.map((lm) => {
-        if (!isDone) {
-          if (lm.data.children && lm.data.id === parentId) {
-            lm.data.children = [...lm.data.children, child]
-            isDone = true;
+  private __recursiveAddChildNode(parentId: string, child: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, currentBranch: (LayoutElement<ContainerData>)[], isDone: WritableSignal<boolean>) {
+    if (!isDone()) {
+      currentBranch.map((node) => {
+        if (!isDone()) {
+          if (node.data.children && node.data.id === parentId) {
+            node.data.children = [...node.data.children, child]
+            isDone.set(true);
             return
           }
 
-          if (lm.data.children) {
-            this.__recursiveAddChildModel(parentId, child, lm.data.children, isDone)
+          if (node.data.children) {
+            this.__recursiveAddChildNode(parentId, child, node.data.children, isDone)
           }
 
         }
@@ -47,24 +63,49 @@ export class ModelService {
     }
   }
 
-  // createChildModel(parentId: string, componentType: string, data?: Partial<LayoutData>):(LayoutElement<AtomicElementData> | LayoutElement<ContainerData>) {
-  //   const id = crypto.randomUUID().split('-')[0];
-  //   const model = {
-  //     data: {id:id, parentId: parentId, type: componentType, data}
-  //   };
+  updateModel(id: string, model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, dataStructure?: (LayoutElement<ContainerData>)[]) {
+    const currentBranch = dataStructure ?? this.childrenModels();
+    
+    
+    console.log("fora: ", currentBranch)
+    
+    const isDone = signal(false);
+    this.__recursiveUpdateModel(id, model, currentBranch, isDone);
+    this.childrenModels.set([...currentBranch])
+  
+  }
 
-  //   return model;
-  // }
+  private __recursiveUpdateModel(id: string, model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, currentBranch: (LayoutElement<ContainerData>)[], isDone: WritableSignal<boolean>) {
+    if (!isDone()) {
+      currentBranch.map((node) => {
+        if (!isDone()) {
+          if (node.data.id === id) {
+            node.data = model.data;
+            isDone.set(true);
+            return
+          }
 
-  getElementById(id: string, layoutModels?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]) {
+          if (node.data.children) {
+            this.__recursiveUpdateModel(id, model, node.data.children, isDone)
+          }
+
+        }
+      })
+    }
+  }
+
+  getNodeById(id: string, layoutModels?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]) {
     layoutModels = layoutModels || this.childrenModels();
 
     layoutModels.map((lm) => {
       if ((lm as LayoutElement<ContainerData>).data.children) {
-        this.getElementById(id, (lm as LayoutElement<ContainerData>).data.children)
+        this.getNodeById(id, (lm as LayoutElement<ContainerData>).data.children)
       }
     })
 
     return layoutModels.find((element) => element.data.id === id);
   }
+
+
+
 }

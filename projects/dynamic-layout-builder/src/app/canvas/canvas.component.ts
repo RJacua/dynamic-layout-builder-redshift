@@ -28,9 +28,9 @@ export class CanvasComponent {
   }
 
   addContainer() {
-    const newContainer = this.componentsSvc.addContainer(this.childrenModels, this.containerDiv, 'canvas');
+    const newContainer = this.componentsSvc.addLayoutElement('container', this.containerDiv, 'canvas');
     if (newContainer){
-      this.modelSvc.addChildModel('canvas', newContainer)
+      this.modelSvc.addChildNode('canvas', newContainer)
     }
   }
 }

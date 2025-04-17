@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, computed, effect, EventEmitter, inject, Input, OnInit, Output, Signal, signal } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, OnInit, Output, Signal, signal, untracked, viewChild } from '@angular/core';
 import { HeaderData, LayoutElement } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
@@ -14,21 +14,27 @@ import { ModelService } from '../services/model.service';
   styleUrl: './header.component.scss'
 })
 
-export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
+export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, AfterViewInit {
   type = 'header';
-  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1' , type: 'header', text: 'Your Title Here', style: { size: 1 } };
+  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: { size: 1 } };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   readonly componentsSvc = inject(ComponentsService);
-    readonly modelSvc = inject(ModelService);
+  readonly modelSvc = inject(ModelService);
   text = signal<string>('');
   size = signal<number>(1);
+  headerSize = computed(() => 'h' + this.size())
   id = signal('0');
   parentId = signal('-1')
+  data2 = input();
+  target = viewChild.required<ElementRef<HTMLHeadElement>>('target');
 
   constructor() {
-    // effect(() => {
-    //   this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
-    // })
+    effect(() => {
+      const model = this.layoutModel();
+      untracked(() =>
+        this.modelSvc.updateModel(this.id(), model)
+      )
+    })
   }
 
   ngOnInit(): void {
@@ -36,10 +42,13 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
     this.size.set(this.data.style?.size || 1);
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
-
-    console.log(`componente do tipo ${this.type} e id ${this.id()} criado`)
   }
   
+  ngAfterViewInit(): void {
+    this.target().nativeElement.innerText = this.data.text || '';
+
+  }
+
   setSize(size: number) {
     this.size.set(size);
     console.log("memoryContent", this.layoutModel());
@@ -48,12 +57,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
   textSyncOnBlur(event: Event) {
     const element = event.target as HTMLElement;
     const value = (event.target as HTMLElement).innerText;
-    if (value !== this.text()) {
-      this.text.set(value);
-    }
-    if (element.innerText !== this.text()) {
-      element.innerText = this.text();
-    }
+    this.text.set(value);
   }
 
   //Lógica do Menu, passar para um serviço depois
@@ -72,7 +76,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
     this.menuIsOn.set(true);
   }
 
-  
+
   layoutModel: Signal<LayoutElement<HeaderData>> = computed(
     () => ({
       data: {
@@ -87,9 +91,11 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit {
     })
   );
 
-  
+
+
   layoutModelString: Signal<string> = computed(
     () => JSON.stringify(this.layoutModel(), null, 2)
   )
+
 
 }

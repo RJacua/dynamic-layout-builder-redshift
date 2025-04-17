@@ -1,20 +1,7 @@
 <div class="main" (focusout)="hideMenu($event)">
-  <ng-container [ngSwitch]="size()">
-    <h1 *ngSwitchCase="1" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
-      [innerText]="text()" (focus)="showMenu($event)"></h1>
-    <h2 *ngSwitchCase="2" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
-      [innerText]="text()" (focus)="showMenu($event)"></h2>
-    <h3 *ngSwitchCase="3" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
-      [innerText]="text()" (focus)="showMenu($event)"></h3>
-    <h4 *ngSwitchCase="4" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
-      [innerText]="text()" (focus)="showMenu($event)"></h4>
-    <h5 *ngSwitchCase="5" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
-      [innerText]="text()" (focus)="showMenu($event)"></h5>
-    <h6 *ngSwitchCase="6" (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
-      [innerText]="text()" (focus)="showMenu($event)"></h6>
-    <p *ngSwitchDefault (blur)="textSyncOnBlur($event)" [contentEditable]="true" [class]="'element editable-content'"
-      [innerText]="text()" (focus)="showMenu($event)"></p>
-  </ng-container>
+
+  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true" [ngClass]="'element editable-content ' + headerSize() "
+    (focus)="showMenu($event)"></p>
 
   <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
     <button class="round-button" (click)="setSize(1)">1</button>
@@ -24,5 +11,5 @@
 
   <br>
   <br>
-
 </div>
+<!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->
