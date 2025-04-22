@@ -12,13 +12,18 @@ export class ModelService {
   writeElementModel(componentType: string, parentId: string, componentData?: LayoutData): LayoutElement<any> {
     const id = crypto.randomUUID().split('-')[0];
     let style = {};
+    let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
     if(componentData?.style){
       style = componentData.style;
+    }
+    if((componentData as ContainerData)?.children){
+      children = (componentData as ContainerData).children!;
+      console.log("children: ", children);
     }
 
     if (componentType.toLowerCase() === 'container') {
       return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style, children: [] }
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style, children: children }
       }
     }
     else {
@@ -98,9 +103,14 @@ export class ModelService {
       }
     })
 
+    console.log(layoutModels.find((element) => element.data.id === id));
+
     return layoutModels.find((element) => element.data.id === id);
   }
 
+  setCanvasModel(model: LayoutElement<ContainerData>[]){
+    this.canvasModel.set(model)
+  }
 
 
 }

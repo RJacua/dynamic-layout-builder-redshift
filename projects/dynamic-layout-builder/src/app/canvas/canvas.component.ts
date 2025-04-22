@@ -4,6 +4,8 @@ import { ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
 import { HeaderComponent } from "../header/header.component";
+import { ContainerData, LayoutElement } from '../interfaces/layout-elements';
+import { layoutModels } from '../model';
 
 @Component({
   selector: 'app-canvas',
@@ -28,5 +30,9 @@ export class CanvasComponent {
   addContainer() {
     const newContainer = this.modelSvc.writeElementModel('container', 'canvas');
     this.modelSvc.addChildNode('canvas', newContainer);
+  }
+
+  renderFromModel() {
+    this.modelSvc.setCanvasModel([layoutModels[2]]);
   }
 }

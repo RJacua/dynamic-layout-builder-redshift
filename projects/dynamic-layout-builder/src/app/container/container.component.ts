@@ -2,10 +2,8 @@ import { AfterViewInit, Component, computed, effect, ElementRef, inject, Input, 
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
-
 import { ContainerData, LayoutElement, AtomicElementData } from '../interfaces/layout-elements';
 import { BehaviorSubject } from 'rxjs';
-
 import { layoutModels } from '../model'
 import { ModelService } from '../services/model.service';
 
@@ -25,7 +23,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = "container";
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {} };
+  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   readonly modelSvc = inject(ModelService);
   id = signal('0');
@@ -37,26 +35,27 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
-  childrenModels = computed(() =>
-    (this.modelSvc.getNodeById(this.id(), this.canvasModel()) as LayoutElement<ContainerData>)?.data.children
-  );
+  children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
 
   readonly componentsSvc = inject(ComponentsService);
 
-  constructor(private host: ElementRef) {
-
-  }
-
-
+  constructor(private host: ElementRef) {}
 
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
 
 
   ngOnInit() {
-    this.setDirection(this.data.style?.direction || 'column');
+    this.setDirection(this.data.style?.direction ?? 'column');
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
+    this.children.set(this.data.children ?? []);
+
+    console.log(this.id())
+
+    this.modelSvc.updateModel(this.id(), this.layoutModel())
+
   }
+
   ngAfterViewInit() {
     this.elementRef.next(this.containerDiv);
   }
@@ -71,20 +70,18 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
           style: {
             direction: this.direction()
           },
-          children: this.childrenModels()
+          children: this.children()
         },
       })
     }
   );
 
   layoutModelString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null, 2)
+    () => JSON.stringify(this.layoutModel(), null, 2)
   )
 
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
-    if (newLayoutElement) {
-      this.modelSvc.addChildNode(this.id(), newLayoutElement)
-    }
+    this.modelSvc.addChildNode(this.id(), newLayoutElement); 
   }
 }
