@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, computed, effect, Signal, untracked, ViewChild, ViewContainerRef } from '@angular/core';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatFormFieldModule } from '@angular/material/form-field';
-// import { MatIconModule } from '@angular/material/icon';
-// import { MatMenuModule } from '@angular/material/menu';
-// import { MatTooltipModule } from '@angular/material/tooltip';
-import { NewAreaMenuService } from '../services-yara/new-area-menu.service';
-import { SelectionService } from '../services-yara/selection.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NewAreaMenuService } from '../services/new-area-menu.service';
+import { SelectionService } from '../services/selection.service';
 import { MenuComponent } from './new-area-menu/menu.component';
-import { StylesService } from '../services-yara/styles.service';
+import { StylesService } from '../services/styles.service';
 import { ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
@@ -65,9 +65,10 @@ export class CanvasComponent {
   // readonly dynamicBorderRadius$ = this.stylesService.strokeRadius$;
   // readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
 
-  onElementClick(event: MouseEvent, element: LayoutElement<any>) {
+  onElementClick(event: MouseEvent) {
+    const element = event.target;
     event.stopPropagation();
-    this.selectionService.select(element);
+    // this.selectionService.select(element);
   }
 
   

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { SelectionService } from '../services-yara/selection.service';
+import { SelectionService } from '../services/selection.service';
 import { CommonModule } from '@angular/common';
 import { BackgroundStylesOptionsComponent } from './background-styles-options/background-styles-options.component';
 import { TextStylesOptionsComponent } from './text-styles-options/text-styles-options.component';

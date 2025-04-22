@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { TextStylesService } from '../../services-yara/textStyles.service';
+import { TextStylesService } from '../../services/textStyles.service';
 import { distinctUntilChanged } from 'rxjs';
 
 @Component({
