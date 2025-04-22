@@ -1,0 +1,25 @@
+<mat-card>
+    <mat-list>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+            <h3 class="center">Border Options</h3>
+        </mat-list-item>
+        <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke" [formControl]="enableStroke">
+        </mat-list-item>
+
+        <div *ngIf="enableStroke$ | async">
+            <form [formGroup]="strokeOptions">
+                <label for="strokeClor">Color:</label><br>
+                <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor"><br><br>
+
+                <label for="strokeStyle">Style:</label>
+                <select name="strokeStyle" id="strokeStyle" formControlName="strokeStyle">
+                    <option *ngFor="let strokeStyle of strokeStyles" [ngValue]="strokeStyle">{{ strokeStyle }}</option>
+                </select><br><br>
+
+                <label for="strokeWidth">Width:</label><br>
+                <input type="number" id="strokeWidth" name="strokeWidth" formControlName="strokeWidth"><br><br>
+            </form>
+        </div>
+    </mat-list>
+</mat-card>

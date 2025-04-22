@@ -1,0 +1,27 @@
+<!-- <mat-drawer-container class="container">
+    <mat-drawer class="side-panel" mode="side" opened position="start">
+        <app-left-panel></app-left-panel>
+    </mat-drawer>
+    <mat-drawer-content>
+        <app-canvas></app-canvas>
+    </mat-drawer-content>
+    <mat-drawer class="side-panel" mode="side" opened position="end">
+        <app-right-panel></app-right-panel>
+    </mat-drawer>
+</mat-drawer-container> -->
+
+<div class="container">
+    <as-split direction="horizontal" unit="percent" [gutterSize]="2">
+        <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30"> 
+            <app-left-panel></app-left-panel>
+        </as-split-area>
+
+        <as-split-area [size]="70"  minSize="40">
+            <app-canvas></app-canvas>
+        </as-split-area>
+
+        <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30">
+            <app-right-panel></app-right-panel>
+        </as-split-area>
+    </as-split>
+</div>

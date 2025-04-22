@@ -1,0 +1,17 @@
+<div class="left-panel">
+    <as-split direction="vertical" unit="percent" [gutterSize]="2">
+
+        <as-split-area [size]="10" minSize="10" maxSize="10">
+            <h2>Layout Builder</h2>
+        </as-split-area>
+
+        <as-split-area [size]="30" minSize="10" > 
+            <app-insert-panel></app-insert-panel>
+        </as-split-area>
+
+        <as-split-area [size]="60" minSize="10" >
+            <app-layers-panel></app-layers-panel>
+        </as-split-area>
+    </as-split>
+</div>
+

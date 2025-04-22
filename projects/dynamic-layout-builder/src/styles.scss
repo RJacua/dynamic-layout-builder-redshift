@@ -1,3 +1,10 @@
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
 .center {
     text-align: center;
   }
@@ -11,3 +18,11 @@
     background-color: #008CBA;
     color: white;
 }
+
+.menu-button:hover {
+    color: #008CBA;
+}
+
+.container {
+    height: 100vh;
+  }

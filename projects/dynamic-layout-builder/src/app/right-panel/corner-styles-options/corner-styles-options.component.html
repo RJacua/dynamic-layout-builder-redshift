@@ -1,0 +1,53 @@
+<mat-card>
+    <mat-list>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+            <h3 class="center">Corner Options</h3>
+        </mat-list-item>
+        <div>
+            <span>
+                <label for="individualCorner">Individual Corners</label>
+                <input type="checkbox" id="individualCorner" name="individualCorner"
+                    [formControl]="enableIndividualCorner">
+            </span>
+        </div><br>
+
+        <div *ngIf="!(enableIndividualCorner$ | async)">
+            <label for="strokeRadius">Corner Radius:</label><br>
+            <input type="range" id="strokeRadius" name="strokeRadius" min="0" max="100" step="1"
+                [formControl]="strokeRadius">
+            <span>{{strokeRadius.value}}</span>
+        </div>
+
+        <form [formGroup]="cornerOptions">
+            <div *ngIf="enableIndividualCorner$ | async"
+                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: 400px;">
+
+                <div>
+                    <label for="TopLeft">TopLeft</label>
+                    <input type="range" id="TopLeft" min="0" max="100" step="1" style="width: 50px;"
+                        formControlName="topLeft">
+                    <span>{{cornerOptions.controls.topLeft.value}}</span>
+                </div>
+                <div>
+                    <label for="TopRight">TopRight</label>
+                    <input type="range" id="TopRight" min="0" max="100" step="1" style="width: 50px;"
+                        formControlName="topRight">
+                    <span>{{cornerOptions.controls.topRight.value}}</span>
+                </div>
+                <div>
+                    <label for="BottomLeft">BottomLeft</label>
+                    <input type="range" id="BottomLeft" min="0" max="100" step="1" style="width: 50px;"
+                        formControlName="bottomLeft">
+                    <span>{{cornerOptions.controls.bottomLeft.value}}</span>
+                </div>
+                <div>
+                    <label for="BottomRight">BottomRight</label>
+                    <input type="range" id="BottomRight" min="0" max="100" step="1" style="width: 50px;"
+                        formControlName="bottomRight">
+                    <span>{{cornerOptions.controls.bottomRight.value}}</span>
+                </div>
+            </div>
+        </form><br><br>
+    </mat-list>
+</mat-card>
