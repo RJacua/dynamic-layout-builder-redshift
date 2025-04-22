@@ -40,7 +40,11 @@ export interface ContainerData extends LayoutData {
 }
 
 
-export interface Canvas<T> {
+export interface Canvas {
   id: string;
-  model: LayoutElement<T>;
+
+  type: string;
+
+  children: LayoutElement<any>[];
+
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, computed, effect, Signal, untracked, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, inject, computed, effect, Signal, untracked, ViewChild, ViewContainerRef, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import { ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
 import { HeaderComponent } from "../header/header.component";
-import { ContainerData, LayoutElement } from '../interfaces/layout-elements';
+import { Canvas, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { layoutModels } from '../model';
 
 @Component({
@@ -36,6 +36,8 @@ import { layoutModels } from '../model';
 
 export class CanvasComponent {
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
+  @Input() data: Canvas = { id: crypto.randomUUID().split("-")[0], type: 'canvas', children: [] };
+
   readonly modelSvc = inject(ModelService);
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
@@ -66,11 +68,24 @@ export class CanvasComponent {
   // readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
 
   onElementClick(event: MouseEvent) {
-    const element = event.target;
     event.stopPropagation();
-    // this.selectionService.select(element);
-  }
-
+    let el = event.target as HTMLElement;
   
+    while (el && el.tagName && !el.tagName.startsWith('APP-') && el.parentElement) {
+      el = el.parentElement;
+    }
+  
+    if (el && el.tagName.startsWith('APP-')) {
+      const componentInstance = (window as any).ng?.getComponent?.(el);
+  
+      if (componentInstance) {
+        console.log("Componente encontrado:", componentInstance);
+        console.log("Input 'data':", componentInstance.data);
+        this.selectionService.select(componentInstance.data);
+      } else {
+        console.warn("ng.getComponent não disponível (modo produção?).");
+      }
+    }
 
+  }
 }
