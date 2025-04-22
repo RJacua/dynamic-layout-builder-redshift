@@ -38,14 +38,14 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   }
 
   ngOnInit(): void {
-    this.text.set(this.data.text || '');
-    this.size.set(this.data.style?.size || 1);
+    this.text.set(this.data.text ?? 'Your Title Here');
+    this.size.set(this.data.style.size ?? 1);
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
   }
   
   ngAfterViewInit(): void {
-    this.target().nativeElement.innerText = this.data.text || '';
+    this.target().nativeElement.innerText = this.data.text ?? 'Your Title Here';
 
   }
 

@@ -1,5 +1,18 @@
 <div class="canvas">
     <div class="align-center">
+
+        @for (node of canvasModel(); track node.data.id) {
+             @switch (node.data.type) {
+                @case ('container') {
+                    <app-area [data]="node.data" />
+                }
+                @default {
+                    <!-- <app-wrapper drag>
+                        <ng-container [ngComponentOutlet]="AppHeader" [ngComponentOutletInputs]="node.data" />
+                    </app-wrapper> -->
+                }
+             }
+        }
         
         <ng-template #containerDiv [class]="'container-border'"></ng-template>
         <br>
@@ -8,4 +21,4 @@
     </div>
 </div>
 
-<pre>{{ childrenModelsString() }}</pre>
+<pre>{{ canvasModelsString() }}</pre>

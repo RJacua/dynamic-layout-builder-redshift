@@ -1,6 +1,24 @@
 <div>
     <div [class]="'container-border container-flex ' + direction()">
-        <ng-template #containerDiv [class]="'container-border'"></ng-template>
+        <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
+        @for (node of childrenModels(); track node.data.id) {
+            @switch (node.data.type) {
+               @case ('container') {
+                   <app-area [data]="node.data" />
+               }
+               @case ('header') {
+                   <app-header [data]="node.data" />
+               }
+               @case ('paragraph') {
+                    <app-paragraph [data]="node.data" />
+               }
+               @default {
+                   <!-- <app-wrapper drag>
+                       <ng-container [ngComponentOutlet]="AppHeader" [ngComponentOutletInputs]="node.data" />
+                   </app-wrapper> -->
+               }
+            }
+       }
     </div>
     <div>
         <!-- <button class="round-button" (click)="createLayoutFromModel(model)">Model</button> -->
@@ -8,5 +26,5 @@
         <button class="round-button" (click)="addLayoutElement('paragraph')">P</button>
         <button class="round-button" (click)="addLayoutElement('container')">C</button>
     </div>
-    <!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->
+    <pre style="text-align: left;">{{ layoutModelString() }}</pre>
 </div>

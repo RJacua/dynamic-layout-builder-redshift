@@ -1,6 +1,6 @@
 <div class="main" (focusout)="hideMenu($event)">
     <p #target [contentEditable]="true" [ngClass]="'element paragraph editable-content ' + alignment()"
-        (focus)="showMenu($event)" (input)="textSyncOnBlur($event)"></p>
+        (focus)="showMenu($event)" (input)="updateTextContent($event)"></p>
     <br>
     <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()">
         <button class="round-button" (click)="setAlignment('left')">←</button>

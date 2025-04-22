@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, Signal, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, computed, effect, inject, Signal, untracked, ViewChild, ViewContainerRef } from '@angular/core';
 import { ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
+import { HeaderComponent } from "../header/header.component";
 
 @Component({
   selector: 'app-canvas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ContainerComponent],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',
   providers: []
@@ -15,22 +16,17 @@ import { ModelService } from '../services/model.service';
 
 export class CanvasComponent {
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
 
-  childrenModels = this.modelSvc.childrenModels;
-  childrenModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.childrenModels(), null, 2)
+  canvasModel = computed(() => this.modelSvc.canvasModel());
+  canvasModelsString: Signal<string> = computed(
+    () => JSON.stringify(this.canvasModel(), null, 2)
   )
 
-  constructor(){
-
-  }
+  constructor() {}
 
   addContainer() {
-    const newContainer = this.componentsSvc.addLayoutElement('container', this.containerDiv, 'canvas');
-    if (newContainer){
-      this.modelSvc.addChildNode('canvas', newContainer)
-    }
+    const newContainer = this.modelSvc.writeElementModel('container', 'canvas');
+    this.modelSvc.addChildNode('canvas', newContainer);
   }
 }

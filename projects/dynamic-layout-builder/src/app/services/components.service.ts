@@ -13,34 +13,45 @@ export class ComponentsService {
   readonly modelSvc = inject(ModelService);
   private components: ComponentRef<any>[] = [];
 
-  addLayoutElement(componentType: string, containerDiv: ViewContainerRef, parentId: string, componentData?: LayoutData): LayoutElement<any> {
-    const id = crypto.randomUUID().split('-')[0];
-    const ref = this.addComponent(componentType.toLowerCase(), containerDiv, id, parentId, componentData);
+  // addLayoutElement(componentType: string, containerDiv: ViewContainerRef, parentId: string, componentData?: LayoutData): LayoutElement<any> {
+  //   const id = crypto.randomUUID().split('-')[0];
+  //   const ref = this.addComponent(componentType.toLowerCase(), containerDiv, id, parentId, componentData);
 
-    let style = {};
+  //   let style = {};
 
-    if (!ref) {
-      console.error("The Ref is in another castle");
-      return {data: {}}
-    }
+  //   if (!ref) {
+  //     console.error("The Ref is in another castle");
+  //     return {data: {}}
+  //   }
 
-    if(componentData?.style){
-      style = componentData.style;
-    }
+  //   if(componentData?.style){
+  //     style = componentData.style;
+  //   }
 
-    if (componentType.toLowerCase() === 'container') {
-      console.log("container aqui");
-      return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style, children: [] }
-      }
-    }
-    else {
-      return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style }
-      }
-    }
+  //   if (componentType.toLowerCase() === 'container') {
+  //     console.log("container aqui");
+  //     return {
+  //       data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style, children: [] }
+  //     }
+  //   }
+  //   else {
+  //     return {
+  //       data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style }
+  //     }
+  //   }
 
+  // }
+
+  renderCanvasFromModel(canvasModel: LayoutElement<ContainerData>[], containerDiv: ViewContainerRef): void {
+    canvasModel.map((cc) => 
+      this.addComponent('container', containerDiv, cc.data.id, 'canvas', cc.data)
+    )
   }
+
+  // drawLayoutElement(componentType: string, containerDiv: ViewContainerRef, parentId: string, componentData?: LayoutData) {
+  //   const id = crypto.randomUUID().split('-')[0];
+  //   const ref = this.addComponent(componentType.toLowerCase(), containerDiv, id, parentId, componentData);
+  // }
 
   addComponent<T extends {}>(type: string, container: ViewContainerRef, id?: string, parentId?: string, data?: T): ComponentRef<LayoutElement<any>> | null {
     if (!container) {

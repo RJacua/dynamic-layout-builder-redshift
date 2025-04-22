@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, ElementRef, inject, Input, OnInit, Signal, signal, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, ElementRef, inject, Input, OnInit, Signal, signal, untracked, ViewChild, ViewContainerRef } from '@angular/core';
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
@@ -36,17 +36,17 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.direction.set(`container-flex-${value} `);
   }
 
-  childrenModels = signal<(LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]>([]);
+  canvasModel = computed(() => this.modelSvc.canvasModel());
+  childrenModels = computed(() =>
+    (this.modelSvc.getNodeById(this.id(), this.canvasModel()) as LayoutElement<ContainerData>)?.data.children
+  );
 
   readonly componentsSvc = inject(ComponentsService);
-  // readonly modelSvc = inject(ModelService);
-
 
   constructor(private host: ElementRef) {
-    // effect(() => {
-    //   this.componentsSvc.emitModel(this.layoutModel, this.modelChange);
-    // })
+
   }
+
 
 
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
@@ -56,8 +56,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.setDirection(this.data.style?.direction || 'column');
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
-
-    // console.log(`componente do tipo ${this.type} e id ${this.id()} criado`)
   }
   ngAfterViewInit() {
     this.elementRef.next(this.containerDiv);
@@ -65,7 +63,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   layoutModel: Signal<LayoutElement<ContainerData>> = computed(
     () => {
-      console.log("container children models: ", this.childrenModels());
       return ({
         data: {
           id: this.id(),
@@ -81,16 +78,13 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   );
 
   layoutModelString: Signal<string> = computed(
-    () => JSON.stringify(this.layoutModel(), null, 2)
+    () => JSON.stringify(this.canvasModel(), null, 2)
   )
 
   addLayoutElement(componentType: string) {
-    const newLayoutElement = this.componentsSvc.addLayoutElement(componentType, this.containerDiv, this.id());
+    const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
     if (newLayoutElement) {
       this.modelSvc.addChildNode(this.id(), newLayoutElement)
     }
-
-      // this.modelSvc.addChildElement(this.id(), this.modelSvc.createChildModel(this.id, componentType))
-    
   }
 }

@@ -44,9 +44,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   ngOnInit(): void {
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
-    this.text.set(this.data.text || '');
-    this.target().nativeElement.innerText = this.data.text || '';
-    this.alignment.set(this.data.style?.alignment || 'align-center ');
+    this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
+    this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
+    this.alignment.set(this.data.style.alignment ?? 'align-center ');
     this.size.set(this.data.style?.size || 1);
   }
 
@@ -75,14 +75,10 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.menuIsOn.set(true);
   }
 
-  textSyncOnBlur(event: Event) {
-    const element = event.target as HTMLElement;
+  updateTextContent(event: Event) {
     const value = (event.target as HTMLElement).innerText;
-    console.log(value)
 
     this.text.set(value);
-
-
   }
 
 
