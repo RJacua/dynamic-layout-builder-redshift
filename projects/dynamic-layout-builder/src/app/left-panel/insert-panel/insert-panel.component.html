@@ -1,0 +1,33 @@
+<div class="buttons-list">
+    <button mat-icon-button [matMenuTriggerFor]="handMenu" aria-label="Example icon-button with a menu">
+        <!-- <mat-icon>back_hand</mat-icon> -->
+        <p>move</p>
+    </button>
+
+    <button mat-icon-button [matMenuTriggerFor]="containerMenu" aria-label="Example icon-button with a menu">
+        <p>container</p>
+    </button>
+
+    <button mat-icon-button [matMenuTriggerFor]="componentMenu" aria-label="Example icon-button with a menu">
+        <p>component</p>
+    </button>
+</div>
+
+<mat-menu #handMenu="matMenu">
+    <button mat-menu-item>Move</button>
+    <button mat-menu-item>Scale</button>
+    <!-- <button mat-menu-item>
+        <mat-icon>dialpad</mat-icon>
+        <span>Redial</span>
+    </button> -->
+</mat-menu>
+
+<mat-menu #containerMenu="matMenu">
+    <button mat-menu-item>Add</button>
+    <button mat-menu-item>Remove</button>
+</mat-menu>
+
+<mat-menu #componentMenu="matMenu">
+    <button mat-menu-item>Header</button>
+    <button mat-menu-item>Paragraph</button>
+</mat-menu>

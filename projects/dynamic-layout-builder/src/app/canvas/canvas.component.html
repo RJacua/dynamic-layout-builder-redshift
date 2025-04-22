@@ -1,4 +1,5 @@
-<div class="canvas">
+<div class="canvas" [ngStyle]="dynamicStyles$ | async" 
+    (click)="onElementClick($event, { id: 'canvasId',  type: 'canvas' })">
     <div class="align-center">
 
         @for (node of canvasModel(); track node.data.id) {
@@ -20,6 +21,17 @@
         <button class="round-button" (click)="renderFromModel()">M</button>
     
     </div>
+
+    <div style="border: 1px solid #81828555; padding:50px" (click)="onElementClick($event, {id: 'containerId2', type: 'container' })">
+        
+    </div>
+
+    <div class="center">
+        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true"
+            matTooltip="Insert or Edit Element"></app-menu>
+        <button class="round-button" (click)="addNewArea()">A</button>
+    </div>
+
 </div>
 
 <pre>{{ canvasModelsString() }}</pre>
