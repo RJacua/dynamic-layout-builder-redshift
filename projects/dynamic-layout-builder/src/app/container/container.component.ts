@@ -84,4 +84,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
     this.modelSvc.addChildNode(this.id(), newLayoutElement); 
   }
+
+  deleteContainer(){
+    this.modelSvc.removeNodeById(this.id());
+  }
+
 }

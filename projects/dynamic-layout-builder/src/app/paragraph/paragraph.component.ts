@@ -81,6 +81,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.text.set(value);
   }
 
+  deleteParagraph(){
+    this.modelSvc.removeNodeById(this.id());
+  }
 
   layoutModel: Signal<LayoutElement<ParagraphData>> = computed(
     () => ({

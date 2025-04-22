@@ -76,6 +76,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.menuIsOn.set(true);
   }
 
+  deleteHeader(){
+    this.modelSvc.removeNodeById(this.id());
+  }
+
 
   layoutModel: Signal<LayoutElement<HeaderData>> = computed(
     () => ({
