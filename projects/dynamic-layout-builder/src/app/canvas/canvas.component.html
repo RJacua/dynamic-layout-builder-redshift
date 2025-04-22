@@ -1,19 +1,31 @@
 <div class="canvas" [ngStyle]="dynamicStyles$ | async" 
-    (click)="onElementClick($event, {  type: 'canvas' })">
+    (click)="onElementClick($event, { id: 'canvasId',  type: 'canvas' })">
     <div>
         <h1>My Canvas 😀</h1>
 
-        <div style="background-color:rgba(255,0,0,0.2);" (click)="onElementClick($event, {type: 'header' })">
+        <div style="background-color:rgba(255,0,0,0.2);" (click)="onElementClick($event, {id: 'headerId', type: 'header' })">
             <h2> I'm a header</h2>
         </div>
         <br>
-        <div style="background-color:rgba(255,0,0,0.2);" (click)="onElementClick($event, {  type: 'paragraph' })">
+
+        <!-- <div style="border: 1px solid #81828555; padding:50px" (click)="onElementClick($event, {id: 'containerId', type: 'container' })">
+            <div style="background-color:rgba(255,0,0,0.2);" (click)="onElementClick($event, {id: 'headerId2', type: 'header' })">
+                <h2> I'm a header</h2>
+            </div>
+        </div> -->
+
+        <br>
+        <div style="background-color:rgba(255,0,0,0.2);" (click)="onElementClick($event, {id: 'paragraphId',   type: 'paragraph' })">
             I'm a paragraph
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
             Excepteur sint
         </div>
         <br>
+    </div>
+
+    <div style="border: 1px solid #81828555; padding:50px" (click)="onElementClick($event, {id: 'containerId2', type: 'container' })">
+        
     </div>
 
     <div class="center">

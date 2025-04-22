@@ -1,14 +1,11 @@
-import { Component, inject, input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { distinctUntilChanged } from 'rxjs';
 import { BackgroundStylesService } from '../../services-yara/backgroundStyles.service';
-import { CommonModule } from '@angular/common';
-import { TextStylesService } from '../../services-yara/textStyles.service';
-import { BorderStylesService } from '../../services-yara/borderStyles.service';
-import { CornerStylesService } from '../../services-yara/cornerStyles.service';
 
 @Component({
   selector: 'app-background-styles-options',

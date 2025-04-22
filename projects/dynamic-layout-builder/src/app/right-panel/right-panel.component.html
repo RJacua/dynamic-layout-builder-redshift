@@ -6,6 +6,11 @@
             <app-corner-styles-options></app-corner-styles-options>
         </div>
 
+        <div *ngSwitchCase="'container'">
+            <app-background-styles-options></app-background-styles-options>
+            <app-corner-styles-options></app-corner-styles-options>
+        </div>
+
         <div *ngSwitchCase="'header'">
             <app-background-styles-options></app-background-styles-options>
             <app-text-styles-options></app-text-styles-options>
