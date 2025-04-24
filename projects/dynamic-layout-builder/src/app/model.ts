@@ -88,9 +88,13 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                                     type: 'paragraph',
                                     text: 'Para 1-2 align left',
                                     style: {
-                                        size: 1,
-                                        alignment: 'paragraph-align-left '
-                                    }
+                                        'background-color': '#3dd',
+                                        'opacity': '1',
+                                        'font-size': '24px',
+                                        'font-weight': '900',
+                                        'color': 'blue',
+                                        'text-align': 'right',
+                                      }
                                 }
                             }
                         ]

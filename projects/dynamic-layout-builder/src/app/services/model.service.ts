@@ -9,19 +9,43 @@ export class ModelService {
 
   canvasModel = signal<(LayoutElement<ContainerData>)[]>([]);
 
-  getNodeById(id: string, layoutModels?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]) {
-    layoutModels = layoutModels || this.canvasModel();
-
-    layoutModels.map((lm) => {
-      if ((lm as LayoutElement<ContainerData>).data.children) {
-        this.getNodeById(id, (lm as LayoutElement<ContainerData>).data.children)
-      }
-    })
-
-    console.log(layoutModels.find((element) => element.data.id === id));
-
-    return layoutModels.find((element) => element.data.id === id);
+  getNodeById(
+    id: string,
+    branch?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
+  ): LayoutElement<ContainerData> | LayoutElement<AtomicElementData> | undefined {
+    const currentBranch = branch ?? this.canvasModel();
+    let result: LayoutElement<any> | undefined = undefined;
+  
+    const isDone = signal(false);
+    this._recursiveGetNodeById(id, currentBranch, isDone, (found) => {
+      result = found;
+    });
+  
+    return result;
   }
+  
+
+  private _recursiveGetNodeById(
+    id: string,
+    branch: LayoutElement<ContainerData>[],
+    isDone: WritableSignal<boolean>,
+    callback: (found: LayoutElement<any>) => void
+  ) {
+    for (const node of branch) {
+      if (isDone()) return;
+  
+      if (node.data.id === id) {
+        callback(node);
+        isDone.set(true);
+        return;
+      }
+  
+      if ('children' in node.data && node.data.children) {
+        this._recursiveGetNodeById(id, node.data.children, isDone, callback);
+      }
+    }
+  }
+  
 
   writeElementModel(componentType: string, parentId: string, componentData?: LayoutData): LayoutElement<any> {
     const id = crypto.randomUUID().split('-')[0];
@@ -108,7 +132,6 @@ export class ModelService {
   }
 
   removeNodeById(id: string, branch?: (LayoutElement<ContainerData>)[]) {
-    console.log("removendo node com id: ", id)
     
     var currentBranch = branch ?? this.canvasModel();
     var isDone = signal(false);

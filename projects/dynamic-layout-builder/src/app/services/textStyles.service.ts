@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { StylesService } from './styles.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class TextStylesService {
 
   constructor() { }
+  readonly stylesSvc = inject(StylesService);
   private fontSizeSubject = new BehaviorSubject<number>(24);
   fontSize$ = this.fontSizeSubject.asObservable();
 
@@ -27,7 +29,8 @@ export class TextStylesService {
     this.fontWeightSubject.next(fontWeight);
   }
   setfontColor(fontColor: string) {
-    this.fontColorSubject.next(fontColor);
+    // this.fontColorSubject.next(fontColor);
+    this.stylesSvc.updateSelectedNodeStyle('color', fontColor);
   }
   setHorizontalAlign(horizontalAlign: string) {
     this.horizontalAlignSubject.next(horizontalAlign);

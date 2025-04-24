@@ -1,103 +1,126 @@
-import { inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable, untracked } from '@angular/core';
 import { BackgroundStylesService } from './backgroundStyles.service';
 import { BorderStylesService } from './borderStyles.service';
 import { CornerStylesService } from './cornerStyles.service';
 import { SelectionService } from './selection.service';
 import { TextStylesService } from './textStyles.service';
 import { combineLatest, map } from 'rxjs';
+import { ModelService } from './model.service';
+import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
+
+//Pergunta, ao inves de fazer o combinelatest pegando todos, pq nao dar update so no atributo, la no serviço do proprio atributo
+//aqui poderia ter uma função q seria algo do tipo updateStyleInModel(tipoDoEstilo, valor), essa função pode ser injetada em 
+// cada serviço que vai atualizar o modelo baseado no q foi escolhido, a logica de atualizar o modelo taria aqui, 
+//mas seria usada em cada 1
+//evitando duplicação de logica, mas diminuindo o tamanho do serviço aqui
 
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class StylesService {
-  private bgStylesService = inject(BackgroundStylesService)
-  private textStylesService = inject(TextStylesService)
-  private borderStylesService = inject(BorderStylesService)
-  private cornerStylesService = inject(CornerStylesService)
+  constructor() {
+    effect(() => {
+
+      untracked(() => {
+
+      })
+    })
+  }
+
+  readonly selectionSvc = inject(SelectionService);
+  readonly modelSvc = inject(ModelService);
+  // private bgStylesService = inject(BackgroundStylesService)
+  // private textStylesService = inject(TextStylesService)
+  // private borderStylesService = inject(BorderStylesService)
+  // private cornerStylesService = inject(CornerStylesService)
+
+  private selectedNode = this.selectionSvc.selectedNode;
 
   // Background Styles
-  bgColor$ = this.bgStylesService.bgColor$;
-  bgOpacity$ = this.bgStylesService.bgOpacity$;
+  // bgColor$ = this.bgStylesService.bgColor$;
+  // bgOpacity$ = this.bgStylesService.bgOpacity$;
 
-  // Text Styles
-  fontSize$ = this.textStylesService.fontSize$;
-  fontWeight$ = this.textStylesService.fontWeight$;
-  fontColor$ = this.textStylesService.fontColor$;
-  horizontalAlign$ = this.textStylesService.horizontalAlign$;
+  // // Text Styles
+  // fontSize$ = this.textStylesService.fontSize$;
+  // fontWeight$ = this.textStylesService.fontWeight$;
+  // fontColor$ = this.textStylesService.fontColor$;
+  // horizontalAlign$ = this.textStylesService.horizontalAlign$;
 
-  // Border Styles
-  enableStroke$ = this.borderStylesService.enableStroke$;
-  strokeColor$ = this.borderStylesService.strokeColor$;
-  strokeStyle$ = this.borderStylesService.strokeStyle$;
-  strokeWidth$ = this.borderStylesService.strokeWidth$;
+  // // Border Styles
+  // enableStroke$ = this.borderStylesService.enableStroke$;
+  // strokeColor$ = this.borderStylesService.strokeColor$;
+  // strokeStyle$ = this.borderStylesService.strokeStyle$;
+  // strokeWidth$ = this.borderStylesService.strokeWidth$;
 
-  // Corner Styles
-  strokeRadius$ = this.cornerStylesService.strokeRadius$;
-  enableIndividualCorner$ = this.cornerStylesService.enableIndividualCorner$;
-  topLeft$ = this.cornerStylesService.topLeft$;
-  topRight$ = this.cornerStylesService.topRight$;
-  bottomLeft$ = this.cornerStylesService.bottomLeft$;
-  bottomRight$ = this.cornerStylesService.bottomRight$;
+  // // Corner Styles
+  // strokeRadius$ = this.cornerStylesService.strokeRadius$;
+  // enableIndividualCorner$ = this.cornerStylesService.enableIndividualCorner$;
+  // topLeft$ = this.cornerStylesService.topLeft$;
+  // topRight$ = this.cornerStylesService.topRight$;
+  // bottomLeft$ = this.cornerStylesService.bottomLeft$;
+  // bottomRight$ = this.cornerStylesService.bottomRight$;
 
-  readonly defaultBorder = '1px solid #81828555';
-  readonly dynamicStyles$ = combineLatest([
-    // Background Styles
-    this.bgColor$,
-    this.bgOpacity$,
-    // Text Styles
-    this.fontSize$,
-    this.fontWeight$,
-    this.fontColor$,
-    this.horizontalAlign$,
-    //  Border Styles
-    this.enableStroke$,
-    this.strokeColor$,
-    this.strokeStyle$,
-    this.strokeWidth$,
-    // Border Radius
-    this.strokeRadius$,
-    // Individual Corner Radius
-    this.enableIndividualCorner$,
-    this.topLeft$,
-    this.topRight$,
-    this.bottomLeft$,
-    this.bottomRight$
-  ]).pipe(
-    map(([
-      bgColor, bgOpacity,
-      fontSize, fontWeight, fontColor, horizontalAlign,
-      enabledStroke, strokeColor, strokeStyle, strokeWidth,
-      strokeRadius,
-      enableIndividualCorner, topLeft, topRight, bottomLeft, bottomRight,
-    ]) => {
-      const baseStyles = ({
-        // Background Styles
-        'background-color': bgColor,
-        'opacity': bgOpacity,
-         // Text Styles
-        'font-size': fontSize + 'px',
-        'font-weight': fontWeight,
-        'color': fontColor,
-        'text-align': horizontalAlign,
-        //  Border Styles
-        'border': enabledStroke ? `${strokeWidth}px ${strokeStyle} ${strokeColor}` : `${this.defaultBorder}`,
-        // Border Radius
-        'border-radius': strokeRadius + 'px',
-      });
+  // readonly defaultBorder = '1px solid #81828555';
+  // readonly dynamicStyles$ = combineLatest([
+  //   // Background Styles
+  //   this.bgColor$,
+  //   this.bgOpacity$,
+  //   // Text Styles
+  //   this.fontSize$,
+  //   this.fontWeight$,
+  //   this.fontColor$,
+  //   this.horizontalAlign$,
+  //   //  Border Styles
+  //   this.enableStroke$,
+  //   this.strokeColor$,
+  //   this.strokeStyle$,
+  //   this.strokeWidth$,
+  //   // Border Radius
+  //   this.strokeRadius$,
+  //   // Individual Corner Radius
+  //   this.enableIndividualCorner$,
+  //   this.topLeft$,
+  //   this.topRight$,
+  //   this.bottomLeft$,
+  //   this.bottomRight$
+  // ]).pipe(
+  //   map(([
+  //     bgColor, bgOpacity,
+  //     fontSize, fontWeight, fontColor, horizontalAlign,
+  //     enabledStroke, strokeColor, strokeStyle, strokeWidth,
+  //     strokeRadius,
+  //     enableIndividualCorner, topLeft, topRight, bottomLeft, bottomRight,
+  //   ]) => {
+  //     const baseStyles = ({
+  //       // Background Styles
+  //       'background-color': bgColor,
+  //       'opacity': bgOpacity,
+  //       // Text Styles
+  //       'font-size': fontSize + 'px',
+  //       'font-weight': fontWeight,
+  //       'color': fontColor,
+  //       'text-align': horizontalAlign,
+  //       //  Border Styles
+  //       'border': enabledStroke ? `${strokeWidth}px ${strokeStyle} ${strokeColor}` : `${this.defaultBorder}`,
+  //       // Border Radius
+  //       'border-radius': strokeRadius + 'px',
+  //     });
 
-      if (enableIndividualCorner) {
-        // Individual Corner Radius
-        return {
-          ...baseStyles,
-          'border-top-left-radius': topLeft + 'px',
-          'border-top-right-radius': topRight + 'px',
-          'border-bottom-left-radius': bottomLeft + 'px',
-          'border-bottom-right-radius': bottomRight + 'px',
-        }
-      }
-      return baseStyles;
-    })
-  );
+  //     if (enableIndividualCorner) {
+  //       // Individual Corner Radius
+  //       return {
+  //         ...baseStyles,
+  //         'border-top-left-radius': topLeft + 'px',
+  //         'border-top-right-radius': topRight + 'px',
+  //         'border-bottom-left-radius': bottomLeft + 'px',
+  //         'border-bottom-right-radius': bottomRight + 'px',
+  //       }
+  //     }
+  //     return baseStyles;
+  //   })
+  // );
 
   // readonly dynamicBorder$ = combineLatest([
   //   this.enableStroke$,
@@ -125,4 +148,24 @@ export class StylesService {
   //   }))
   // );
 
+  updateSelectedNodeStyle(styleType: string, value: string) {
+    var currentNode = this.selectedNode();
+    if (currentNode) {
+
+      const updatedModel = {
+        ...currentNode,
+        data: {
+          ...currentNode.data,
+          style: {
+            ...currentNode.data.style,
+            [styleType]: value
+          }
+        }
+      };
+
+      this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
+      console.log("updatedmodel: ", updatedModel)
+      console.log("canvasmodel: ", this.modelSvc.canvasModel())
+    }
+  }
 }

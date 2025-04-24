@@ -12,16 +12,7 @@ export interface LayoutData {
   id: string;
   parentId: string;
   type: string;
-  style: Styles;
-
-}
-
-export interface Styles {
-  alignment?: string;
-  direction?: string;
-  color?: string;
-  font?: string;
-  size?: number;
+  style: any; //por enquanto, depois vamos usar a interface Stykes
 
 }
 
@@ -46,5 +37,14 @@ export interface Canvas {
   type: string;
 
   children: LayoutElement<any>[];
+
+}
+
+export interface Styles { //vai crescer
+  alignment?: string;
+  direction?: string;
+  color?: string;
+  font?: string;
+  size?: number;
 
 }

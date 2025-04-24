@@ -50,8 +50,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
-    console.log(this.id())
-
     this.modelSvc.updateModel(this.id(), this.layoutModel())
 
   }

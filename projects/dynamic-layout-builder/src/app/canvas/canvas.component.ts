@@ -62,7 +62,7 @@ export class CanvasComponent {
   }
 
   // readonly defaultBorder = this.stylesService.defaultBorder;
-  readonly dynamicStyles$ = this.stylesService.dynamicStyles$;
+  // readonly dynamicStyles$ = this.stylesService.dynamicStyles$;
   // readonly dynamicBorder$ = this.stylesService.dynamicBorder$;
   // readonly dynamicBorderRadius$ = this.stylesService.strokeRadius$;
   // readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
@@ -79,8 +79,6 @@ export class CanvasComponent {
       const componentInstance = (window as any).ng?.getComponent?.(el);
   
       if (componentInstance) {
-        console.log("Componente encontrado:", componentInstance);
-        console.log("Input 'data':", componentInstance.data);
         this.selectionService.select(componentInstance.data);
       } else {
         console.warn("ng.getComponent não disponível (modo produção?).");
