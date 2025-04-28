@@ -4,8 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { BorderStylesService } from '../../services-yara/borderStyles.service';
-import { CornerStylesService } from '../../services-yara/cornerStyles.service';
+import { BorderStylesService } from '../../services/borderStyles.service';
+import { CornerStylesService } from '../../services/cornerStyles.service';
 import { distinctUntilChanged } from 'rxjs';
 
 @Component({

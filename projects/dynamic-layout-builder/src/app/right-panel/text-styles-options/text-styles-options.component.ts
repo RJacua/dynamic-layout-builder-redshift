@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { TextStylesService } from '../../services-yara/textStyles.service';
+import { TextStylesService } from '../../services/textStyles.service';
 import { distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -40,7 +40,7 @@ export class TextStylesOptionsComponent implements OnInit {
      this.fontOptions.controls.fontSize.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(size => {
-            console.log('Selected size:', size);
+            // console.log('Selected size:', size);
             if (size !== null)
               this.textStylesService.setfontSize(size);
           });
@@ -48,7 +48,7 @@ export class TextStylesOptionsComponent implements OnInit {
         this.fontOptions.controls.fontWeight.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(weight => {
-            console.log('Selected wight:', weight);
+            // console.log('Selected wight:', weight);
             if (weight !== null)
               this.textStylesService.setfontWeight(weight);
           });
@@ -56,7 +56,7 @@ export class TextStylesOptionsComponent implements OnInit {
         this.fontOptions.controls.fontColor.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(color => {
-            console.log('Selected color:', color);
+            // console.log('Selected color:', color);
             if (color !== null)
               this.textStylesService.setfontColor(color);
           });
@@ -64,7 +64,7 @@ export class TextStylesOptionsComponent implements OnInit {
         this.fontOptions.controls.horizontalAlign.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(hAlign => {
-            console.log('Selected hAlign:', hAlign);
+            // console.log('Selected hAlign:', hAlign);
             if (hAlign !== null)
               this.textStylesService.setHorizontalAlign(hAlign);
           });

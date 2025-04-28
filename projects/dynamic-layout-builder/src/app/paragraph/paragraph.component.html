@@ -1,0 +1,16 @@
+<div class="main" (focusout)="hideMenu($event)">
+    <p #target [contentEditable]="true" [ngStyle]="dynamicStyle()"
+        (focus)="showMenu($event)" (input)="updateTextContent($event)"></p>
+    <br>
+    <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()">
+        <!-- <button class="round-button" (click)="setAlignment('left')">←</button>
+        <button class="round-button" (click)="setAlignment('center')">⨀</button>
+        <button class="round-button" (click)="setAlignment('right')">→</button> -->
+        <button class="round-button" (click)="deleteParagraph()">del</button>
+    </div>
+
+    <br>
+    <br>
+    <br>
+</div>
+<!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->

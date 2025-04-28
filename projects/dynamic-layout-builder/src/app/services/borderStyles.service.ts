@@ -34,5 +34,4 @@ export class BorderStylesService {
     this.strokeWidthSubject.next(strokeWidth);
   }
 
-
 }
