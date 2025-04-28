@@ -23,7 +23,8 @@ export class TextStylesService {
 
 
   setfontSize(fontSize: number) {
-    this.fontSizeSubject.next(fontSize);
+    // this.fontSizeSubject.next(fontSize);
+    this.stylesSvc.updateSelectedNodeStyle('font-size', fontSize.toString() + 'px');
   }
   setfontWeight(fontWeight: number) {
     this.fontWeightSubject.next(fontWeight);
