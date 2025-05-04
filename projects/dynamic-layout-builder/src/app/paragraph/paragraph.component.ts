@@ -25,7 +25,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       const text = this.text();
 
       untracked(() => {
-        const nodeModel = this.modelSvc.getNodeById(this.id);
+        const nodeModel = this.modelSvc.getNodeById(this.id());
         if (!nodeModel) return;
 
         const updatedModel = {
@@ -36,19 +36,19 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
           }
         };
 
-        this.modelSvc.updateModel(this.id, updatedModel);
-        console.log("on effect: ", this.modelSvc.canvasModel())
+        this.modelSvc.updateModel(this.id(), updatedModel);
+        // console.log("on effect: ", this.modelSvc.canvasModel())
       });
     });
     effect(() => {
-      const canvas = this.modelSvc.canvasModel();
+      const node = this.nodeSignal();
+      const canvasModel = this.modelSvc.canvasModel();
 
-      const nodeModel = untracked(() => this.modelSvc.getNodeById(this.id, canvas));
-
-      if (nodeModel) {
-        this.dynamicStyle.set(nodeModel.data.style);
+      if (node) {
+        this.dynamicStyle.set(node.data.style);
       }
-      console.log("on effect style: ", this.dynamicStyle())
+    
+      console.log("on effect style:", this.dynamicStyle());
     });
 
   }
@@ -57,7 +57,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService)
 
-  id = '0';
+  id = signal('0');
   parentId = signal('-1');
   alignment = signal('align-center ');
   text = signal<string>('');
@@ -66,20 +66,20 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
 
+  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
 
-  node = signal(this.modelSvc.getNodeById(this.id));
-
-  dynamicStyle = signal(this.node()?.data.style);
+  dynamicStyle = signal(this.nodeSignal()?.data.style);
 
   ngOnInit(): void {
-    this.id = this.data.id;
+    this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
     this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     this.alignment.set(this.data.style.alignment ?? 'align-center ');
+    
     this.dynamicStyle.set(this.data.style ?? {});
 
-    this.node.set(this.modelSvc.getNodeById(this.id));
+    // this.node.set(this.modelSvc.getNodeById(this.id));
   }
 
   // setAlignment(value: string) {
@@ -89,6 +89,24 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   //   }));
   // }
 
+  isFocused = false;
+  isHovered = false;
+  
+  onFocus() {
+    this.isFocused = true;
+  }
+  
+  onBlur() {
+    this.isFocused = false;
+  }
+  
+  onMouseEnter() {
+    this.isHovered = true;
+  }
+  
+  onMouseLeave() {
+    this.isHovered = false;
+  }
   hideMenu(event: Event) {
     const related = (event as FocusEvent).relatedTarget as HTMLElement | null;
 
@@ -107,7 +125,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   }
 
   deleteParagraph() {
-    this.modelSvc.removeNodeById(this.id);
+    this.modelSvc.removeNodeById(this.id());
   }
 
   //   nodeModel: Signal<LayoutElement<ParagraphData> | undefined> = computed(

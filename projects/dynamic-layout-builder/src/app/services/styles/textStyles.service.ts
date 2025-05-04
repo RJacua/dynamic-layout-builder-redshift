@@ -27,13 +27,14 @@ export class TextStylesService {
     this.stylesSvc.updateSelectedNodeStyle('font-size', fontSize.toString() + 'px');
   }
   setfontWeight(fontWeight: number) {
-    this.fontWeightSubject.next(fontWeight);
+    this.stylesSvc.updateSelectedNodeStyle('font-weight', fontWeight.toString());
   }
   setfontColor(fontColor: string) {
     // this.fontColorSubject.next(fontColor);
     this.stylesSvc.updateSelectedNodeStyle('color', fontColor);
   }
   setHorizontalAlign(horizontalAlign: string) {
-    this.horizontalAlignSubject.next(horizontalAlign);
+    // this.horizontalAlignSubject.next(horizontalAlign);
+    this.stylesSvc.updateSelectedNodeStyle('text-align', horizontalAlign);
   }
 }

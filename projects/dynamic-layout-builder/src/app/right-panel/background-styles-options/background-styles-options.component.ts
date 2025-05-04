@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { distinctUntilChanged } from 'rxjs';
-import { BackgroundStylesService } from '../../services/backgroundStyles.service';
+import { BackgroundStylesService } from '../../services/styles/backgroundStyles.service';
 
 @Component({
   selector: 'app-background-styles-options',

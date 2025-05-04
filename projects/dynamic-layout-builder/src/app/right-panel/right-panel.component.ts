@@ -21,6 +21,6 @@ import { CornerStylesOptionsComponent } from './corner-styles-options/corner-sty
 export class RightPanelComponent {
   private selectionService = inject(SelectionService)
 
-  selectedElement$ = this.selectionService.selectedElement$;
+  selectedNode = this.selectionService.selectedNode;
 
 }

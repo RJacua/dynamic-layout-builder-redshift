@@ -1,4 +1,4 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { ModelService } from './model.service';
@@ -15,17 +15,26 @@ export class SelectionService {
   constructor() { }
 
   readonly modelSvc = inject(ModelService);
-  private selectedElement = new BehaviorSubject<ContainerData | AtomicElementData | any>({});
-  selectedElement$ = this.selectedElement.asObservable();
-  selectedElementId = signal('');
-  selectedNode:WritableSignal<LayoutElement<ContainerData | AtomicElementData> | undefined> = signal(undefined);
+  // private selectedElement = new BehaviorSubject<ContainerData | AtomicElementData | any>({});
+  // selectedElement$ = this.selectedElement.asObservable();
+  // selectedElementId = signal('');
+  // selectedNode:WritableSignal<LayoutElement<ContainerData | AtomicElementData> | undefined> = signal(undefined);
 
-  select(element: ContainerData | AtomicElementData) {
-    this.selectedElement.next(element);
-    // console.log("id selected: ", element.id);
-    this.selectedElementId.set(element.id);
-    this.selectedNode.set(this.modelSvc.getNodeById(element.id));
-    // console.log(this.selectedNode());
+  // select(element: ContainerData | AtomicElementData) {
+  //   // this.selectedElement.next(element);
+  //   console.log("id selected: ", element.id);
+  //   this.selectedElementId.set(element.id);
+  //   this.selectedNode.set(this.modelSvc.getNodeById(element.id));
+  //   //console.log(this.selectedNode());
+  // }
+
+  private _selectedId = signal<string>('');
+  selectedElementId = computed(this._selectedId);
+  selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
+
+  select(element: ContainerData | AtomicElementData): void {   
+    this._selectedId.set(element.id);
+    // console.log(this.selectedNode())
   }
 
 }
