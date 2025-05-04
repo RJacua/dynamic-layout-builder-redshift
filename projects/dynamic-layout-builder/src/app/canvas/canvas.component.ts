@@ -48,6 +48,7 @@ export class CanvasComponent {
   addContainer() {
     const newContainer = this.modelSvc.writeElementModel('container', 'canvas');
     this.modelSvc.addChildNode('canvas', newContainer);
+    this.selectionService.select(newContainer.data);
   }
 
   renderFromModel() {
@@ -79,7 +80,7 @@ export class CanvasComponent {
       const componentInstance = (window as any).ng?.getComponent?.(el);
   
       if (componentInstance) {
-        this.selectionService.select(componentInstance.data);
+        this.selectionService.select(componentInstance.data); 
       } else {
         console.warn("ng.getComponent não disponível (modo produção?).");
       }

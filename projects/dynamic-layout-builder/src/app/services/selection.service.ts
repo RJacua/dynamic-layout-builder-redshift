@@ -30,8 +30,7 @@ export class SelectionService {
 
   private _selectedId = signal<string>('');
   selectedElementId = computed(this._selectedId);
-  selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel())
-);
+  selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
   select(element: ContainerData | AtomicElementData): void {   
     this._selectedId.set(element.id);

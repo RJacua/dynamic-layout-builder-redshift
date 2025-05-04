@@ -6,6 +6,7 @@ import { ContainerData, LayoutElement, AtomicElementData } from '../interfaces/l
 import { BehaviorSubject } from 'rxjs';
 import { layoutModels } from '../model'
 import { ModelService } from '../services/model.service';
+import { SelectionService } from '../services/selection.service';
 
 @Component({
   selector: 'app-area',
@@ -38,6 +39,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
 
   readonly componentsSvc = inject(ComponentsService);
+  readonly selectionSvc = inject(SelectionService);
 
   constructor(private host: ElementRef) {}
 
@@ -80,7 +82,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
-    this.modelSvc.addChildNode(this.id(), newLayoutElement); 
+    this.modelSvc.addChildNode(this.id(), newLayoutElement);
+    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
   }
 
   deleteContainer(){
