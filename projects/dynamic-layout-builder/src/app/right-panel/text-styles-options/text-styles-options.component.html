@@ -18,7 +18,7 @@
 
             <label for="hAlign">Horizontal Alignment:</label>
             <select name="hAlign" id="hAlign" formControlName="horizontalAlign">
-                <option *ngFor="let hOption of hOptions" [ngValue]="hOption">{{ hOption }}</option>
+                <option *ngFor="let hOption of hOptions" [ngValue]="hOption.value">{{ hOption.label }}</option>
             </select><br><br>
         </form>
     </mat-list>

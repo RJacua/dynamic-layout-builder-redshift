@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NewAreaMenuService } from '../services/new-area-menu.service';
 import { SelectionService } from '../services/selection.service';
 import { MenuComponent } from './new-area-menu/menu.component';
-import { StylesService } from '../services/styles.service';
+import { StylesService } from '../services/styles/styles.service';
 import { ContainerComponent } from "../container/container.component";
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';

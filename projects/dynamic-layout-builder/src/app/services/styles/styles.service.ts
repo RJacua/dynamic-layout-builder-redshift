@@ -2,11 +2,11 @@ import { effect, inject, Injectable, untracked } from '@angular/core';
 import { BackgroundStylesService } from './backgroundStyles.service';
 import { BorderStylesService } from './borderStyles.service';
 import { CornerStylesService } from './cornerStyles.service';
-import { SelectionService } from './selection.service';
+import { SelectionService } from '../selection.service';
 import { TextStylesService } from './textStyles.service';
 import { combineLatest, map } from 'rxjs';
-import { ModelService } from './model.service';
-import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
+import { ModelService } from '../model.service';
+import { AtomicElementData, ContainerData, LayoutElement } from '../../interfaces/layout-elements';
 
 //Pergunta, ao inves de fazer o combinelatest pegando todos, pq nao dar update so no atributo, la no serviço do proprio atributo
 //aqui poderia ter uma função q seria algo do tipo updateStyleInModel(tipoDoEstilo, valor), essa função pode ser injetada em 
@@ -164,8 +164,6 @@ export class StylesService {
       };
 
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
-      console.log("updatedmodel: ", updatedModel)
-      console.log("canvasmodel: ", this.modelSvc.canvasModel())
     }
   }
 }

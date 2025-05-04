@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LayersPanelComponent } from './layers.component';
+import { LayersPanelComponent } from './layers-panel.component';
 
 describe('LayersComponent', () => {
   let component: LayersPanelComponent;
