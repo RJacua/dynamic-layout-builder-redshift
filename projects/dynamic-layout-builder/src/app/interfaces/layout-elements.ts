@@ -13,6 +13,7 @@ export interface LayoutData {
   parentId: string;
   type: string;
   style: any; //por enquanto, depois vamos usar a interface Stykes
+  headerSize?: string;
 
 }
 
@@ -46,5 +47,7 @@ export interface Styles { //vai crescer
   color?: string;
   font?: string;
   size?: number;
+
+  fontSize?: number;
 
 }

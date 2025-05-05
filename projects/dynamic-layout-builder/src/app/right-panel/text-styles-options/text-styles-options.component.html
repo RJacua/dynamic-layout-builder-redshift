@@ -5,21 +5,33 @@
             <h3 class="center">Text Options</h3>
         </mat-list-item>
         <form [formGroup]="fontOptions">
-            <label for="fontSize">Font Size:</label><br>
-            <input type="number" id="fontSize" name="fontSize" formControlName="fontSize"><br><br>
+            <div *ngIf="fontOptions.contains('fontSize')">
+                <label for="fontSize">Font Size:</label><br>
+                <input type="number" id="fontSize" formControlName="fontSize"><br><br>
+              </div>
 
-            <label for="fontWeight">Font Weight:</label><br>
-            <input type="range" id="fontWeight" name="fontWeight" min="100" max="900" step="100"
-                formControlName="fontWeight">
-            <span>{{fontOptions.controls.fontWeight.value}}</span><br><br>
+              <div *ngIf="fontOptions.contains('headerSize')">
+                <label for="headerSize">Font Size:</label><br>
+                <select name="headerSize" id="headerSize" formControlName="headerSize">
+                    <option *ngFor="let headerOption of headerOptions" [ngValue]="headerOption">{{ headerOption }}</option>
+                </select>
+              </div>
 
+            
+              <div *ngIf="fontOptions.contains('fontWeight')">
+                <label for="fontWeight">Font Weight:</label><br>
+                <input type="range" id="fontWeight" min="100" max="900" step="100" formControlName="fontWeight">
+                <span>{{ fontOptions.get('fontWeight')?.value }}</span><br><br>
+              </div>
+              
             <label for="fontColor">Font Color:</label><br>
             <input type="color" id="fontColor" name="fontColor" formControlName="fontColor"><br><br>
 
             <label for="hAlign">Horizontal Alignment:</label>
             <select name="hAlign" id="hAlign" formControlName="horizontalAlign">
                 <option *ngFor="let hOption of hOptions" [ngValue]="hOption.value">{{ hOption.label }}</option>
-            </select><br><br>
+            </select>
+            <br><br>
         </form>
     </mat-list>
 </mat-card>
