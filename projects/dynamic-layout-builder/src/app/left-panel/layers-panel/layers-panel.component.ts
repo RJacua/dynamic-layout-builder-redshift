@@ -16,16 +16,29 @@ import { LayoutElement } from '../../interfaces/layout-elements';
 })
 export class LayersPanelComponent {
 
-  @Input() data: Signal<Partial<LayoutElement<any>[]>> = signal([]);
+  @Input() data: string = '0';
+
+  constructor(){
+    effect(() => {
+      const data = this.data;
+      const test = this.modelSvc.hasCanvasModelChanged;
+      console.log(data)
+    }
+    )
+  }
 
   ngOnInit(): void {
-    console.log(this.data());
-    this.canvasModel = computed(() => this.data())
+    if(this.data === "canvas"){
+      this.nodeModel = computed(() => this.modelSvc.getNodeById(this.data))
+    }
+    else {
+      this.nodeModel = computed(() => [this.modelSvc.getNodeById(this.data)])
+    }
   }
 
   readonly modelSvc = inject(ModelService);
 
-  canvasModel: any;
+  nodeModel: any;
 
   childrenAccessor = (node: any) => node?.data.children || [];
 

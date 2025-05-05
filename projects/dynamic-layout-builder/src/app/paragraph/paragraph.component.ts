@@ -47,7 +47,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
       this.dynamicStyle.set(this.nodeSignal()?.data.style);
 
-      console.log("on effect style:", this.dynamicStyle());
+      // console.log("on effect style:", this.dynamicStyle());
     });
 
   }

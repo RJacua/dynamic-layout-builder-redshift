@@ -26,7 +26,10 @@ export class ModelService {
   getNodeById(
     id: string,
     branch?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
-  ): LayoutElement<ContainerData> | LayoutElement<AtomicElementData> | undefined {
+  ): any {
+    if(id === 'canvas'){
+      return this.canvasModel();
+    }
     const currentBranch = branch ?? this.canvasModel();
     return this._recursiveGetNodeById(id, currentBranch);
   }

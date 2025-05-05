@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { LayersPanelComponent } from "./layers-panel/layers-panel.component";
 import { InsertPanelComponent } from "./insert-panel/insert-panel.component";
@@ -13,6 +13,12 @@ import { ModelService } from '../services/model.service';
   styleUrl: './left-panel.component.scss'
 })
 export class LeftPanelComponent {
+
+  constructor(){
+    effect(() => {
+      const canvasModel = this.canvasModel();
+    })
+  }
 
   modelSvc = inject(ModelService);
   canvasModel = this.modelSvc.canvasModel;

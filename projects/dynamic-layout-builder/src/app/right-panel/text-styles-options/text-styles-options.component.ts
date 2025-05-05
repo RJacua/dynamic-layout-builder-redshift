@@ -84,7 +84,7 @@ export class TextStylesOptionsComponent implements OnInit {
     this.fontOptions.controls.fontColor.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(color => {
-        console.log('Selected color:', color);
+        // console.log('Selected color:', color);
         if (color !== null)
           this.textStylesService.setfontColor(color);
       });
