@@ -17,28 +17,64 @@ import { SelectionService } from '../services/selection.service';
 
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, AfterViewInit {
   type = 'header';
-  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: { size: 1 } };
+  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: { size: 1 }, headerSize: 'h1'};
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
+
   constructor() {
+    // effect(() => {
+    //   const model = this.layoutModel();
+    //   untracked(() =>
+    //     this.modelSvc.updateModel(this.id(), model)
+    //   )
+    // });
     effect(() => {
-      const model = this.layoutModel();
-      untracked(() =>
-        this.modelSvc.updateModel(this.id(), model)
-      )
-    })
+      const text = this.text();
+      const headerSize = this.headerSize();
+
+      untracked(() => {
+        const nodeModel = this.modelSvc.getNodeById(this.id());
+        if (!nodeModel) return;
+
+        const updatedModel = {
+          ...nodeModel,
+          data: {
+            ...nodeModel.data,
+            text,
+            headerSize
+          }
+        };
+
+        this.modelSvc.updateModel(this.id(), updatedModel);
+        // console.log("on effect: ", this.modelSvc.canvasModel())
+      });
+    });
+    effect(() => {
+      const node = this.nodeSignal();
+      const canvasModel = this.modelSvc.canvasModel();
+
+      if (node) {
+        this.dynamicStyle.set(node.data.style);
+        this.dynamicHeader.set(node.data.headerSize);
+      }
+    
+      console.log("on effect style:", this.dynamicStyle());
+      console.log("on effect header:", this.dynamicHeader());
+    });
   }
   readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   text = signal<string>('');
-  size = signal<number>(1);
-  headerSize = computed(() => 'h' + this.size())
+  // size = signal<number>(1);
+  // headerSize = computed(() => 'h' + this.size())
+  headerSize = signal('h1');
   id = signal('0');
   parentId = signal('-1')
   data2 = input();
   target = viewChild.required<ElementRef<HTMLHeadElement>>('target');
-
-
+  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
+  dynamicStyle = signal(this.nodeSignal()?.data.style);
+  dynamicHeader = signal(this.nodeSignal()?.data.headerSize);
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
@@ -47,9 +83,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');
-    this.size.set(this.data.style.size ?? 1);
+    // this.size.set(this.data.style.size ?? 1);
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
+    this.headerSize.set(this.data.headerSize ?? 'h1');
   }
   
   ngAfterViewInit(): void {
@@ -57,10 +94,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   }
 
-  setSize(size: number) {
-    this.size.set(size);
-    console.log("memoryContent", this.layoutModel());
-  }
+  // setSize(size: number) {
+  //   this.size.set(size);
+  //   console.log("memoryContent", this.layoutModel());
+  // }
 
   textSyncOnBlur(event: Event) {
     const element = event.target as HTMLElement;
@@ -89,25 +126,25 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   }
 
 
-  layoutModel: Signal<LayoutElement<HeaderData>> = computed(
-    () => ({
-      data: {
-        id: this.id(),
-        parentId: this.parentId(),
-        type: 'header',
-        text: this.text(),
-        style: {
-          size: this.size()
-        }
-      }
-    })
-  );
+  // layoutModel: Signal<LayoutElement<HeaderData>> = computed(
+  //   () => ({
+  //     data: {
+  //       id: this.id(),
+  //       parentId: this.parentId(),
+  //       type: 'header',
+  //       text: this.text(),
+  //       style: {
+  //         size: this.size()
+  //       }
+  //     }
+  //   })
+  // );
 
 
 
-  layoutModelString: Signal<string> = computed(
-    () => JSON.stringify(this.layoutModel(), null, 2)
-  )
+  // layoutModelString: Signal<string> = computed(
+  //   () => JSON.stringify(this.layoutModel(), null, 2)
+  // )
 
 
 }

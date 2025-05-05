@@ -1,12 +1,12 @@
-<div class="main" (focusout)="hideMenu($event)"  [class.active]="isFocused() || isHovered" >
-
-  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true" [ngClass]="'element editable-content ' + headerSize() " (focus)="showMenu($event)"></p>
+<div class="main" (focusout)="hideMenu($event)" [class.active]="isFocused() || isHovered" >
+  <br>
+  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true"
+     [ngStyle]="dynamicStyle()" [ngClass]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>
 
   <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
-    <!-- <button class="round-button" (click)="setSize(1)">1</button>
-    <button class="round-button" (click)="setSize(3)">3</button>
-    <button class="round-button" (click)="setSize(6)">6</button>
-    <button class="round-button" (click)="deleteHeader()">del</button> -->
+    <button class="round-button" (click)="deleteHeader()">del</button>
   </div>
+
+  <br>
 </div>
 <!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->
