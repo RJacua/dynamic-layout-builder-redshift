@@ -3,6 +3,7 @@ import { HeaderData, LayoutElement } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
+import { SelectionService } from '../services/selection.service';
 
 @Component({
   selector: 'app-header',
@@ -18,16 +19,6 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   type = 'header';
   @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: { size: 1 } };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
-  readonly componentsSvc = inject(ComponentsService);
-  readonly modelSvc = inject(ModelService);
-  text = signal<string>('');
-  size = signal<number>(1);
-  headerSize = computed(() => 'h' + this.size())
-  id = signal('0');
-  parentId = signal('-1')
-  data2 = input();
-  target = viewChild.required<ElementRef<HTMLHeadElement>>('target');
-
   constructor() {
     effect(() => {
       const model = this.layoutModel();
@@ -36,6 +27,23 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       )
     })
   }
+  readonly componentsSvc = inject(ComponentsService);
+  readonly modelSvc = inject(ModelService);
+  readonly selectionSvc = inject(SelectionService);
+  text = signal<string>('');
+  size = signal<number>(1);
+  headerSize = computed(() => 'h' + this.size())
+  id = signal('0');
+  parentId = signal('-1')
+  data2 = input();
+  target = viewChild.required<ElementRef<HTMLHeadElement>>('target');
+
+
+
+  isFocused = computed(() => {
+    return this.id() === this.selectionSvc.selectedElementId();
+  });
+  isHovered = false;
 
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');

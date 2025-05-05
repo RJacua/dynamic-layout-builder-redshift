@@ -1,9 +1,12 @@
-import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector } from '@angular/core';
 import { LayoutElement, ParagraphData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
+import { TextStylesService } from '../services/styles/textStyles.service';
+import { TextStylesOptionsComponent } from '../right-panel/text-styles-options/text-styles-options.component';
+import { StylesService } from '../services/styles/styles.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -18,36 +21,32 @@ import { SelectionService } from '../services/selection.service';
 export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit {
   type = 'paragraph';
   @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
-  // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   constructor() {
     effect(() => {
       const text = this.text();
 
       untracked(() => {
-        const nodeModel = this.modelSvc.getNodeById(this.id());
-        if (!nodeModel) return;
+        // const nodeModel = this.nodeSignal();
+        if (!this.nodeSignal()) return;
 
         const updatedModel = {
-          ...nodeModel,
+          ...this.nodeSignal(),
           data: {
-            ...nodeModel.data,
+            ...this.nodeSignal()?.data,
             text
           }
         };
 
-        this.modelSvc.updateModel(this.id(), updatedModel);
-        // console.log("on effect: ", this.modelSvc.canvasModel())
+        this.modelSvc.updateModel(this.id(), updatedModel as LayoutElement<any>);
       });
     });
     effect(() => {
-      const node = this.nodeSignal();
-      const canvasModel = this.modelSvc.canvasModel();
+      // const canvasModel = this.modelSvc.canvasModel();
+      const test = this.modelSvc.hasCanvasModelChanged();
 
-      if (node) {
-        this.dynamicStyle.set(node.data.style);
-      }
-    
+      this.dynamicStyle.set(this.nodeSignal()?.data.style);
+
       console.log("on effect style:", this.dynamicStyle());
     });
 
@@ -55,7 +54,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
   readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
-  readonly selectionSvc = inject(SelectionService)
+  readonly selectionSvc = inject(SelectionService);
 
   id = signal('0');
   parentId = signal('-1');
@@ -79,27 +78,15 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     
     this.dynamicStyle.set(this.data.style ?? {});
 
-    // this.node.set(this.modelSvc.getNodeById(this.id));
   }
 
-  // setAlignment(value: string) {
-  //   this.dynamicStyle.update(current => ({
-  //     ...current,
-  //     'text-align': value
-  //   }));
-  // }
 
-  isFocused = false;
+
+  isFocused = computed(() => {
+    return this.id() === this.selectionSvc.selectedElementId();
+  });
   isHovered = false;
-  
-  onFocus() {
-    this.isFocused = true;
-  }
-  
-  onBlur() {
-    this.isFocused = false;
-  }
-  
+
   onMouseEnter() {
     this.isHovered = true;
   }

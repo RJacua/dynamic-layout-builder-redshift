@@ -1,5 +1,5 @@
 <div>
-    <div [class]="'container-border container-flex ' + direction()">
+    <div [class]="'main ' + 'container-border container-flex ' + direction()" [class.active]="isFocused()">
         <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
         @for (node of layoutModel().data.children; track node.data.id) {
             @switch (node.data.type) {

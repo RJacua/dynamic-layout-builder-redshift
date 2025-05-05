@@ -1,1 +1,25 @@
+<mat-tree [dataSource]="canvasModel()" [childrenAccessor]="childrenAccessor">
+  <mat-nested-tree-node *matTreeNodeDef="let node">
+    <div class="node-item">
+      <button mat-icon-button (click)="toggleNode(node.data.id)" [attr.aria-label]="'toggle ' + node.data.type">
+        <mat-icon>
+          {{ isNodeExpanded(node.data.id) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+      {{ node.data.type }} {{ node.data.id }}
+    </div>
 
+
+    <div *ngIf="isNodeExpanded(node.data.id)"> <!-- se tiver aberto -->
+
+      <div *ngFor="let child of node.data.children"> <!-- para cada filho -->
+        <mat-nested-tree-node>
+          {{child.data.id}}
+        </mat-nested-tree-node>
+    
+      </div>
+    
+    </div>
+
+  </mat-nested-tree-node>
+</mat-tree>

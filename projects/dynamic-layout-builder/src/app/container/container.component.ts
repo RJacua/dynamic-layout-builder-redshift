@@ -14,7 +14,6 @@ import { SelectionService } from '../services/selection.service';
   imports: [
     HeaderComponent,
     ParagraphComponent,
-    ContainerComponent,
   ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
@@ -35,7 +34,11 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.direction.set(`container-flex-${value} `);
   }
 
-  canvasModel = computed(() => this.modelSvc.canvasModel());
+  isFocused = computed(() => {
+    return this.id() === this.selectionSvc.selectedElementId();
+  });
+
+  canvasModel = computed(() => {this.modelSvc.canvasModel()});
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
 
   readonly componentsSvc = inject(ComponentsService);

@@ -1,5 +1,6 @@
-<div class="main" (focusout)="hideMenu($event)" tabindex="0" [class.active]="isFocused || isHovered"
-    (focusin)="onFocus()" (focusout)="onBlur()" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+<div class="main" (focusout)="hideMenu($event)" tabindex="0" [class.active]="isFocused() || isHovered"
+    (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+    <!-- (focusin)="onFocus()" (focusout)="onBlur()" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"> -->
     <br>
     <p #target contentEditable="true" [ngStyle]="dynamicStyle()" (focus)="showMenu($event)"
         (input)="updateTextContent($event)" ></p>
