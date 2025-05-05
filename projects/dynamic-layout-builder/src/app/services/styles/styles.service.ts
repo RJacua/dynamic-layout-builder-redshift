@@ -166,4 +166,24 @@ export class StylesService {
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
     }
   }
+
+    updateSelectedNodeHeaderSize(value: string) {
+    var currentNode = this.selectedNode();
+    if (currentNode) {
+
+      const updatedModel = {
+        ...currentNode,
+        data: {
+          ...currentNode.data,
+          headerSize: value,
+          // style: {
+          //   ...currentNode.data.style,
+          //   [styleType]: value
+          // }
+        }
+      };
+
+      this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
+    }
+  }
 }

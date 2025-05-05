@@ -65,9 +65,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   menuIsOn = signal(false);
   data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
-
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-
   dynamicStyle = signal(this.nodeSignal()?.data.style);
 
   ngOnInit(): void {
