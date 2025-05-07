@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { layoutModels } from '../model'
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-area',
@@ -14,6 +15,7 @@ import { SelectionService } from '../services/selection.service';
   imports: [
     HeaderComponent,
     ParagraphComponent,
+    CommonModule,
   ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
@@ -25,28 +27,42 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
+  constructor() {
+    effect(() => {
+      const node = this.nodeSignal();
+      const canvasModel = this.modelSvc.hasCanvasModelChanged();
+
+      if (node) {
+        this.dynamicStyle.set(node.data.style);
+      }
+    
+      console.log("on effect style:", this.dynamicStyle());
+    });
+
+  }
+
   readonly modelSvc = inject(ModelService);
+  readonly componentsSvc = inject(ComponentsService);
+  readonly selectionSvc = inject(SelectionService);
+
   id = signal('0');
   parentId = signal('0');
-  direction = signal('container-flex-column ');
+  // direction = signal('container-flex-column ');
   //Lógica do Menu, passar para um serviço depois
-  setDirection(value: string) {
-    this.direction.set(`container-flex-${value} `);
-  }
+  // setDirection(value: string) {
+  //   this.direction.set(`container-flex-${value} `);
+  // }
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
   });
-
+  
   canvasModel = computed(() => {this.modelSvc.canvasModel()});
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
-
-  readonly componentsSvc = inject(ComponentsService);
-  readonly selectionSvc = inject(SelectionService);
-
-  constructor(private host: ElementRef) {}
-
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
+  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
+  dynamicStyle = signal(this.nodeSignal()?.data.style);
+
 
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
   dynamicStyle = signal(this.nodeSignal()?.data.style);
@@ -54,13 +70,14 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
 
   ngOnInit() {
-    this.setDirection(this.data.style?.direction ?? 'column');
+    // this.setDirection(this.data.style?.direction ?? 'column');
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
-    this.modelSvc.updateModel(this.id(), this.nodeSignal())
+    this.dynamicStyle.set(this.data.style ?? {});
 
+    this.modelSvc.updateModel(this.id(), this.nodeSignal());
   }
 
   ngAfterViewInit() {

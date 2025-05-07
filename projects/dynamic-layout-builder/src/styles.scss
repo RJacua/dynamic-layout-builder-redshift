@@ -18,8 +18,8 @@ body, html {
 }
 
 .round-button {
-    border-radius: 25%;
-    font-size: large;
+    border-radius: 35%;
+    font-size: x-small;
 }
 .round-button:hover {
     background-color: #008CBA;
@@ -80,15 +80,18 @@ body, html {
     min-width: 0;
 }
 
-.container-flex-row {
-    flex-direction: row;
-}
+// .container-flex-row {
+//     flex-direction: row;
+// }
 
-.container-flex-column {
-    flex-direction: column;
-}
+// .container-flex-column {
+//     flex-direction: column;
+// }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.main.active {
+    background-color: blanchedalmond;
+    outline: none;
+    transition: background-color 0.2s ease;
+  }

@@ -50,7 +50,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     });
     effect(() => {
       const node = this.nodeSignal();
-      const canvasModel = this.modelSvc.canvasModel();
+      const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       if (node) {
         this.dynamicStyle.set(node.data.style);
@@ -92,6 +92,20 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   ngAfterViewInit(): void {
     this.target().nativeElement.innerText = this.data.text ?? 'Your Title Here';
 
+  }
+
+  isFocused = computed(() => {
+    return this.id() === this.selectionSvc.selectedElementId();
+  });
+
+  isHovered = false;
+
+  onMouseEnter() {
+    this.isHovered = true;
+  }
+  
+  onMouseLeave() {
+    this.isHovered = false;
   }
 
   // setSize(size: number) {

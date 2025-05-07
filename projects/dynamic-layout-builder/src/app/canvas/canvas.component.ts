@@ -39,6 +39,7 @@ export class CanvasComponent {
   @Input() data: Canvas = { id: crypto.randomUUID().split("-")[0], type: 'canvas', children: [] };
 
   readonly modelSvc = inject(ModelService);
+  readonly selectionSvc = inject(SelectionService);
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
@@ -46,9 +47,9 @@ export class CanvasComponent {
   )
 
   addContainer() {
-    const newContainer = this.modelSvc.writeElementModel('container', 'canvas');
-    this.modelSvc.addChildNode('canvas', newContainer);
-    this.selectionService.select(newContainer.data);
+    const newLayoutElement = this.modelSvc.writeElementModel('container', 'canvas');
+    this.modelSvc.addChildNode('canvas', newLayoutElement);
+    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
   }
 
   renderFromModel() {
