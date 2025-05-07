@@ -1,0 +1,21 @@
+.node-item {
+    width: 100%;
+    display:inline;
+    overflow: hidden;
+}
+
+.tree-node {
+    width: calc(100% - 2px);
+    border: solid 1px;
+
+    // background: red;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.new-node {
+    padding-left: 20px;
+    border-left: solid 1px;
+}

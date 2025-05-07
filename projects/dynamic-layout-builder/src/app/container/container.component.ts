@@ -48,6 +48,10 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
 
+  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
+  dynamicStyle = signal(this.nodeSignal()?.data.style);
+
+
 
   ngOnInit() {
     this.setDirection(this.data.style?.direction ?? 'column');
@@ -55,7 +59,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
-    this.modelSvc.updateModel(this.id(), this.layoutModel())
+    this.modelSvc.updateModel(this.id(), this.nodeSignal())
 
   }
 
@@ -63,25 +67,25 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.elementRef.next(this.containerDiv);
   }
 
-  layoutModel: Signal<LayoutElement<ContainerData>> = computed(
-    () => {
-      return ({
-        data: {
-          id: this.id(),
-          parentId: this.parentId(),
-          type: 'container',
-          style: {
-            direction: this.direction()
-          },
-          children: this.children()
-        },
-      })
-    }
-  );
+  // layoutModel: Signal<LayoutElement<ContainerData>> = computed(
+  //   () => {
+  //     return ({
+  //       data: {
+  //         id: this.id(),
+  //         parentId: this.parentId(),
+  //         type: 'container',
+  //         style: {
+  //           direction: this.direction()
+  //         },
+  //         children: this.children()
+  //       },
+  //     })
+  //   }
+  // );
 
-  layoutModelString: Signal<string> = computed(
-    () => JSON.stringify(this.layoutModel(), null, 2)
-  )
+  // layoutModelString: Signal<string> = computed(
+  //   () => JSON.stringify(this.nodeSignal(), null, 2)
+  // )
 
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());

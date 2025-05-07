@@ -1,5 +1,6 @@
 import { computed, effect, Injectable, Signal, signal, untracked, ViewContainerRef, WritableSignal } from '@angular/core';
 import { ContainerData, LayoutElement, AtomicElementData, LayoutData } from '../interfaces/layout-elements';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ModelService {
@@ -18,7 +19,13 @@ export class ModelService {
   canvasModel = signal<(LayoutElement<ContainerData>)[]>([]);
   hasCanvasModelChanged = signal(false);
 
+  // updatedNode = new Subject<any>();
+  // this._renderUpdate.subscribe(() => {}); colocar isso no construtor no lugar do hasCanvasModelChanged
+
+
   getNodeSignalById(id: string) {
+    // this.updatedNode.next({});
+    
     const _ = this.canvasModel();
     return signal(this.getNodeById(id, this.canvasModel()));
   }

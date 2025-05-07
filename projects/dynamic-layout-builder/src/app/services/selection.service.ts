@@ -33,8 +33,18 @@ export class SelectionService {
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
   select(element: ContainerData | AtomicElementData): void {   
+    if(element.id !== this._selectedId()){
     this._selectedId.set(element.id);
+    }
+    else this._selectedId.set('0');
     // console.log(this.selectedNode())
+  }
+  
+  selectById(id: string){
+    if(id !== this._selectedId()){
+      this._selectedId.set(id);
+    }
+    else this._selectedId.set('0');
   }
 
 }
