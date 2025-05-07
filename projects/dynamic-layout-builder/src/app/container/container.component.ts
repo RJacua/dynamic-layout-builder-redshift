@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { layoutModels } from '../model'
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-area',
@@ -14,7 +15,7 @@ import { SelectionService } from '../services/selection.service';
   imports: [
     HeaderComponent,
     ParagraphComponent,
-    ContainerComponent,
+    CommonModule,
   ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
@@ -26,59 +27,78 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
-  readonly modelSvc = inject(ModelService);
-  id = signal('0');
-  parentId = signal('0');
-  direction = signal('container-flex-column ');
-  //Lógica do Menu, passar para um serviço depois
-  setDirection(value: string) {
-    this.direction.set(`container-flex-${value} `);
+  constructor() {
+    effect(() => {
+      const node = this.nodeSignal();
+      const canvasModel = this.modelSvc.hasCanvasModelChanged();
+
+      if (node) {
+        this.dynamicStyle.set(node.data.style);
+      }
+    
+      console.log("on effect style:", this.dynamicStyle());
+    });
+
   }
 
-  canvasModel = computed(() => this.modelSvc.canvasModel());
-  children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
-
+  readonly modelSvc = inject(ModelService);
   readonly componentsSvc = inject(ComponentsService);
   readonly selectionSvc = inject(SelectionService);
 
-  constructor(private host: ElementRef) {}
+  id = signal('0');
+  parentId = signal('0');
+  // direction = signal('container-flex-column ');
+  //Lógica do Menu, passar para um serviço depois
+  // setDirection(value: string) {
+  //   this.direction.set(`container-flex-${value} `);
+  // }
 
+  isFocused = computed(() => {
+    return this.id() === this.selectionSvc.selectedElementId();
+  });
+  
+  canvasModel = computed(() => {this.modelSvc.canvasModel()});
+  children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
+  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
+  dynamicStyle = signal(this.nodeSignal()?.data.style);
+
 
 
   ngOnInit() {
-    this.setDirection(this.data.style?.direction ?? 'column');
+    // this.setDirection(this.data.style?.direction ?? 'column');
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
-    this.modelSvc.updateModel(this.id(), this.layoutModel())
+    this.dynamicStyle.set(this.data.style ?? {});
 
+    this.modelSvc.updateModel(this.id(), this.nodeSignal());
   }
 
   ngAfterViewInit() {
     this.elementRef.next(this.containerDiv);
   }
 
-  layoutModel: Signal<LayoutElement<ContainerData>> = computed(
-    () => {
-      return ({
-        data: {
-          id: this.id(),
-          parentId: this.parentId(),
-          type: 'container',
-          style: {
-            direction: this.direction()
-          },
-          children: this.children()
-        },
-      })
-    }
-  );
+  // layoutModel: Signal<LayoutElement<ContainerData>> = computed(
+  //   () => {
+  //     return ({
+  //       data: {
+  //         id: this.id(),
+  //         parentId: this.parentId(),
+  //         type: 'container',
+  //         style: {
+  //           direction: this.direction()
+  //         },
+  //         children: this.children()
+  //       },
+  //     })
+  //   }
+  // );
 
-  layoutModelString: Signal<string> = computed(
-    () => JSON.stringify(this.layoutModel(), null, 2)
-  )
+  // layoutModelString: Signal<string> = computed(
+  //   () => JSON.stringify(this.nodeSignal(), null, 2)
+  // )
 
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());

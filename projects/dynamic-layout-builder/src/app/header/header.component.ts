@@ -3,6 +3,7 @@ import { HeaderData, LayoutElement } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
+import { SelectionService } from '../services/selection.service';
 
 @Component({
   selector: 'app-header',
@@ -49,7 +50,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     });
     effect(() => {
       const node = this.nodeSignal();
-      const canvasModel = this.modelSvc.canvasModel();
+      const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       if (node) {
         this.dynamicStyle.set(node.data.style);
@@ -62,6 +63,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   }
   readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
+  readonly selectionSvc = inject(SelectionService);
   text = signal<string>('');
   // size = signal<number>(1);
   // headerSize = computed(() => 'h' + this.size())
@@ -86,6 +88,20 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   ngAfterViewInit(): void {
     this.target().nativeElement.innerText = this.data.text ?? 'Your Title Here';
 
+  }
+
+  isFocused = computed(() => {
+    return this.id() === this.selectionSvc.selectedElementId();
+  });
+
+  isHovered = false;
+
+  onMouseEnter() {
+    this.isHovered = true;
+  }
+  
+  onMouseLeave() {
+    this.isHovered = false;
   }
 
   // setSize(size: number) {

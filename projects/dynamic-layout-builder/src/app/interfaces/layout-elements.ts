@@ -13,16 +13,17 @@ export interface LayoutData {
   parentId: string;
   type: string;
   style: any; //por enquanto, depois vamos usar a interface Stykes
-  headerSize?: string;
-
+  
 }
 
 export interface ParagraphData extends LayoutData {
   text?: string;
+
 }
 
 export interface HeaderData extends LayoutData {
   text?: string;
+  headerSize?: string;
 }
 
 export interface ContainerData extends LayoutData {
@@ -42,12 +43,20 @@ export interface Canvas {
 }
 
 export interface Styles { //vai crescer
-  alignment?: string;
-  direction?: string;
+  // Text Styles
+  ['font-size']?: number;
+  ['font-weight']?: number;
   color?: string;
-  font?: string;
-  size?: number;
+  ['text-align']?: string;
 
-  fontSize?: number;
+  headerSize?: string;
+
+  // Background Styles
+  ["background-color"]?: string;
+  opacity?: number;
+  ["flex-direction"]?: string;
+ 
+  
 
 }
+

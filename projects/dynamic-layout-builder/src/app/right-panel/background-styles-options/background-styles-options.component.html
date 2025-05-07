@@ -4,11 +4,21 @@
             <h3 class="center">General Options</h3>
         </mat-list-item>
 
-        <label for="bgColor">Background Color:</label><br>
-        <input type="color" id="bgColor" name="bgColor" [formControl]="bgColor"><br><br>
+        <form [formGroup]="generalOptions">
+            <label for="bgColor">Background Color:</label><br>
+            <input type="color" id="bgColor" name="bgColor" formControlName="bgColor"><br><br>
 
-        <label for="bgOpacity">Background Opacity:</label><br>
-        <input type="number" id="bgOpacity" name="bgOpacity" [formControl]="bgOpacity"><br><br>
+            <label for="bgOpacity">Background Opacity:</label><br>
+            <input type="number" id="bgOpacity" name="bgOpacity" formControlName="bgOpacity"><br><br>
+
+            <div *ngIf="generalOptions.contains('flexDirection')">
+                <label for="flexDirection">Direction:</label><br>
+                <select name="flexDirection" id="flexDirection" formControlName="flexDirection">
+                    <option *ngFor="let flexDirection of flexDirections" [ngValue]="flexDirection.value">{{
+                        flexDirection.label }}</option>
+                </select>
+            </div>
+        </form>
 
     </mat-list>
 </mat-card>

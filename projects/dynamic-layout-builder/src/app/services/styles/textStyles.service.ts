@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StylesService } from './styles.service';
+import { Styles } from '../../interfaces/layout-elements';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,16 @@ export class TextStylesService {
   setHeaderSize(headerSize: string) {
     // this.fontSizeSubject.next(fontSize);
     this.stylesSvc.updateSelectedNodeHeaderSize(headerSize);
+  }
+
+  setAll(defaultStyles: Styles) {
+    // console.log("Default Style:", defaultStyles);
+
+    Object.entries(defaultStyles).forEach((attr) => {
+      // console.log("update", attr[0], " ->", attr[1]);
+      this.stylesSvc.updateSelectedNodeStyle(attr[0], attr[1]);
+    })
+
   }
 
 }
