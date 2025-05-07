@@ -4,13 +4,10 @@
   <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true"
      [ngStyle]="dynamicStyle()" [ngClass]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>
 
-
-  <!-- <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
-    <button class="round-button" (click)="setSize(1)">1</button>
-    <button class="round-button" (click)="setSize(3)">3</button>
-    <button class="round-button" (click)="setSize(6)">6</button>
+  <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
     <button class="round-button" (click)="deleteHeader()">del</button>
-  </div> -->
+  </div>
+
   <br>
 </div>
 <!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->

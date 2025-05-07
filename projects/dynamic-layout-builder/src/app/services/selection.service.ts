@@ -34,7 +34,13 @@ export class SelectionService {
 
   select(element: ContainerData | AtomicElementData): void {   
     this._selectedId.set(element.id);
-    // console.log(this.selectedNode())
+  }
+  
+  selectById(id: string){
+    if(id !== this._selectedId()){
+      this._selectedId.set(id);
+    }
+    else this._selectedId.set('0');
   }
 
 }

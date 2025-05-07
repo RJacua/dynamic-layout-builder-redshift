@@ -1,1 +1,3 @@
-
+<div *ngFor="let child of canvasModel()">
+    <app-layers-tree [data]="child.data.id"></app-layers-tree>
+</div>
