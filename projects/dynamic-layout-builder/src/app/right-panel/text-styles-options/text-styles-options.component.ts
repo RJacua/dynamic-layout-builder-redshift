@@ -76,7 +76,7 @@ export class TextStylesOptionsComponent implements OnInit {
       else {
         defaultStyles = this.paragraphStyles;
       }
-      if (Object.keys(node.data.style).length === 0) {
+      if (Object.keys(node.data.style).length < 3) {
         untracked(() =>
           this.textStylesSvc.setAll(defaultStyles)
         )

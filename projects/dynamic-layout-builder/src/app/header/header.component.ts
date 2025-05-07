@@ -76,11 +76,6 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   dynamicStyle = signal(this.nodeSignal()?.data.style);
   dynamicHeader = signal(this.nodeSignal()?.data.headerSize);
 
-  isFocused = computed(() => {
-    return this.id() === this.selectionSvc.selectedElementId();
-  });
-  isHovered = false;
-
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');
     // this.size.set(this.data.style.size ?? 1);
