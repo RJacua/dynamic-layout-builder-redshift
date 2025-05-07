@@ -1,25 +1,46 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { StylesService } from './styles.service';
+import { Styles } from '../../interfaces/layout-elements';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackgroundStylesService {
 
-  constructor() { }
+  readonly stylesSvc = inject(StylesService);
 
-  private bgColorSubject = new BehaviorSubject<string>('#ffffff');
-  bgColor$ = this.bgColorSubject.asObservable();
+  // private bgColorSubject = new BehaviorSubject<string>('#ffffff');
+  // bgColor$ = this.bgColorSubject.asObservable();
 
-  private bgOpacitySubject = new BehaviorSubject<number>(1);
-  bgOpacity$ = this.bgOpacitySubject.asObservable();
+  // private bgOpacitySubject = new BehaviorSubject<number>(1);
+  // bgOpacity$ = this.bgOpacitySubject.asObservable();
 
 
   setBgColor(bgColor: string) {
-    this.bgColorSubject.next(bgColor);
+    // this.bgColorSubject.next(bgColor);
+    this.stylesSvc.updateSelectedNodeStyle('background-color', bgColor);
   }
   setBgOpacity(bgOpacity: number) {
-    this.bgOpacitySubject.next(bgOpacity / 100);
+    // this.bgOpacitySubject.next(bgOpacity / 100);
+    this.stylesSvc.updateSelectedNodeStyle('opacity', (bgOpacity / 100).toString());
   }
-  
+
+  setFlexDirection(direction: string) {
+    // this.bgOpacitySubject.next(bgOpacity / 100);
+    this.stylesSvc.updateSelectedNodeStyle('flex-direction', direction);
+  }
+
+  setAll(defaultStyles: Styles) {
+    // console.log("Default Style:", defaultStyles);
+
+    Object.entries(defaultStyles).forEach((attr) => {
+      // console.log("update", attr[0], " ->", attr[1]);
+      this.stylesSvc.updateSelectedNodeStyle(attr[0], attr[1]);
+    })
+
+  }
+
+
+
 }

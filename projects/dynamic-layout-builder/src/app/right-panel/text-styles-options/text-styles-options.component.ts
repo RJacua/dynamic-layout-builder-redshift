@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -8,6 +8,7 @@ import { TextStylesService } from '../../services/styles/textStyles.service';
 import { distinctUntilChanged } from 'rxjs';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
+import { Styles } from '../../interfaces/layout-elements';
 
 @Component({
   selector: 'app-text-styles-options',
@@ -16,7 +17,7 @@ import { SelectionService } from '../../services/selection.service';
     MatCardModule,
     MatListModule,
     MatDividerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './text-styles-options.component.html',
   styleUrl: './text-styles-options.component.scss'
@@ -24,6 +25,7 @@ import { SelectionService } from '../../services/selection.service';
 export class TextStylesOptionsComponent implements OnInit {
   readonly textStylesSvc = inject(TextStylesService)
   readonly selectionSvc = inject(SelectionService)
+
 
   // id = '0';
   // node = signal(this.modelSvc.getNodeById(this.id));
@@ -41,6 +43,17 @@ export class TextStylesOptionsComponent implements OnInit {
   headerOptions = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
   headerOptionDefault = this.headerOptions[0];
 
+  paragraphStyles: Styles = {
+    ['font-size']: 16,
+    ['font-weight']: 400,
+    color: '#000000',
+    ['text-align']: this.hOptionDefault,
+  };
+  headerStyles: Styles = {
+    color: '#000000',
+    ['text-align']: this.hOptionDefault,
+    // headerSize: this.headerOptionDefault,
+  };
 
   fontOptions = new FormGroup({
     // fontSize: new FormControl<number>(0),
@@ -53,8 +66,21 @@ export class TextStylesOptionsComponent implements OnInit {
     // this.fontOptions.controls.horizontalAlign.setValue(this.hOptionDefault);
 
     effect(() => {
+      let defaultStyles: Styles;
       const node = this.selectedNode();
       if (!node) return;
+
+      if (this.selectedNode()?.data.type === 'header') {
+        defaultStyles = this.headerStyles;
+      }
+      else {
+        defaultStyles = this.paragraphStyles;
+      }
+      if (Object.keys(node.data.style).length === 0) {
+        untracked(() =>
+          this.textStylesSvc.setAll(defaultStyles)
+        )
+      }
 
       // this.fontOptions.setValue({
       //   fontSize: parseInt(node.data.style["font-size"]) || 16,
@@ -87,6 +113,7 @@ export class TextStylesOptionsComponent implements OnInit {
         }
       }
 
+
       if (this.selectedNode()?.data.type !== 'header') {
         this.fontOptions.setValue({
           fontColor: node.data.style["color"] || '#000000',
@@ -94,14 +121,17 @@ export class TextStylesOptionsComponent implements OnInit {
           fontSize: parseInt(node.data.style["font-size"]) || 16,
           fontWeight: parseInt(node.data.style["font-weight"]) || 400,
         });
+
       }
-      else if(this.selectedNode()?.data.type === 'header'){
+      else if (this.selectedNode()?.data.type === 'header') {
         this.fontOptions.setValue({
           fontColor: node.data.style["color"] || '#000000',
           horizontalAlign: node.data.style["text-align"] || this.hOptionDefault,
-          headerSize: node.data.headerSize || this. headerOptionDefault,
+          headerSize: node.data.headerSize || this.headerOptionDefault,
         });
+
       }
+
       // else {
       //   this.fontOptions.setValue({
       //     fontColor: node.data.style["color"] || '#000000',
@@ -159,7 +189,6 @@ export class TextStylesOptionsComponent implements OnInit {
 
       const headerSizeControl = this.fontOptions.get('headerSize');
       if (headerSizeControl instanceof FormControl) {
-        console.log('Selected Header');
         headerSizeControl.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(size => {
@@ -173,39 +202,6 @@ export class TextStylesOptionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.id = this.selectionSvc.selectedElementId();
-
-    //   this.fontOptions.controls.fontSize.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(size => {
-    //     // console.log('Selected size:', size);
-    //     if (size !== null)
-    //       this.textStylesService.setfontSize(size);
-    //   });
-
-    // this.fontOptions.controls.fontWeight.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(weight => {
-    //     // console.log('Selected wight:', weight);
-    //     if (weight !== null)
-    //       this.textStylesService.setfontWeight(weight);
-    //   });
-
-    // this.fontOptions.controls.fontColor.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(color => {
-    //     console.log('Selected color:', color);
-    //     if (color !== null)
-    //       this.textStylesService.setfontColor(color);
-    //   });
-
-    // this.fontOptions.controls.horizontalAlign.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(hAlign => {
-    //     // console.log('Selected hAlign:', hAlign);
-    //     if (hAlign !== null)
-    //       this.textStylesService.setHorizontalAlign(hAlign);
-    //   });
 
   }
 }

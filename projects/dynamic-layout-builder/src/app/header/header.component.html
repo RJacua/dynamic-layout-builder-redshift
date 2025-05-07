@@ -1,4 +1,5 @@
-<div class="main" (focusout)="hideMenu($event)">
+<div class="main" (focusout)="hideMenu($event)" [class.active]="isFocused() || isHovered"
+(mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
   <br>
   <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true"
      [ngStyle]="dynamicStyle()" [ngClass]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>

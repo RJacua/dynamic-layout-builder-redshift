@@ -1,52 +1,66 @@
-import { effect, Injectable, Signal, signal, untracked, ViewContainerRef, WritableSignal } from '@angular/core';
+import { computed, effect, Injectable, Signal, signal, untracked, ViewContainerRef, WritableSignal } from '@angular/core';
 import { ContainerData, LayoutElement, AtomicElementData, LayoutData } from '../interfaces/layout-elements';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ModelService {
 
   constructor() {
+    effect(() => {
+      const canvasModel = this.canvasModel();
+
+      untracked(() => {
+        this.hasCanvasModelChanged.update(() => !this.hasCanvasModelChanged());
+      })
+
+    })
   }
 
   canvasModel = signal<(LayoutElement<ContainerData>)[]>([]);
-  private _isDone = false;  
+  hasCanvasModelChanged = signal(false);
+
+  // updatedNode = new Subject<any>();
+  // this._renderUpdate.subscribe(() => {}); colocar isso no construtor no lugar do hasCanvasModelChanged
+
+
+  getNodeSignalById(id: string) {
+    // this.updatedNode.next({});
+    
+    const _ = this.canvasModel();
+    return signal(this.getNodeById(id, this.canvasModel()));
+  }
 
   getNodeById(
     id: string,
     branch?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
-  ): LayoutElement<ContainerData> | LayoutElement<AtomicElementData> | undefined {
+  ): any {
+    if(id === 'canvas'){
+      return this.canvasModel();
+    }
     const currentBranch = branch ?? this.canvasModel();
-    let result: LayoutElement<any> | undefined = undefined;
-  
-    this._recursiveGetNodeById(id, currentBranch, this._isDone, (found) => {
-      result = found;
-    });
-  
-    this._isDone = false;
-    return result;
+    return this._recursiveGetNodeById(id, currentBranch);
   }
-  
 
   private _recursiveGetNodeById(
     id: string,
-    branch: LayoutElement<ContainerData>[],
-    isDone: boolean,
-    callback: (found: LayoutElement<any>) => void
-  ) {
+    branch: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
+  ): LayoutElement<any> | undefined {
     for (const node of branch) {
-      if (isDone) return;
-  
       if (node.data.id === id) {
-        callback(node);
-        this._isDone = true;
-        return;
+        return node;
       }
-  
+
       if ('children' in node.data && node.data.children) {
-        this._recursiveGetNodeById(id, node.data.children, this._isDone, callback);
+        const found = this._recursiveGetNodeById(id, node.data.children);
+        if (found) {
+          return found;
+        }
       }
     }
+
+    return undefined;
   }
-  
+
 
   writeElementModel(componentType: string, parentId: string, componentData?: LayoutData): LayoutElement<any> {
     const id = crypto.randomUUID().split('-')[0];
@@ -72,103 +86,118 @@ export class ModelService {
     }
   }
 
-  addChildNode(parentId: string, childModel: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, branch?: (LayoutElement<ContainerData>)[]) {
+  addChildNode(
+    parentId: string,
+    childModel: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>,
+    branch?: (LayoutElement<ContainerData>)[]
+  ): string | undefined {
     const currentBranch = branch ?? this.canvasModel();
 
     if (parentId === 'canvas') {
       this.canvasModel.set([...currentBranch, childModel]);
-      return
+      return childModel.data.id;
     }
 
-    this._recursiveAddChildNode(parentId, childModel, currentBranch, this._isDone);
+    const updated = this._recursiveAddChildNode(parentId, childModel, currentBranch);
 
-    this.canvasModel.set([...currentBranch]);
-    this._isDone = false;
-    return childModel.data.id;
-  }
-
-  private _recursiveAddChildNode(parentId: string, child: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, currentBranch: (LayoutElement<ContainerData>)[], isDone: boolean) {
-    if (!isDone) {
-      currentBranch.map((node) => {
-        if (!isDone) {
-          if (node.data.children && node.data.id === parentId) {
-            node.data.children = [...node.data.children, child]
-            this._isDone = true;
-            return
-          }
-
-          if (node.data.children) {
-            this._recursiveAddChildNode(parentId, child, node.data.children, this._isDone)
-          }
-
-        }
-      })
+    if (updated) {
+      this.canvasModel.set([...currentBranch]);
+      return childModel.data.id;
     }
+
+    return undefined;
   }
 
-  updateModel(id: string, model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, branch?: (LayoutElement<ContainerData>)[]) {
+  private _recursiveAddChildNode(
+    parentId: string,
+    child: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>,
+    branch: (LayoutElement<ContainerData>)[]
+  ): boolean {
+    for (const node of branch) {
+      if (node.data.id === parentId && node.data.children) {
+        node.data.children = [...node.data.children, child];
+        return true;
+      }
+
+      if (node.data.children) {
+        const added = this._recursiveAddChildNode(parentId, child, node.data.children);
+        if (added) return true;
+      }
+    }
+
+    return false;
+  }
+
+
+  updateModel(
+    id: string,
+    model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>,
+    branch?: (LayoutElement<ContainerData>)[]
+  ) {
     const currentBranch = branch ?? this.canvasModel();
 
-    this._recursiveUpdateModel(id, model, currentBranch, this._isDone);
-    this.canvasModel.set([...currentBranch])
+    const updated = this._recursiveUpdateModel(id, model, currentBranch);
 
-    this._isDone = false;
-  }
-
-  private _recursiveUpdateModel(id: string, model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>, currentBranch: (LayoutElement<ContainerData>)[], isDone: boolean) {
-    if (!isDone) {
-      currentBranch.map((node) => {
-        if (!isDone) {
-          if (node.data.id === id) {
-            node.data = model.data;
-            this._isDone = true;
-            return
-          }
-
-          if (node.data.children) {
-            this._recursiveUpdateModel(id, model, node.data.children, this._isDone)
-          }
-
-        }
-      })
+    if (updated) {
+      this.canvasModel.set([...currentBranch]);
     }
   }
 
-  removeNodeById(id: string, branch?: (LayoutElement<ContainerData>)[]) {
-    
-    var currentBranch = branch ?? this.canvasModel();
+  private _recursiveUpdateModel(
+    id: string,
+    model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>,
+    branch: (LayoutElement<ContainerData>)[]
+  ): boolean {
+    for (const node of branch) {
+      if (node.data.id === id) {
+        node.data = model.data;
+        return true;
+      }
 
-    if(currentBranch === this.canvasModel()){
-      currentBranch = currentBranch.filter((child) => child.data.id !== id);
-      if(currentBranch.length !== this.canvasModel().length){
-        this._isDone = true;
+      if (node.data.children) {
+        const updated = this._recursiveUpdateModel(id, model, node.data.children);
+        if (updated) return true;
       }
     }
 
-    this._recursiveRemoveNodeById(id, currentBranch, this._isDone);
-    this.canvasModel.set([...currentBranch]);
+    return false;
   }
 
-  private _recursiveRemoveNodeById(id: string, currentBranch: (LayoutElement<ContainerData>)[], isDone: boolean) {
 
-    if (!isDone) {
-      currentBranch.map((node) => {
-        if ('children' in node.data && node.data.children) {
-          let oldLength = node.data.children.length;
-          node.data.children = node.data.children.filter((child) => child.data.id !== id);
-          if (oldLength > node.data.children.length){
-            this._isDone = true;
-          }
-        }
-      })
+  removeNodeById(
+    id: string,
+    branch?: (LayoutElement<ContainerData>)[]
+  ) {
+    let currentBranch = branch ?? this.canvasModel();
 
-      if (!this._isDone) {
-        currentBranch.map((node) => {
-          if (node.data && 'children' in node.data && node.data.children)
-            this._recursiveRemoveNodeById(id, node.data.children, this._isDone)
-        })
-      }
+    const removedAtRoot = currentBranch.some(node => node.data.id === id);
+    currentBranch = currentBranch.filter(node => node.data.id !== id);
+
+    const removedInChildren = currentBranch.some(node => this._recursiveRemoveNodeById(id, node));
+
+    if (removedAtRoot || removedInChildren) {
+      this.canvasModel.set([...currentBranch]);
     }
+  }
+
+  private _recursiveRemoveNodeById(
+    id: string,
+    node: LayoutElement<ContainerData>
+  ): boolean {
+    if (!node.data.children) return false;
+
+    const originalLength = node.data.children.length;
+    node.data.children = node.data.children.filter(child => child.data.id !== id);
+
+    const removedHere = node.data.children.length < originalLength;
+
+    if (removedHere) return true;
+
+    for (const child of node.data.children) {
+      if (this._recursiveRemoveNodeById(id, child)) return true;
+    }
+
+    return false;
   }
 
   setCanvasModel(model: LayoutElement<ContainerData>[]) {
