@@ -63,12 +63,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
   dynamicStyle = signal(this.nodeSignal()?.data.style);
 
-
-  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.nodeSignal()?.data.style);
-
-
-
   ngOnInit() {
     // this.setDirection(this.data.style?.direction ?? 'column');
     this.id.set(this.data.id);
