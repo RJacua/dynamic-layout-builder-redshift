@@ -29,7 +29,6 @@ export class ModelService {
     const _ = this.canvasModel();
     return signal(this.getNodeById(id, this.canvasModel()));
   }
-
   getNodeById(
     id: string,
     branch?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
