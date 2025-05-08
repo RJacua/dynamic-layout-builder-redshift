@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, Input, signal } from '@angular/core';
+import { Component, computed, effect, inject, Input, signal, untracked } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
@@ -14,12 +14,23 @@ import { SelectionService } from '../../../services/selection.service';
 })
 export class LayersTreeComponent {
   @Input() data: string = '0';
-  selectionService = inject(SelectionService);
+  readonly selectionSvc = inject(SelectionService);
+  readonly modelSvc = inject(ModelService);
+
+  isSelected = computed(() => {return this.data === this.selectionSvc.selectedElementId()})
+
+  isFocused = computed(() => {
+    return this.data === this.selectionSvc.selectedElementId();
+  });
 
   constructor() {
     effect(() => {
       const data = this.data;
-      const test = this.modelSvc.hasCanvasModelChanged;
+      const lastAddedId = this.modelSvc.lastAddedNodeId();
+
+      untracked(() =>
+        this.expandNewNodeParents(lastAddedId)
+      )
     }
     )
   }
@@ -27,14 +38,12 @@ export class LayersTreeComponent {
   ngOnInit(): void {
     if (this.data === "canvas") {
       this.nodeModel = computed(() => this.modelSvc.getNodeById(this.data));
-      
+
     }
     else {
       this.nodeModel = computed(() => [this.modelSvc.getNodeById(this.data)])
     }
   }
-
-  readonly modelSvc = inject(ModelService);
 
   nodeModel: any;
 
@@ -50,6 +59,16 @@ export class LayersTreeComponent {
       expanded.add(nodeId);
     }
     this.isExpanded.set(new Set(expanded));
+    // console.log("isExpanded List: ", this.isExpanded())
+  }
+
+  expandNewNodeParents(nodeId: string) {
+    const parentsId = this.modelSvc.getGenealogicalTreeIdsById(nodeId);
+    const expanded = this.isExpanded();
+    parentsId.forEach(id => {
+      expanded.add(id);
+    });
+    this.isExpanded.set(new Set(expanded));
   }
 
   isNodeExpanded(nodeId: string): boolean {
@@ -58,20 +77,20 @@ export class LayersTreeComponent {
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
     let el = event.target as HTMLElement;
-  
-    if(el.tagName === "MAT-ICON"){
+
+    if (el.tagName === "MAT-ICON") {
       return
     }
 
     while (el && el.tagName && !el.tagName.startsWith('APP-') && el.parentElement) {
       el = el.parentElement;
     }
-  
+
     if (el && el.tagName.startsWith('APP-')) {
       const componentInstance = (window as any).ng?.getComponent?.(el);
-  
+
       if (componentInstance) {
-        this.selectionService.selectById(componentInstance.data); 
+        this.selectionSvc.selectById(componentInstance.data);
       } else {
         console.warn("ng.getComponent não disponível (modo produção?).");
       }

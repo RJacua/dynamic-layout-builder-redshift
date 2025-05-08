@@ -36,7 +36,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
         this.dynamicStyle.set(node.data.style);
       }
     
-      console.log("on effect style:", this.dynamicStyle());
+      // console.log("on effect style:", this.dynamicStyle());
     });
 
   }
@@ -47,11 +47,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   id = signal('0');
   parentId = signal('0');
-  // direction = signal('container-flex-column ');
-  //Lógica do Menu, passar para um serviço depois
-  // setDirection(value: string) {
-  //   this.direction.set(`container-flex-${value} `);
-  // }
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
@@ -77,26 +72,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   ngAfterViewInit() {
     this.elementRef.next(this.containerDiv);
   }
-
-  // layoutModel: Signal<LayoutElement<ContainerData>> = computed(
-  //   () => {
-  //     return ({
-  //       data: {
-  //         id: this.id(),
-  //         parentId: this.parentId(),
-  //         type: 'container',
-  //         style: {
-  //           direction: this.direction()
-  //         },
-  //         children: this.children()
-  //       },
-  //     })
-  //   }
-  // );
-
-  // layoutModelString: Signal<string> = computed(
-  //   () => JSON.stringify(this.nodeSignal(), null, 2)
-  // )
 
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());

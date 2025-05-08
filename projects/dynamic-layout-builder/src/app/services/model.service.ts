@@ -19,6 +19,8 @@ export class ModelService {
   canvasModel = signal<(LayoutElement<ContainerData>)[]>([]);
   hasCanvasModelChanged = signal(false);
 
+  lastAddedNodeId = signal('0')
+
   // updatedNode = new Subject<any>();
   // this._renderUpdate.subscribe(() => {}); colocar isso no construtor no lugar do hasCanvasModelChanged
 
@@ -95,6 +97,7 @@ export class ModelService {
 
     if (parentId === 'canvas') {
       this.canvasModel.set([...currentBranch, childModel]);
+      this.lastAddedNodeId.set(childModel.data.id);
       return childModel.data.id;
     }
 
@@ -102,6 +105,7 @@ export class ModelService {
 
     if (updated) {
       this.canvasModel.set([...currentBranch]);
+      this.lastAddedNodeId.set(childModel.data.id);
       return childModel.data.id;
     }
 
@@ -206,6 +210,22 @@ export class ModelService {
 
   addChildrenTemplate(parentId: string, childrenModels: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]) {
     childrenModels.map((childModel) => this.addChildNode(parentId, childModel));
+  }
+
+  getGenealogicalTreeIdsById(id: string){
+    let currentId = id;
+    let genealogicalTree: string[] = [];
+    
+    while(!genealogicalTree.includes('canvas')){
+      let currentNode = this.getNodeById(currentId);
+      currentId = currentNode.data.parentId;
+      console.log(currentId);
+      genealogicalTree.push(currentId);
+    }
+
+    console.log(genealogicalTree);
+
+    return genealogicalTree;
   }
 
 }

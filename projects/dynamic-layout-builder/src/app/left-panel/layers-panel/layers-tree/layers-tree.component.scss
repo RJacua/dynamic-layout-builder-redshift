@@ -19,3 +19,9 @@
     padding-left: 20px;
     border-left: solid 1px;
 }
+
+.main.active {
+    background-color: blanchedalmond;
+    outline: none;
+    transition: background-color 0.2s ease;
+  }

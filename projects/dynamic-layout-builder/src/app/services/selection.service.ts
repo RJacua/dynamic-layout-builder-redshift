@@ -40,7 +40,11 @@ export class SelectionService {
     if(id !== this._selectedId()){
       this._selectedId.set(id);
     }
-    else this._selectedId.set('0');
+    else this.unselect();
+  }
+
+  unselect(){
+    this._selectedId.set('canvas');
   }
 
 }
