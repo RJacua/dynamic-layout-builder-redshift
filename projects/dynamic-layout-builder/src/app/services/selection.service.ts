@@ -28,22 +28,28 @@ export class SelectionService {
   //   //console.log(this.selectedNode());
   // }
 
-  private _selectedId = signal<string>('');
+  private _selectedId = signal<string>('canvas');
   selectedElementId = computed(this._selectedId);
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
-  select(element: ContainerData | AtomicElementData): void {   
-    this._selectedId.set(element.id);
+  select(element: ContainerData | AtomicElementData): void {
+    if(element.type === 'canvas') {
+      this.unselect();
+      return
+    }
+    else if (element.id) {
+      this._selectedId.set(element.id);
+    }
   }
-  
-  selectById(id: string){
-    if(id !== this._selectedId()){
+
+  selectById(id: string) {
+    if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
     else this.unselect();
   }
 
-  unselect(){
+  unselect() {
     this._selectedId.set('canvas');
   }
 

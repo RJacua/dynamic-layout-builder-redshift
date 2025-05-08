@@ -8,7 +8,7 @@
         <p>container</p>
     </button>
 
-    <button mat-icon-button [matMenuTriggerFor]="componentMenu" aria-label="Example icon-button with a menu">
+    <button mat-icon-button [matMenuTriggerFor]="componentMenu" aria-label="Example icon-button with a menu"  *ngIf="selectedElementType() == 'container'">
         <p>component</p>
     </button>
 </div>
@@ -23,11 +23,12 @@
 </mat-menu>
 
 <mat-menu #containerMenu="matMenu">
-    <button mat-menu-item>Add</button>
+    <button mat-menu-item (click)="addLayoutElement('container')">Add</button>
     <button mat-menu-item (click)="removeSelectedNode()">Remove</button>
 </mat-menu>
 
 <mat-menu #componentMenu="matMenu">
-    <button mat-menu-item>Header</button>
-    <button mat-menu-item>Paragraph</button>
+    <button mat-menu-item (click)="addLayoutElement('header')">Header</button>
+    <button mat-menu-item (click)="addLayoutElement('paragraph')">Paragraph</button>
+    <button mat-menu-item (click)="addLayoutElement('container')">Container</button>
 </mat-menu>

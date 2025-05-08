@@ -1,5 +1,5 @@
 <ng-container *ngIf="selectedNode() as selected">
-    <ng-container [ngSwitch]="selected.data.type">
+    <ng-container [ngSwitch]="selected.data?.type">
 
         <div *ngSwitchCase="'canvas'">
             <app-background-styles-options></app-background-styles-options>

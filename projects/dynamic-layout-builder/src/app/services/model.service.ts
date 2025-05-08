@@ -218,6 +218,9 @@ export class ModelService {
     
     while(!genealogicalTree.includes('canvas')){
       let currentNode = this.getNodeById(currentId);
+      if(!currentNode){
+        return []
+      }
       currentId = currentNode.data.parentId;
       console.log(currentId);
       genealogicalTree.push(currentId);
@@ -226,6 +229,10 @@ export class ModelService {
     console.log(genealogicalTree);
 
     return genealogicalTree;
+  }
+
+  unsetLastAddedId(){
+    this.lastAddedNodeId.set('canvas');
   }
 
 }

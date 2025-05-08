@@ -31,6 +31,7 @@ export class LayersTreeComponent {
       untracked(() =>
         this.expandNewNodeParents(lastAddedId)
       )
+      // this.modelSvc.unsetLastAddedId()
     }
     )
   }
@@ -63,6 +64,8 @@ export class LayersTreeComponent {
   }
 
   expandNewNodeParents(nodeId: string) {
+    if(nodeId === 'canvas') return;
+
     const parentsId = this.modelSvc.getGenealogicalTreeIdsById(nodeId);
     const expanded = this.isExpanded();
     parentsId.forEach(id => {
