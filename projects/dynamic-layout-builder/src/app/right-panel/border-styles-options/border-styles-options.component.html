@@ -4,17 +4,17 @@
         <mat-list-item>
             <h3 class="center">Border Options</h3>
         </mat-list-item>
-        <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke" [formControl]="enableStroke">
+        <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke" [formControl]="enableStrokeCheckbox">
         </mat-list-item>
 
-        <div *ngIf="enableStroke$ | async">
+        <div *ngIf="enableStrokeCheckbox.value">
             <form [formGroup]="strokeOptions">
                 <label for="strokeClor">Color:</label><br>
                 <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor"><br><br>
 
                 <label for="strokeStyle">Style:</label>
                 <select name="strokeStyle" id="strokeStyle" formControlName="strokeStyle">
-                    <option *ngFor="let strokeStyle of strokeStyles" [ngValue]="strokeStyle">{{ strokeStyle }}</option>
+                    <option *ngFor="let strokeStyleOption of strokeStyleOptions" [ngValue]="strokeStyleOption.value">{{ strokeStyleOption.label }}</option>
                 </select><br><br>
 
                 <label for="strokeWidth">Width:</label><br>

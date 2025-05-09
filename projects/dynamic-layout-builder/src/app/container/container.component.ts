@@ -25,7 +25,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = "container";
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, children: [] };
+  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, enabler: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {
@@ -101,7 +101,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
     this.modelSvc.addChildNode(this.id(), newLayoutElement);
-    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
+    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 1});
   }
 
   deleteContainer(){
