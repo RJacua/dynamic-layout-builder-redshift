@@ -17,7 +17,7 @@ import { SelectionService } from '../services/selection.service';
 
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, AfterViewInit {
   type = 'header';
-  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: { size: 1 }, headerSize: 'h1'};
+  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: {}, enabler: {}, headerSize: 'h1'};
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   constructor() {

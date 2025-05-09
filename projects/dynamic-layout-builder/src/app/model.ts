@@ -6,21 +6,21 @@ import { ContainerData, LayoutElement, AtomicElementData } from "./interfaces/la
 export const layoutModels: LayoutElement<ContainerData>[] = [
     {
         data: {
-            id: 'aikb5', parentId: 'canvas', type: 'container', style: { direction: 'column' },
+            id: 'aikb5', parentId: 'canvas', type: 'container', style: { }, enabler: {},
             children: [
-                { data: { id: 'mo6av', parentId: 'aikb5', type: 'header', style: {}, text: 'Coiso' } },
-                { data: { id: 'plq01', parentId: 'aikb5', type: 'paragraph', style: {}, text: 'Teste Teste Teste' } },
-                { data: { id: '1bu89', parentId: 'aikb5', type: 'container', style: {} } },
+                { data: { id: 'mo6av', parentId: 'aikb5', type: 'header', style: {}, enabler: {}, text: 'Coiso' } },
+                { data: { id: 'plq01', parentId: 'aikb5', type: 'paragraph', style: {}, enabler: {}, text: 'Teste Teste Teste' } },
+                { data: { id: '1bu89', parentId: 'aikb5', type: 'container', style: {}, enabler: {} } },
             ]
         },
     },
     {
         data: {
-            id: 'aikb5', parentId: 'canvas', type: 'container', style: { direction: 'row' },
+            id: 'aikb5', parentId: 'canvas', type: 'container', style: { }, enabler: {},
             children: [
-                { data: { id: 'mo6av', parentId: 'aikb5', type: 'header', style: {}, text: 'Coiso' } },
-                { data: { id: 'plq01', parentId: 'aikb5', type: 'paragraph', style: {}, text: 'Teste Teste Teste' } },
-                { data: { id: '1bu89', parentId: 'aikb5', type: 'container', style: {} } },
+                { data: { id: 'mo6av', parentId: 'aikb5', type: 'header', style: {}, enabler: {}, text: 'Coiso' } },
+                { data: { id: 'plq01', parentId: 'aikb5', type: 'paragraph', style: {}, enabler: {}, text: 'Teste Teste Teste' } },
+                { data: { id: '1bu89', parentId: 'aikb5', type: 'container', style: {}, enabler: {} } },
             ]
         },
     },
@@ -29,7 +29,8 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
             id: 'b8c22183',
             parentId: 'canvas',
             type: 'container',
-            style: {},
+            style: {}, 
+            enabler: {},
             children: [
                 {
                     data: {
@@ -38,8 +39,9 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                         type: 'header',
                         text: 'Header 1 size1',
                         style: {
-                            'size': 1
-                        }
+                            
+                        }, 
+                        enabler: {}
                     }
                 },
                 {
@@ -48,6 +50,7 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                         parentId: 'b8c22183',
                         type: 'container',
                         style: {},
+                        enabler: {},
                         children: [
                             {
                                 data: {
@@ -56,8 +59,9 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                                     type: 'header',
                                     text: 'Header 1-1 size3',
                                     style: {
-                                        size: 3
-                                    }
+                                       
+                                    }, 
+                                    enabler: {}
                                 }
                             }
                         ]
@@ -68,7 +72,8 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                         id: 'ffa2d18f',
                         parentId: 'b8c22183',
                         type: 'container',
-                        style: {},
+                        style: {}, 
+                        enabler: {},
                         children: [
                             {
                                 data: {
@@ -77,8 +82,9 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                                     type: 'header',
                                     text: 'Header 1-2 size1',
                                     style: {
-                                        size: 1
-                                    }
+                                       
+                                    }, 
+                                    enabler: {}
                                 }
                             },
                             {
@@ -89,12 +95,13 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                                     text: 'Para 1-2 align left',
                                     style: {
                                         'background-color': '#3dd',
-                                        'opacity': '1',
+                                        'opacity': 1,
                                         'font-size': '24px',
                                         'font-weight': '900',
                                         'color': 'blue',
                                         'text-align': 'right',
-                                      }
+                                      }, 
+                                      enabler: {}
                                 }
                             }
                         ]

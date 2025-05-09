@@ -9,6 +9,7 @@ import { distinctUntilChanged } from 'rxjs';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { Styles } from '../../interfaces/layout-elements';
+import { GeneralFunctionsService } from '../../services/generalFunctions.service';
 
 @Component({
   selector: 'app-text-styles-options',
@@ -22,9 +23,10 @@ import { Styles } from '../../interfaces/layout-elements';
   templateUrl: './text-styles-options.component.html',
   styleUrl: './text-styles-options.component.scss'
 })
-export class TextStylesOptionsComponent implements OnInit {
+export class TextStylesOptionsComponent {
   readonly textStylesSvc = inject(TextStylesService)
   readonly selectionSvc = inject(SelectionService)
+  readonly generalSvc = inject(GeneralFunctionsService)
 
 
   // id = '0';
@@ -44,8 +46,8 @@ export class TextStylesOptionsComponent implements OnInit {
   headerOptionDefault = this.headerOptions[0];
 
   paragraphStyles: Styles = {
-    ['font-size']: 16,
-    ['font-weight']: 400,
+    ['font-size']: '16px',
+    ['font-weight']: '400',
     color: '#000000',
     ['text-align']: this.hOptionDefault,
   };
@@ -76,11 +78,12 @@ export class TextStylesOptionsComponent implements OnInit {
       else {
         defaultStyles = this.paragraphStyles;
       }
-      if (Object.keys(node.data.style).length < 3) {
-        untracked(() =>
-          this.textStylesSvc.setAll(defaultStyles)
-        )
-      }
+      // if (Object.keys(node.data.style).length < 3) {
+      untracked(() => {
+        this.textStylesSvc.setAllMissing(defaultStyles, node.data.style);
+      })
+
+      // }
 
       // this.fontOptions.setValue({
       //   fontSize: parseInt(node.data.style["font-size"]) || 16,
@@ -118,8 +121,8 @@ export class TextStylesOptionsComponent implements OnInit {
         this.fontOptions.setValue({
           fontColor: node.data.style["color"] || '#000000',
           horizontalAlign: node.data.style["text-align"] || this.hOptionDefault,
-          fontSize: parseInt(node.data.style["font-size"]) || 16,
-          fontWeight: parseInt(node.data.style["font-weight"]) || 400,
+          fontSize: parseInt(node.data.style["font-size"]) || '16px',
+          fontWeight: parseInt(node.data.style["font-weight"]) || '400',
         });
 
       }
@@ -201,7 +204,4 @@ export class TextStylesOptionsComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-
-  }
 }

@@ -6,7 +6,8 @@ import { SelectionService } from '../selection.service';
 import { TextStylesService } from './textStyles.service';
 import { combineLatest, map } from 'rxjs';
 import { ModelService } from '../model.service';
-import { AtomicElementData, ContainerData, LayoutElement } from '../../interfaces/layout-elements';
+import { AtomicElementData, ContainerData, Enablers, LayoutElement, Styles } from '../../interfaces/layout-elements';
+import { GeneralFunctionsService } from '../generalFunctions.service';
 
 //Pergunta, ao inves de fazer o combinelatest pegando todos, pq nao dar update so no atributo, la no serviço do proprio atributo
 //aqui poderia ter uma função q seria algo do tipo updateStyleInModel(tipoDoEstilo, valor), essa função pode ser injetada em 
@@ -30,6 +31,7 @@ export class StylesService {
   }
 
   readonly selectionSvc = inject(SelectionService);
+  readonly generalSvc = inject(GeneralFunctionsService);
   readonly modelSvc = inject(ModelService);
   // private bgStylesService = inject(BackgroundStylesService)
   // private textStylesService = inject(TextStylesService)
@@ -167,7 +169,27 @@ export class StylesService {
     }
   }
 
-    updateSelectedNodeHeaderSize(value: string) {
+
+  updateSelectedNodeEnabler(enablerType: string, value: string) {
+    var currentNode = this.selectedNode();
+    if (currentNode) {
+
+      const updatedModel = {
+        ...currentNode,
+        data: {
+          ...currentNode.data,
+          enabler: {
+            ...currentNode.data.enabler,
+            [enablerType]: value
+          }
+        }
+      };
+
+      this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
+    }
+  }
+
+  updateSelectedNodeHeaderSize(value: string) {
     var currentNode = this.selectedNode();
     if (currentNode) {
 
@@ -186,4 +208,52 @@ export class StylesService {
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
     }
   }
+
+  setAllMissingStyles(defaultStyles: Styles, currentStyles: Styles) {
+    // console.log("Default Style:", defaultStyles);
+
+    Object.entries(defaultStyles).forEach((attr) => {
+      // console.log("update", attr[0], " ->", attr[1]);
+      if (!this.generalSvc.isAttributeOf(attr[0], currentStyles)) {
+        this.updateSelectedNodeStyle(attr[0], attr[1]);
+      }
+    })
+  }
+  setAllMissingEnablers(defaultEnablers: Enablers, currentEnablers: Enablers) {
+    // console.log("Default Style:", defaultStyles);
+
+    Object.entries(defaultEnablers).forEach((attr) => {
+      // console.log("update", attr[0], " ->", attr[1]);
+      if (!this.generalSvc.isAttributeOf(attr[0], currentEnablers)) {
+        this.updateSelectedNodeEnabler(attr[0], attr[1]);
+      }
+    })
+
+  }
+
+  changeToDefaultStyles(nodeStyle: Styles, defaultStyle: Styles) {
+    let updatedStyle = nodeStyle;
+    console.log("changeToDefaultStyles: ", updatedStyle);
+    
+    Object.entries(defaultStyle).forEach((d) => {
+      Object.entries(updatedStyle).forEach((u) => {
+        if (u[0] === d[0]) {
+
+          updatedStyle = {
+            ...updatedStyle,
+            [d[0]]: d[1]
+          }
+          console.log("Update: ", updatedStyle);
+        };
+      })
+    })
+
+    console.log("final: ", updatedStyle)
+    return updatedStyle
+
+  }
+
+
 }
+
+

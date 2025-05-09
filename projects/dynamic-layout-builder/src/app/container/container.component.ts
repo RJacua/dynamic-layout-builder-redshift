@@ -2,12 +2,13 @@ import { AfterViewInit, Component, computed, effect, ElementRef, inject, Input, 
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
-import { ContainerData, LayoutElement, AtomicElementData } from '../interfaces/layout-elements';
+import { ContainerData, LayoutElement, AtomicElementData, Styles, Enablers } from '../interfaces/layout-elements';
 import { BehaviorSubject } from 'rxjs';
 import { layoutModels } from '../model'
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { CommonModule } from '@angular/common';
+import { BorderStylesService } from '../services/styles/borderStyles.service';
 
 @Component({
   selector: 'app-area',
@@ -25,7 +26,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = "container";
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, children: [] };
+  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, enabler: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {
@@ -33,8 +34,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       if (node) {
-        this.dynamicStyle.set(node.data.style);
+        this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
       }
+      
     
       console.log("on effect style:", this.dynamicStyle());
     });
@@ -44,6 +46,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly modelSvc = inject(ModelService);
   readonly componentsSvc = inject(ComponentsService);
   readonly selectionSvc = inject(SelectionService);
+  readonly borderStylesSvc = inject(BorderStylesService);
 
   id = signal('0');
   parentId = signal('0');
@@ -61,7 +64,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.nodeSignal()?.data.style);
+
+  dynamicStyle = signal(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+
 
   ngOnInit() {
     // this.setDirection(this.data.style?.direction ?? 'column');
@@ -69,7 +74,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
-    this.dynamicStyle.set(this.data.style ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
     this.modelSvc.updateModel(this.id(), this.nodeSignal());
   }
@@ -101,7 +106,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
     this.modelSvc.addChildNode(this.id(), newLayoutElement);
-    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
+    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 1});
   }
 
   deleteContainer(){

@@ -20,7 +20,7 @@ import { StylesService } from '../services/styles/styles.service';
 
 export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit {
   type = 'paragraph';
-  @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
+  @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
 
   constructor() {
     effect(() => {
@@ -42,10 +42,12 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       });
     });
     effect(() => {
+      const node = this.nodeSignal();
       // const canvasModel = this.modelSvc.canvasModel();
-      const test = this.modelSvc.hasCanvasModelChanged();
-
+      const canvasModel = this.modelSvc.hasCanvasModelChanged();
+      if (node) {
       this.dynamicStyle.set(this.nodeSignal()?.data.style);
+      }
 
       // console.log("on effect style:", this.dynamicStyle());
     });
@@ -72,7 +74,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.parentId.set(this.data.parentId);
     this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
-    this.alignment.set(this.data.style.alignment ?? 'align-center ');
+    // this.alignment.set(this.data.style.alignment ?? 'align-center ');
     
     this.dynamicStyle.set(this.data.style ?? {});
 
