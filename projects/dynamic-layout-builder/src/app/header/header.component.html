@@ -5,7 +5,7 @@
      [style]="dynamicStyle()" [class]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>
 
   <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
-    <button class="round-button" (click)="deleteHeader()">del</button>
+    <!-- <button class="round-button" (click)="deleteHeader()">del</button> -->
   </div>
 
   <br>

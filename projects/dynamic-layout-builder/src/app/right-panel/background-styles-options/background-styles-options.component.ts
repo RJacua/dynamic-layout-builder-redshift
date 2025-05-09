@@ -104,7 +104,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         bgColorControl.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(color => {
-            console.log('Selected color:', color);
+            // console.log('Selected color:', color);
             if (color !== null) {
               this.bgStylesService.setBgColor(color);
             }
@@ -116,7 +116,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         bgOpacityControl.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(opacity => {
-            console.log('Selected opacity:', opacity);
+            // console.log('Selected opacity:', opacity);
             if (opacity !== null) {
               this.bgStylesService.setBgOpacity(opacity);
             }
@@ -128,7 +128,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         flexDirectionControl.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(direction => {
-            console.log('Selected direction:', direction);
+            // console.log('Selected direction:', direction);
             if (direction !== null) {
               this.bgStylesService.setFlexDirection(direction);
             }

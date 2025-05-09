@@ -1,5 +1,5 @@
 <br>
-<mat-tree [dataSource]="nodeModel()" [childrenAccessor]="childrenAccessor" (click)="onElementClick($event)">
+<mat-tree class="main" [class.active]="isSelected()" [dataSource]="nodeModel()" [childrenAccessor]="childrenAccessor" (click)="onElementClick($event)">
   <mat-nested-tree-node *matTreeNodeDef="let node">
     <div [class.tree-node]="node.data.type == 'container'"
     [class.node-item]="node.data.type !== 'container' || !node.data.children.length">

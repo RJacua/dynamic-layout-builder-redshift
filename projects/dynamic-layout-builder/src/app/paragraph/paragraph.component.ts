@@ -7,6 +7,7 @@ import { SelectionService } from '../services/selection.service';
 import { TextStylesService } from '../services/styles/textStyles.service';
 import { TextStylesOptionsComponent } from '../right-panel/text-styles-options/text-styles-options.component';
 import { StylesService } from '../services/styles/styles.service';
+import { BorderStylesService } from '../services/styles/borderStyles.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -46,7 +47,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       // const canvasModel = this.modelSvc.canvasModel();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
       if (node) {
-      this.dynamicStyle.set(this.nodeSignal()?.data.style);
+        this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
       }
 
       // console.log("on effect style:", this.dynamicStyle());
@@ -57,6 +58,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
+   readonly borderStylesSvc = inject(BorderStylesService);
 
   id = signal('0');
   parentId = signal('-1');
@@ -67,8 +69,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.nodeSignal()?.data.style);
-
+  dynamicStyle = signal(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
   ngOnInit(): void {
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
@@ -76,7 +77,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     // this.alignment.set(this.data.style.alignment ?? 'align-center ');
     
-    this.dynamicStyle.set(this.data.style ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
   }
 
