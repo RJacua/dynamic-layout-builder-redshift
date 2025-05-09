@@ -2,7 +2,7 @@
 (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
   <br>
   <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true"
-     [ngStyle]="dynamicStyle()" [ngClass]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>
+     [style]="dynamicStyle()" [class]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>
 
   <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
     <!-- <button class="round-button" (click)="deleteHeader()">del</button> -->

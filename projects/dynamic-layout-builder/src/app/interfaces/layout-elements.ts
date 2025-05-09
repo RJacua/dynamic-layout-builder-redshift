@@ -8,13 +8,16 @@ export interface LayoutElement<T> {
 
 }
 
+
 export interface LayoutData {
   id: string;
   parentId: string;
   type: string;
-  style: any; //por enquanto, depois vamos usar a interface Stykes
+  style: Styles; //por enquanto, depois vamos usar a interface Styles
+  enabler: Enablers; //por enquanto, depois vamos usar a interface Enablers
   
 }
+
 
 export interface ParagraphData extends LayoutData {
   text?: string;
@@ -44,8 +47,8 @@ export interface Canvas {
 
 export interface Styles { //vai crescer
   // Text Styles
-  ['font-size']?: number;
-  ['font-weight']?: number;
+  ['font-size']?: string;
+  ['font-weight']?: string;
   color?: string;
   ['text-align']?: string;
 
@@ -55,8 +58,17 @@ export interface Styles { //vai crescer
   ["background-color"]?: string;
   opacity?: number;
   ["flex-direction"]?: string;
- 
-  
 
+  // Border Styles
+  ['border-color']?: string;
+  ['border-style']?: string;
+
+  ['border-width']?: string;
+
+}
+
+export interface Enablers { //vai crescer
+  enableStroke?: boolean;
+  
 }
 

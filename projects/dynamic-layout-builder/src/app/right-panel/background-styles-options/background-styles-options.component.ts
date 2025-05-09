@@ -9,6 +9,7 @@ import { BackgroundStylesService } from '../../services/styles/backgroundStyles.
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { Styles } from '../../interfaces/layout-elements';
+import { GeneralFunctionsService } from '../../services/generalFunctions.service';
 
 @Component({
   selector: 'app-background-styles-options',
@@ -24,6 +25,7 @@ import { Styles } from '../../interfaces/layout-elements';
 export class BackgroundStylesOptionsComponent implements OnInit {
   private bgStylesService = inject(BackgroundStylesService);
   readonly selectionSvc = inject(SelectionService)
+  readonly generalSvc = inject(GeneralFunctionsService)
   selectedNode = this.selectionSvc.selectedNode;
 
   flexDirections = [
@@ -35,16 +37,16 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   flexDirectionDefault = this.flexDirections[2].value;
 
   containerStyles: Styles = {
-    ["background-color"]: '#ffffff',
+    ["background-color"]: 'rgba(255, 255, 255,0)',
     opacity: 1,
     ['flex-direction']: this.flexDirectionDefault,
   };
 
   allStyles: Styles = {
-    ["background-color"]: '#ffffff',
+    ["background-color"]: 'rgba(255,255,255,0)',
     opacity: 1,
   };
-  // bgColor = new FormControl<string>('#ffffff');
+  // bgColor = new FormControl<string>('rgba(255,255,255,0)');
   // bgOpacity = new FormControl<number>(100);
 
   generalOptions = new FormGroup({});
@@ -56,16 +58,18 @@ export class BackgroundStylesOptionsComponent implements OnInit {
       if (!node) return;
 
       if (this.selectedNode()?.data.type === 'container') {
-              defaultStyles = this.containerStyles;
-            }
-            else {
-              defaultStyles = this.allStyles;
-            }
-            if (Object.keys(node.data.style).length === 0) {
-              untracked(() =>
-                this.bgStylesService.setAll(defaultStyles)
-              )
-            }
+        defaultStyles = this.containerStyles;
+      }
+      else {
+        defaultStyles = this.allStyles;
+      }
+      // if (Object.keys(node.data.style).length === 0) {
+      // !this.generalSvc.isSubset(defaultStyles, node.data.style)
+      untracked(() => {
+        this.bgStylesService.setAllMissing(defaultStyles, node.data.style);
+        // this.bgStylesService.setAll(defaultStyles);
+      })
+      // }
 
       this.generalOptions.addControl('bgColor', new FormControl(''));
       this.generalOptions.addControl('bgOpacity', new FormControl(''));
@@ -79,13 +83,13 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
       if (this.selectedNode()?.data.type !== 'container') {
         this.generalOptions.setValue({
-          bgColor: node.data.style["background-color"] || '#ffffff',
+          bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
           bgOpacity: node.data.style["opacity"] * 100 || 100,
         });
       }
       else if (this.selectedNode()?.data.type === 'container') {
         this.generalOptions.setValue({
-          bgColor: node.data.style["background-color"] || '#ffffff',
+          bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
           bgOpacity: node.data.style["opacity"] * 100 || 100,
           flexDirection: node.data.style["flex-direction"] || this.flexDirectionDefault,
         });

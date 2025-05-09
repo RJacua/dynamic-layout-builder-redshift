@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StylesService } from './styles.service';
 import { Styles } from '../../interfaces/layout-elements';
+import { GeneralFunctionsService } from '../generalFunctions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,8 @@ export class TextStylesService {
 
   constructor() { }
   readonly stylesSvc = inject(StylesService);
+  readonly generalSvc = inject(GeneralFunctionsService)
+
   // private fontSizeSubject = new BehaviorSubject<number>(24);
   // fontSize$ = this.fontSizeSubject.asObservable();
 
@@ -42,14 +45,8 @@ export class TextStylesService {
     this.stylesSvc.updateSelectedNodeHeaderSize(headerSize);
   }
 
-  setAll(defaultStyles: Styles) {
-    // console.log("Default Style:", defaultStyles);
-
-    Object.entries(defaultStyles).forEach((attr) => {
-      // console.log("update", attr[0], " ->", attr[1]);
-      this.stylesSvc.updateSelectedNodeStyle(attr[0], attr[1]);
-    })
-
+  setAllMissing(defaultStyles: Styles, currentStyles: Styles) {
+    this.stylesSvc.setAllMissingStyles(defaultStyles, currentStyles);
   }
 
 }

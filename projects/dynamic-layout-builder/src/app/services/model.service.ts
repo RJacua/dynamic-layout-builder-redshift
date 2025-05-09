@@ -67,9 +67,13 @@ export class ModelService {
   writeElementModel(componentType: string, parentId: string, componentData?: LayoutData): LayoutElement<any> {
     const id = crypto.randomUUID().split('-')[0];
     let style = {};
+    let enabler = {};
     let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
     if (componentData?.style) {
       style = componentData.style;
+    }
+    if (componentData?.enabler) {
+      enabler = componentData.enabler;
     }
     if ((componentData as ContainerData)?.children) {
       children = (componentData as ContainerData).children!;
@@ -78,12 +82,12 @@ export class ModelService {
 
     if (componentType.toLowerCase() === 'container') {
       return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style, children: children }
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, children: children }
       }
     }
     else {
       return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), style: style }
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style}
       }
     }
   }
