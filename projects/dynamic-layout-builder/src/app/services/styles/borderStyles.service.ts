@@ -49,4 +49,8 @@ export class BorderStylesService {
   setAllMissingEnablers(defaultEnablers: Enablers, currentEnablers: Enablers) {
     this.stylesSvc.setAllMissingEnablers(defaultEnablers, currentEnablers)
   }
+
+  changeStylesByEnablers(nodeStyle: Styles, nodeEnabler: Enablers){
+    
+  }
 }

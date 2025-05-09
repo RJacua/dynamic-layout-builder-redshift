@@ -2,7 +2,7 @@ import { AfterViewInit, Component, computed, effect, ElementRef, inject, Input, 
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
 import { ComponentsService } from '../services/components.service';
-import { ContainerData, LayoutElement, AtomicElementData } from '../interfaces/layout-elements';
+import { ContainerData, LayoutElement, AtomicElementData, Styles, Enablers } from '../interfaces/layout-elements';
 import { BehaviorSubject } from 'rxjs';
 import { layoutModels } from '../model'
 import { ModelService } from '../services/model.service';
@@ -63,6 +63,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
 
   dynamicStyle = signal(this.nodeSignal()?.data.style);
+
 
   ngOnInit() {
     // this.setDirection(this.data.style?.direction ?? 'column');

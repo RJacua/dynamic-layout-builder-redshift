@@ -2,7 +2,7 @@
     (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
     <!-- (focusin)="onFocus()" (focusout)="onBlur()" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"> -->
     <br>
-    <p #target contentEditable="true" [ngStyle]="dynamicStyle()" (focus)="showMenu($event)"
+    <p #target contentEditable="true" [style]="dynamicStyle()" (focus)="showMenu($event)"
         (input)="updateTextContent($event)" ></p>
     <br>
     <!-- <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()">
