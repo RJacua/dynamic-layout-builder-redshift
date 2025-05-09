@@ -13,12 +13,13 @@ export class BorderStylesService {
   readonly stylesSvc = inject(StylesService);
   readonly generalSvc = inject(GeneralFunctionsService);
 
-  readonly containerStyles: Styles = {
+  readonly defaultContainerStyles: Styles = {
     ['border-color']: '#81828555',
     ['border-style']: 'solid',
     ['border-width']: '1px',
+    ['border-radius']: "0px"
   };
-  readonly componentStyles: Styles = {
+  readonly defaultComponentStyles: Styles = {
     ['border-color']: '',
     ['border-style']: '',
     ['border-width']: '0px',
@@ -68,10 +69,10 @@ export class BorderStylesService {
     if(nodeStyle && !borderEnabler){
       console.log("ENTROU ", nodeStyle)
       if(type === 'container'){
-        console.log(":) ", this.stylesSvc.changeToDefaultStyles(nodeStyle, this.containerStyles));
-        return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.containerStyles));
+        console.log(":) ", this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultContainerStyles));
+        return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultContainerStyles));
       }
-      else return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.componentStyles));
+      else return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultComponentStyles));
     }
     
     else return signal(nodeStyle);
