@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit, untracked } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, untracked } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -67,7 +67,9 @@ export class BorderStylesOptionsComponent implements OnInit {
       const node = this.selectedNode();
       if (!node) return;
 
-      if (this.selectedNode()?.data.type === 'container') {
+      let componentType = node.data.type;
+
+      if (componentType === 'container') {
         defaultStyles = this.containerStyles;
       }
       else {
@@ -83,13 +85,12 @@ export class BorderStylesOptionsComponent implements OnInit {
 
       this.enableStrokeCheckbox.setValue(node.data.enabler.enableStroke === 'true' || this.defaultEnabler.enableStroke);
 
-      // let component = this.selectedNode()?.data.type;
-      // this.strokeOptions.setValue({
-      //   strokeColor: node.data.style["border-color"] || component === 'container' ? '#81828555' : '',
-      //   strokeStyle: node.data.style["border-style"] || component === 'container' ? 'solid' : '',
-      //   strokeWidth:  parseInt(node.data.style["border-width"]) || component === 'container' ? 1 : 0,
-      // });
-
+      
+      this.strokeOptions.setValue({
+        strokeColor: node.data.style["border-color"] || (componentType === 'container' ? '#81828555' : ''),
+        strokeStyle: node.data.style["border-style"] || (componentType === 'container' ? 'solid' : ''),
+        strokeWidth:  parseInt(node.data.style["border-width"]) || (componentType === 'container' ? 1 : 0),
+      });
 
 
     });

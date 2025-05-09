@@ -37,16 +37,16 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   flexDirectionDefault = this.flexDirections[2].value;
 
   containerStyles: Styles = {
-    ["background-color"]: '#ffffff',
+    ["background-color"]: 'rgba(255, 255, 255,0)',
     opacity: 1,
     ['flex-direction']: this.flexDirectionDefault,
   };
 
   allStyles: Styles = {
-    ["background-color"]: '#ffffff',
+    ["background-color"]: 'rgba(255,255,255,0)',
     opacity: 1,
   };
-  // bgColor = new FormControl<string>('#ffffff');
+  // bgColor = new FormControl<string>('rgba(255,255,255,0)');
   // bgOpacity = new FormControl<number>(100);
 
   generalOptions = new FormGroup({});
@@ -83,13 +83,13 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
       if (this.selectedNode()?.data.type !== 'container') {
         this.generalOptions.setValue({
-          bgColor: node.data.style["background-color"] || '#ffffff',
+          bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
           bgOpacity: node.data.style["opacity"] * 100 || 100,
         });
       }
       else if (this.selectedNode()?.data.type === 'container') {
         this.generalOptions.setValue({
-          bgColor: node.data.style["background-color"] || '#ffffff',
+          bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
           bgOpacity: node.data.style["opacity"] * 100 || 100,
           flexDirection: node.data.style["flex-direction"] || this.flexDirectionDefault,
         });

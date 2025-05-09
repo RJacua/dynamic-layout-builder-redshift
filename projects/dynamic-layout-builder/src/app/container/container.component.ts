@@ -61,6 +61,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
+
   dynamicStyle = signal(this.nodeSignal()?.data.style);
 
   ngOnInit() {
