@@ -46,8 +46,8 @@ export class TextStylesOptionsComponent {
   headerOptionDefault = this.headerOptions[0];
 
   paragraphStyles: Styles = {
-    ['font-size']: 16,
-    ['font-weight']: 400,
+    ['font-size']: '16px',
+    ['font-weight']: '400',
     color: '#000000',
     ['text-align']: this.hOptionDefault,
   };
@@ -121,8 +121,8 @@ export class TextStylesOptionsComponent {
         this.fontOptions.setValue({
           fontColor: node.data.style["color"] || '#000000',
           horizontalAlign: node.data.style["text-align"] || this.hOptionDefault,
-          fontSize: parseInt(node.data.style["font-size"]) || 16,
-          fontWeight: parseInt(node.data.style["font-weight"]) || 400,
+          fontSize: parseInt(node.data.style["font-size"]) || '16px',
+          fontWeight: parseInt(node.data.style["font-weight"]) || '400',
         });
 
       }

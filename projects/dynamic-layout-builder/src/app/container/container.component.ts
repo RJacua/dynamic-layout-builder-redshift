@@ -8,6 +8,7 @@ import { layoutModels } from '../model'
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { CommonModule } from '@angular/common';
+import { BorderStylesService } from '../services/styles/borderStyles.service';
 
 @Component({
   selector: 'app-area',
@@ -33,8 +34,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       if (node) {
-        this.dynamicStyle.set(node.data.style);
+        this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
       }
+      
     
       console.log("on effect style:", this.dynamicStyle());
     });
@@ -44,6 +46,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly modelSvc = inject(ModelService);
   readonly componentsSvc = inject(ComponentsService);
   readonly selectionSvc = inject(SelectionService);
+  readonly borderStylesSvc = inject(BorderStylesService);
 
   id = signal('0');
   parentId = signal('0');
@@ -62,7 +65,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
 
-  dynamicStyle = signal(this.nodeSignal()?.data.style);
+  dynamicStyle = signal(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
 
 
   ngOnInit() {
@@ -71,7 +74,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
-    this.dynamicStyle.set(this.data.style ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
     this.modelSvc.updateModel(this.id(), this.nodeSignal());
   }

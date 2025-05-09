@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StylesService } from './styles.service';
 import { Enablers, Styles } from '../../interfaces/layout-elements';
@@ -11,7 +11,18 @@ export class BorderStylesService {
 
   constructor() { }
   readonly stylesSvc = inject(StylesService);
-  readonly generalSvc = inject(GeneralFunctionsService)
+  readonly generalSvc = inject(GeneralFunctionsService);
+
+  readonly containerStyles: Styles = {
+    ['border-color']: '#81828555',
+    ['border-style']: 'solid',
+    ['border-width']: '1px',
+  };
+  readonly componentStyles: Styles = {
+    ['border-color']: '',
+    ['border-style']: '',
+    ['border-width']: '0px',
+  };
 
   // private enableStrokeSubject = new BehaviorSubject<boolean>(false);
   // enableStroke$ = this.enableStrokeSubject.asObservable();
@@ -50,7 +61,19 @@ export class BorderStylesService {
     this.stylesSvc.setAllMissingEnablers(defaultEnablers, currentEnablers)
   }
 
-  changeStylesByEnablers(nodeStyle: Styles, nodeEnabler: Enablers){
+  changeStylesByEnablers(nodeStyle: Styles, borderEnabler: boolean, type: string){
     
+    console.log("BorderSvc changeToDefaultStyles: ", type);
+    console.log("aqui: ", nodeStyle, borderEnabler)
+    if(nodeStyle && !borderEnabler){
+      console.log("ENTROU ", nodeStyle)
+      if(type === 'container'){
+        console.log(":) ", this.stylesSvc.changeToDefaultStyles(nodeStyle, this.containerStyles));
+        return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.containerStyles));
+      }
+      else return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.componentStyles));
+    }
+    
+    else return signal(nodeStyle);
   }
 }

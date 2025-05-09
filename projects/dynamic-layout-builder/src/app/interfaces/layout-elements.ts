@@ -47,8 +47,8 @@ export interface Canvas {
 
 export interface Styles { //vai crescer
   // Text Styles
-  ['font-size']?: number;
-  ['font-weight']?: number;
+  ['font-size']?: string;
+  ['font-weight']?: string;
   color?: string;
   ['text-align']?: string;
 
@@ -63,7 +63,7 @@ export interface Styles { //vai crescer
   ['border-color']?: string;
   ['border-style']?: string;
 
-  ['border-width']?: number;
+  ['border-width']?: string;
 
 }
 

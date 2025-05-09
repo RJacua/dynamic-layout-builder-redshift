@@ -24,7 +24,7 @@ import { GeneralFunctionsService } from '../../services/generalFunctions.service
   styleUrl: './border-styles-options.component.scss'
 })
 export class BorderStylesOptionsComponent implements OnInit {
-  private borderStylesService = inject(BorderStylesService);
+  private borderStylesSvc = inject(BorderStylesService);
   readonly selectionSvc = inject(SelectionService);
   readonly generalSvc = inject(GeneralFunctionsService)
 
@@ -41,16 +41,9 @@ export class BorderStylesOptionsComponent implements OnInit {
   defaultEnabler: Enablers = {
     enableStroke: false,
   }
-  containerStyles: Styles = {
-    ['border-color']: '#81828555',
-    ['border-style']: 'solid',
-    ['border-width']: 1,
-  };
-  componentStyles: Styles = {
-    ['border-color']: '',
-    ['border-style']: '',
-    ['border-width']: 0,
-  };
+
+  containerStyles = this.borderStylesSvc.containerStyles;
+  componentStyles = this.borderStylesSvc.componentStyles;
   enableStrokeCheckbox = new FormControl();
   strokeOptions = new FormGroup({
     strokeColor: new FormControl<string>(''),
@@ -78,8 +71,8 @@ export class BorderStylesOptionsComponent implements OnInit {
       // if (Object.keys(node.data.style).length < 60) {
       // !this.generalSvc.isSubset(defaultStyles, node.data.style)
       untracked(() => {
-        this.borderStylesService.setAllMissingStyles(defaultStyles, node.data.style);
-        this.borderStylesService.setAllMissingEnablers(this.defaultEnabler, node.data.enabler);
+        this.borderStylesSvc.setAllMissingStyles(defaultStyles, node.data.style);
+        this.borderStylesSvc.setAllMissingEnablers(this.defaultEnabler, node.data.enabler);
       })
       // }
 
@@ -103,34 +96,34 @@ export class BorderStylesOptionsComponent implements OnInit {
     this.enableStrokeCheckbox.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(stroke => {
-        console.log('Add stroke:', stroke);
+        // console.log('Add stroke:', stroke);
         if (stroke !== null)
-          this.borderStylesService.setAddStroke(stroke);
+          this.borderStylesSvc.setAddStroke(stroke);
       });
 
 
     this.strokeOptions.controls.strokeColor.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(strokeColor => {
-        console.log('Add strokeColor:', strokeColor);
+        // console.log('Add strokeColor:', strokeColor);
         if (strokeColor !== null)
-          this.borderStylesService.setStrokeColor(strokeColor);
+          this.borderStylesSvc.setStrokeColor(strokeColor);
       });
 
     this.strokeOptions.controls.strokeStyle.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(strokeStyle => {
-        console.log('Add strokeStyle:', strokeStyle);
+        // console.log('Add strokeStyle:', strokeStyle);
         if (strokeStyle !== null)
-          this.borderStylesService.setStrokeStyle(strokeStyle);
+          this.borderStylesSvc.setStrokeStyle(strokeStyle);
       });
 
     this.strokeOptions.controls.strokeWidth.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(strokeWidth => {
-        console.log('Add strokeWidth:', strokeWidth);
+        // console.log('Add strokeWidth:', strokeWidth);
         if (strokeWidth !== null)
-          this.borderStylesService.setStrokeWidth(strokeWidth);
+          this.borderStylesSvc.setStrokeWidth(strokeWidth);
       });
 
   }

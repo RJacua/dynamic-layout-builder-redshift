@@ -96,8 +96,8 @@ export const layoutModels: LayoutElement<ContainerData>[] = [
                                     style: {
                                         'background-color': '#3dd',
                                         'opacity': 1,
-                                        'font-size': 24,
-                                        'font-weight': 900,
+                                        'font-size': '24px',
+                                        'font-weight': '900',
                                         'color': 'blue',
                                         'text-align': 'right',
                                       }, 
