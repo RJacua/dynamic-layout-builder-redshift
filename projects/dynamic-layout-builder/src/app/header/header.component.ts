@@ -54,7 +54,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       if (node) {
-        this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+        this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
         this.dynamicHeader.set(node.data.headerSize);
       }
     
@@ -76,7 +76,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   data2 = input();
   target = viewChild.required<ElementRef<HTMLHeadElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
 
   dynamicHeader = signal(this.nodeSignal()?.data.headerSize);
 

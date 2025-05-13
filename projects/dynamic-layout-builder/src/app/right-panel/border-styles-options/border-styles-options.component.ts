@@ -10,6 +10,7 @@ import { distinctUntilChanged } from 'rxjs';
 import { Enablers, Styles } from '../../interfaces/layout-elements';
 import { SelectionService } from '../../services/selection.service';
 import { GeneralFunctionsService } from '../../services/generalFunctions.service';
+import { CornerStylesOptionsComponent } from '../corner-styles-options/corner-styles-options.component';
 
 @Component({
   selector: 'app-border-styles-options',
@@ -18,7 +19,8 @@ import { GeneralFunctionsService } from '../../services/generalFunctions.service
     MatCardModule,
     MatListModule,
     MatDividerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CornerStylesOptionsComponent,
   ],
   templateUrl: './border-styles-options.component.html',
   styleUrl: './border-styles-options.component.scss'
@@ -26,7 +28,7 @@ import { GeneralFunctionsService } from '../../services/generalFunctions.service
 export class BorderStylesOptionsComponent implements OnInit {
   private borderStylesSvc = inject(BorderStylesService);
   readonly selectionSvc = inject(SelectionService);
-  readonly generalSvc = inject(GeneralFunctionsService)
+  readonly generalSvc = inject(GeneralFunctionsService);
 
   selectedNode = this.selectionSvc.selectedNode;
 
@@ -34,7 +36,7 @@ export class BorderStylesOptionsComponent implements OnInit {
     { value: 'dotted', label: 'Dotted' },
     { value: 'dashed', label: 'Dashed' },
     { value: 'solid', label: 'Solid' },
-    { value: 'dDouble', label: 'Double' }
+    { value: 'Double', label: 'Double' }
   ];
   strokeStyleOptionsDefault = this.strokeStyleOptions[2].value;
 
@@ -42,8 +44,8 @@ export class BorderStylesOptionsComponent implements OnInit {
     enableStroke: false,
   }
 
-  containerStyles = this.borderStylesSvc.containerStyles;
-  componentStyles = this.borderStylesSvc.componentStyles;
+  containerStyles = this.borderStylesSvc.defaultContainerStyles;
+  componentStyles = this.borderStylesSvc.defaultComponentStyles;
   enableStrokeCheckbox = new FormControl();
   strokeOptions = new FormGroup({
     strokeColor: new FormControl<string>(''),

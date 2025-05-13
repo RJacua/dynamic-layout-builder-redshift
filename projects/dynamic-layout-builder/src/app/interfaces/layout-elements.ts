@@ -15,7 +15,7 @@ export interface LayoutData {
   type: string;
   style: Styles; //por enquanto, depois vamos usar a interface Styles
   enabler: Enablers; //por enquanto, depois vamos usar a interface Enablers
-  
+
 }
 
 
@@ -62,13 +62,21 @@ export interface Styles { //vai crescer
   // Border Styles
   ['border-color']?: string;
   ['border-style']?: string;
-
   ['border-width']?: string;
+
+  // Corner Styles
+  ['border-radius']?: string;
+  ['border-top-left-radius']?: string;
+  ['border-top-right-radius']?: string;
+  ['border-bottom-left-radius']?: string;
+  ['border-bottom-right-radius']?: string;
 
 }
 
 export interface Enablers { //vai crescer
   enableStroke?: boolean;
-  
+  enableIndividualCorner?: boolean;
+
 }
+
 
