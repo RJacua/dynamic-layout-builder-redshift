@@ -9,6 +9,13 @@ import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { CommonModule } from '@angular/common';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MenuComponent } from '../canvas/new-area-menu/menu.component';
+import { NewAreaMenuService } from '../services/new-area-menu.service';
 
 @Component({
   selector: 'app-area',
@@ -17,6 +24,12 @@ import { BorderStylesService } from '../services/styles/borderStyles.service';
     HeaderComponent,
     ParagraphComponent,
     CommonModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MenuComponent,
+    MatTooltipModule
   ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
@@ -29,6 +42,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, enabler: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
+
     effect(() => {
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
@@ -36,8 +50,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       if (node) {
         this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
       }
-      
-    
+
+
       // console.log("on effect style:", this.dynamicStyle());
     });
 
@@ -47,15 +61,21 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly componentsSvc = inject(ComponentsService);
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
+  readonly newAreaMenuSvc = inject(NewAreaMenuService);
 
   id = signal('0');
   parentId = signal('0');
+  initialData: {id: string, rootNodes: string[]} =  { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
   });
-  
-  canvasModel = computed(() => {this.modelSvc.canvasModel()});
+
+  isHover = computed(() => {
+    return this.id() === this.selectionSvc.hoveredElementId();
+  });
+
+  canvasModel = computed(() => { this.modelSvc.canvasModel() });
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
@@ -72,6 +92,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
     this.modelSvc.updateModel(this.id(), this.nodeSignal());
+
+    this.initialData =  { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
+
   }
 
   ngAfterViewInit() {
@@ -81,10 +104,10 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   addLayoutElement(componentType: string) {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
     this.modelSvc.addChildNode(this.id(), newLayoutElement);
-    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 1});
+    setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 1 });
   }
 
-  deleteContainer(){
+  deleteContainer() {
     this.modelSvc.removeNodeById(this.id());
   }
 

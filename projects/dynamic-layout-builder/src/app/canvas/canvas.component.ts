@@ -36,7 +36,7 @@ import { layoutModels } from '../model';
 
 export class CanvasComponent {
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: Canvas = { id: crypto.randomUUID().split("-")[0], type: 'canvas', children: [] };
+  @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
 
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
@@ -57,10 +57,9 @@ export class CanvasComponent {
   }
 
   private selectionService = inject(SelectionService)
-  private stylesService = inject(StylesService)
-  initialData: string[] = [];
+  initialData: {id: string, rootNodes: string[]};
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
-    this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
+    this.initialData = {id: 'canvas', rootNodes: this.newAreaMenuSvc.rootLevelNodes.slice()};
   }
 
   // readonly defaultBorder = this.stylesService.defaultBorder;
