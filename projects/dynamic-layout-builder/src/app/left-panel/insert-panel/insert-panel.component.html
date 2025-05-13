@@ -8,7 +8,8 @@
         <!-- <p>move</p> -->
     </button>
 
-    <button mat-icon-button aria-label="Example icon-button with a menu" (click)="addLayoutElement('container')">
+    <button mat-icon-button aria-label="Example icon-button with a menu" (click)="addLayoutElement('container')"
+    *ngIf="selectedElementType() == 'container' || selectedElementType() == undefined">
         <!-- [matMenuTriggerFor]="containerMenu" -->
         <mat-icon matTooltip="Add Container">add_box</mat-icon>
         <!-- <p>container</p> -->
