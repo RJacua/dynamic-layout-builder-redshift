@@ -8,11 +8,11 @@
             <span>
                 <label for="individualCorner">Individual Corners</label>
                 <input type="checkbox" id="individualCorner" name="individualCorner"
-                    [formControl]="enableIndividualCorner">
+                    [formControl]="enableIndividualCornerCheckbox">
             </span>
         </div><br>
 
-        <div *ngIf="!(enableIndividualCorner$ | async)">
+        <div *ngIf="!enableIndividualCornerCheckbox.value">
             <label for="strokeRadius">Corner Radius:</label><br>
             <input type="range" id="strokeRadius" name="strokeRadius" min="0" max="100" step="1"
                 [formControl]="strokeRadius">
@@ -20,7 +20,7 @@
         </div>
 
         <form [formGroup]="cornerOptions">
-            <div *ngIf="enableIndividualCorner$ | async"
+            <div *ngIf="enableIndividualCornerCheckbox.value"
                 style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: 400px;">
 
                 <div>

@@ -47,7 +47,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       // const canvasModel = this.modelSvc.canvasModel();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
       if (node) {
-        this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+        this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
       }
 
       // console.log("on effect style:", this.dynamicStyle());
@@ -69,7 +69,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
   ngOnInit(): void {
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
@@ -77,7 +77,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     // this.alignment.set(this.data.style.alignment ?? 'align-center ');
     
-    this.dynamicStyle.set(this.borderStylesSvc.changeStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
   }
 

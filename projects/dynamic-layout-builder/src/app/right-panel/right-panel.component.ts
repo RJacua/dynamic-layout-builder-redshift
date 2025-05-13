@@ -13,7 +13,7 @@ import { CornerStylesOptionsComponent } from './corner-styles-options/corner-sty
     BackgroundStylesOptionsComponent, 
     TextStylesOptionsComponent,
     BorderStylesOptionsComponent,
-    CornerStylesOptionsComponent
+    // CornerStylesOptionsComponent
   ],
   templateUrl: './right-panel.component.html',
   styleUrl: './right-panel.component.scss'
