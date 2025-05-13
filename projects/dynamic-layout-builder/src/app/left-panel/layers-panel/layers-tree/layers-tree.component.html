@@ -1,19 +1,17 @@
-<br>
-<mat-tree class="main" [class.active]="isSelected()" [dataSource]="nodeModel()" [childrenAccessor]="childrenAccessor" (click)="onElementClick($event)">
+<mat-tree class="main" [dataSource]="nodeModel()" [childrenAccessor]="childrenAccessor"
+  (click)="onElementClick($event)">
   <mat-nested-tree-node *matTreeNodeDef="let node">
-    <div [class.tree-node]="node.data.type == 'container'"
-    [class.node-item]="node.data.type !== 'container' || !node.data.children.length">
-      <button mat-icon-button (click)="toggleNode(node.data.id)" [attr.aria-label]="'toggle ' + node.data.type"
-        *ngIf="node.data.children?.length > 0">
-        <mat-icon>
-          {{ isNodeExpanded(node.data.id) ? 'expand_more' : 'chevron_right' }}
-        </mat-icon>
-      </button>
+    <div class="node-line" [class.selected]="isSelected()" [class.tree-node]="node.data.type == 'container'"
+      [class.node-item]="node.data.type !== 'container' || !node.data.children.length">
+      <mat-icon class="expand-icon" mat-icon-button (click)="toggleNode(node.data.id)"
+        [attr.aria-label]="'toggle ' + node.data.type" *ngIf="node.data.children?.length > 0">
+        {{ isNodeExpanded(node.data.id) ? 'expand_more' : 'chevron_right' }}
+      </mat-icon>
       {{ node.data.type }} {{ node.data.id }}
     </div>
 
     <div *ngIf="isNodeExpanded(node.data.id)" class="new-node">
-      <div *ngFor="let child of node.data.children" >
+      <div *ngFor="let child of node.data.children">
         <app-layers-tree [data]="child.data.id"></app-layers-tree>
       </div>
     </div>
