@@ -114,10 +114,7 @@ export class CornerStylesService {
       ['border-bottom-right-radius']: nodeStyle['border-radius'],
     };
 
-    console.log("CornerSvc changeToDefaultStyles: ", type);
-    console.log("aqui2: ", nodeStyle, individualCornerEnabler)
     if (nodeStyle && !individualCornerEnabler) {
-      console.log("ENTROU ", nodeStyle)
       return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, defaultIndividualCornerStyles));
     }
 

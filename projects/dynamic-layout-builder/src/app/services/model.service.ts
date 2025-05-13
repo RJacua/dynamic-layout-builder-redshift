@@ -208,6 +208,28 @@ export class ModelService {
     return false;
   }
 
+  moveNodeTo(nodeId: string, newParentId?: string){
+    
+    newParentId = newParentId || 'canvas';
+
+    let node = this.getNodeById(nodeId);
+    let newParentNode = this.getNodeById(newParentId);
+    if(nodeId === newParentId || newParentNode.data.id === node.data.parentId) {
+      return;
+    }
+    
+    if(newParentNode.data.type === 'container'){
+      this.removeNodeById(nodeId);
+      if(newParentId){
+        this.addChildNode(newParentId, node);
+      }
+      else {
+        this.addChildNode('canvas', node);
+
+      }
+    }
+  }
+
   setCanvasModel(model: LayoutElement<ContainerData>[]) {
     this.canvasModel.set(model)
   }
@@ -226,11 +248,9 @@ export class ModelService {
         return []
       }
       currentId = currentNode.data.parentId;
-      console.log(currentId);
+      // console.log(currentId);
       genealogicalTree.push(currentId);
     }
-
-    console.log(genealogicalTree);
 
     return genealogicalTree;
   }

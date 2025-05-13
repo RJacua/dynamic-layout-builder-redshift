@@ -52,7 +52,6 @@ export class MenuComponent {
   }
 
   onMenuClick(node: string): void {
-    console.log(this.data)
     if (!this.newAreaMenuSvc.isExpandable(node)) {
       this.newAreaMenuSvc.runAction(node, this.data.id);
     }

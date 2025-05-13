@@ -5,10 +5,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { ModelService } from '../../../services/model.service';
 import { SelectionService } from '../../../services/selection.service';
+import { CdkDrag, CdkDragDrop, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-layers-tree',
-  imports: [MatTreeModule, MatIconModule, MatButtonModule, CommonModule],
+  imports: [MatTreeModule, MatIconModule, MatButtonModule, CommonModule, CdkDrag, DragDropModule],
   templateUrl: './layers-tree.component.html',
   styleUrl: './layers-tree.component.scss'
 })
@@ -17,7 +18,7 @@ export class LayersTreeComponent {
   readonly selectionSvc = inject(SelectionService);
   readonly modelSvc = inject(ModelService);
 
-  isSelected = computed(() => {return this.data === this.selectionSvc.selectedElementId()})
+  isSelected = computed(() => { return this.data === this.selectionSvc.selectedElementId() })
 
   isFocused = computed(() => {
     return this.data === this.selectionSvc.selectedElementId();
@@ -64,7 +65,7 @@ export class LayersTreeComponent {
   }
 
   expandNewNodeParents(nodeId: string) {
-    if(nodeId === 'canvas') return;
+    if (nodeId === 'canvas') return;
 
     const parentsId = this.modelSvc.getGenealogicalTreeIdsById(nodeId);
     const expanded = this.isExpanded();
@@ -98,6 +99,50 @@ export class LayersTreeComponent {
         console.warn("ng.getComponent não disponível (modo produção?).");
       }
     }
+  }
+
+  onElementHover(event: MouseEvent) {
+    let el = event.target as HTMLElement;
+
+    while (el && !el.hasAttribute('data-id') && el.parentElement) {
+      el = el.parentElement;
+    }
+
+    if (el && el.hasAttribute('data-id')) {
+      const id = el.getAttribute('data-id');
+      if (id) {
+        this.selectionSvc.hoverById(id);
+      }
+    }
+    console.log("selected: ", this.selectionSvc.selectedElementId());
+    console.log("hovered: ", this.selectionSvc.hoveredElementId());
+  }
+
+  onElementMouseLeave(event: MouseEvent) {
+    const toElement = event.relatedTarget as HTMLElement;
+
+    let el = toElement;
+    while (el && el !== document.body) {
+      if (el.hasAttribute && el.hasAttribute('data-id')) {
+        return;
+      }
+      el = el.parentElement!;
+    }
+
+    this.selectionSvc.unhover();
+  }
+
+
+  onDrag(event: CdkDragStart) {
+    const element = event.source.element.nativeElement;
+    const id = element.getAttribute('data-id');
+    if (id) {
+      this.selectionSvc.selectById(id, true);
+    }
+  }
+
+  onDrop() {
+    this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
   }
 
 }
