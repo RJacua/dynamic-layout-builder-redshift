@@ -32,7 +32,7 @@ export class CornerStylesOptionsComponent implements OnInit {
   defaultEnabler: Enablers = {
     enableIndividualCorner: false,
   }
-  defaultCornerStyles = this.cornerStylesSvc.defaultCornerStyles;
+  defaultCornerStyles = this.cornerStylesSvc.defaultIndividualCornerStyles;
 
   strokeRadius = new FormControl<number>(0)
   enableIndividualCornerCheckbox = new FormControl()
@@ -65,12 +65,12 @@ export class CornerStylesOptionsComponent implements OnInit {
       this.strokeRadius.setValue(parseInt(node.data.style["border-radius"]) || 0);
 
       // if (this.enableIndividualCornerCheckbox.value === true) {
-      //   this.cornerOptions.setValue({
-      //     topLeft: parseInt(node.data.style["border-top-left-radius"]) || this.strokeRadius.value ,
-      //     topRight: parseInt(node.data.style["border-top-right-radius"]) ||  this.strokeRadius.value,
-      //     bottomLeft: parseInt(node.data.style["border-bottom-left-radius"]) ||  this.strokeRadius.value,
-      //     bottomRight: parseInt(node.data.style["border-bottom-right-radius"]) ||  this.strokeRadius.value,
-      //   });
+        this.cornerOptions.setValue({
+          topLeft: parseInt(node.data.style["border-top-left-radius"]) || this.strokeRadius.value ,
+          topRight: parseInt(node.data.style["border-top-right-radius"]) ||  this.strokeRadius.value,
+          bottomLeft: parseInt(node.data.style["border-bottom-left-radius"]) ||  this.strokeRadius.value,
+          bottomRight: parseInt(node.data.style["border-bottom-right-radius"]) ||  this.strokeRadius.value,
+        });
 
       // }
 
@@ -86,7 +86,7 @@ export class CornerStylesOptionsComponent implements OnInit {
       .subscribe(individualCorner => {
         console.log('Add individualCorner:', individualCorner);
         if (individualCorner !== null)
-          this.cornerStylesSvc.setIndividualCorner(individualCorner);
+          this.cornerStylesSvc.setIndividualCorner(individualCorner, this.cornerOptions.controls, this.strokeRadius.value);
       });
 
     this.strokeRadius.valueChanges

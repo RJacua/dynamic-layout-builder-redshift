@@ -62,14 +62,14 @@ export class BorderStylesService {
     this.stylesSvc.setAllMissingEnablers(defaultEnablers, currentEnablers)
   }
 
-  changeStylesByEnablers(nodeStyle: Styles, borderEnabler: boolean, type: string){
+  changeBorderStylesByEnablers(nodeStyle: Styles, borderEnabler: boolean, type: string){
     
-    console.log("BorderSvc changeToDefaultStyles: ", type);
-    console.log("aqui: ", nodeStyle, borderEnabler)
+    // console.log("BorderSvc changeToDefaultStyles: ", type);
+    // console.log("aqui: ", nodeStyle, borderEnabler)
     if(nodeStyle && !borderEnabler){
-      console.log("ENTROU ", nodeStyle)
+      // console.log("ENTROU ", nodeStyle)
       if(type === 'container'){
-        console.log(":) ", this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultContainerStyles));
+        // console.log(":) ", this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultContainerStyles));
         return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultContainerStyles));
       }
       else return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultComponentStyles));

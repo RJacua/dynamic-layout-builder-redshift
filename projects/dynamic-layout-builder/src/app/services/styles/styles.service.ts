@@ -233,7 +233,7 @@ export class StylesService {
 
   changeToDefaultStyles(nodeStyle: Styles, defaultStyle: Styles) {
     let updatedStyle = nodeStyle;
-    console.log("changeToDefaultStyles: ", updatedStyle);
+    // console.log("changeToDefaultStyles: ", updatedStyle);
     
     Object.entries(defaultStyle).forEach((d) => {
       Object.entries(updatedStyle).forEach((u) => {
@@ -243,16 +243,15 @@ export class StylesService {
             ...updatedStyle,
             [d[0]]: d[1]
           }
-          console.log("Update: ", updatedStyle);
+          // console.log("Update: ", updatedStyle);
         };
       })
     })
 
-    console.log("final: ", updatedStyle)
+    // console.log("final: ", updatedStyle)
     return updatedStyle
 
   }
-
 
 }
 
