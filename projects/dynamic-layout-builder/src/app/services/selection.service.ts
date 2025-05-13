@@ -42,11 +42,11 @@ export class SelectionService {
     }
   }
 
-  selectById(id: string) {
+  selectById(id: string, tree = false) {
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
-    else this.unselect();
+    else if(!tree) this.unselect();
   }
 
   unselect() {
@@ -68,10 +68,7 @@ export class SelectionService {
   }
 
   hoverById(id: string) {
-    if (id !== this._hoveredId()) {
       this._hoveredId.set(id);
-    }
-    else this.unhover();
   }
 
   unhover() {

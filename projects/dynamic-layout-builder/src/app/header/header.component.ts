@@ -58,8 +58,8 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
         this.dynamicHeader.set(node.data.headerSize);
       }
     
-      console.log("on effect style:", this.dynamicStyle());
-      console.log("on effect header:", this.dynamicHeader());
+      // console.log("on effect style:", this.dynamicStyle());
+      // console.log("on effect header:", this.dynamicHeader());
     });
   }
   readonly componentsSvc = inject(ComponentsService);

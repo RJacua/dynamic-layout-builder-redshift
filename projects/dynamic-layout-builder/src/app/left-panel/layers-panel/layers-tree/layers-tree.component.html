@@ -1,12 +1,37 @@
-<mat-tree class="main" [dataSource]="nodeModel()" [childrenAccessor]="childrenAccessor"
-  (click)="onElementClick($event)">
-  <mat-nested-tree-node *matTreeNodeDef="let node">
-    <div class="node-line" [class.selected]="isSelected()" [class.tree-node]="node.data.type == 'container'"
-      [class.node-item]="node.data.type !== 'container' || !node.data.children.length">
-      <mat-icon class="expand-icon" mat-icon-button (click)="toggleNode(node.data.id)"
-        [attr.aria-label]="'toggle ' + node.data.type" *ngIf="node.data.children?.length > 0">
-        {{ isNodeExpanded(node.data.id) ? 'expand_more' : 'chevron_right' }}
-      </mat-icon>
+<br>
+<mat-tree
+  class="main"
+  [class.active]="isSelected()"
+  [dataSource]="nodeModel()"
+  [childrenAccessor]="childrenAccessor"
+  (click)="onElementClick($event)"
+  (mouseover)="onElementHover($event)"
+  (mouseleave)="onElementMouseLeave($event)"
+>
+  <mat-nested-tree-node
+    *matTreeNodeDef="let node"
+    cdkDropList
+    (cdkDropListDropped)="onDrop()"
+    [cdkDropListData]="[data]"
+    [attr.data-id]="node.data.id"
+  >
+    <div
+      cdkDrag
+      (cdkDragStarted)="onDrag($event)"
+      [attr.data-id]="node.data.id"
+      [class.tree-node]="node.data.type == 'container'"
+      [class.node-item]="node.data.type !== 'container' || !node.data.children.length"
+    >
+      <button
+        mat-icon-button
+        (click)="toggleNode(node.data.id)"
+        [attr.aria-label]="'toggle ' + node.data.type"
+        *ngIf="node.data.children?.length > 0"
+      >
+        <mat-icon>
+          {{ isNodeExpanded(node.data.id) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
       {{ node.data.type }} {{ node.data.id }}
     </div>
 

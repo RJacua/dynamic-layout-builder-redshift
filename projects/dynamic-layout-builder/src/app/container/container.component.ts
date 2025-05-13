@@ -17,6 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MenuComponent } from '../canvas/new-area-menu/menu.component';
 import { NewAreaMenuService } from '../services/new-area-menu.service';
+import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-area',
@@ -30,7 +31,9 @@ import { NewAreaMenuService } from '../services/new-area-menu.service';
     MatMenuModule,
     MatIconModule,
     MenuComponent,
-    MatTooltipModule
+    MatTooltipModule, 
+    CdkDrag, 
+    DragDropModule
   ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
@@ -51,7 +54,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       if (node) {
         this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
         this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
-      console.log("aqui: ", this.nodeSignal().data.style)
       }
 
 
@@ -71,7 +73,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   id = signal('0');
   parentId = signal('0');
-  initialData: {id: string, rootNodes: string[]} =  { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
+  initialData: { id: string, rootNodes: string[] } = { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
@@ -99,7 +101,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
     this.modelSvc.updateModel(this.id(), this.nodeSignal());
 
-    this.initialData =  { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
+    this.initialData = { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
 
   }
 
@@ -121,6 +123,50 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     // this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
     this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
     console.log("aqui: ", this.dynamicStyle())
+  }
+
+  onElementHover(event: MouseEvent) {
+    let el = event.target as HTMLElement;
+
+    while (el && !el.hasAttribute('data-id') && el.parentElement) {
+      el = el.parentElement;
+    }
+
+    if (el && el.hasAttribute('data-id')) {
+      const id = el.getAttribute('data-id');
+      if (id) {
+        this.selectionSvc.hoverById(id);
+      }
+    }
+    console.log("selected: ", this.selectionSvc.selectedElementId());
+    console.log("hovered: ", this.selectionSvc.hoveredElementId());
+  }
+
+  onElementMouseLeave(event: MouseEvent) {
+    const toElement = event.relatedTarget as HTMLElement;
+
+    let el = toElement;
+    while (el && el !== document.body) {
+      if (el.hasAttribute && el.hasAttribute('data-id')) {
+        return;
+      }
+      el = el.parentElement!;
+    }
+
+    this.selectionSvc.unhover();
+  }
+
+
+  onDrag(event: CdkDragStart) {
+    const element = event.source.element.nativeElement;
+    const id = element.getAttribute('data-id');
+    if (id) {
+      this.selectionSvc.selectById(id, true);
+    }
+  }
+
+  onDrop() {
+    this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
   }
 
 }
