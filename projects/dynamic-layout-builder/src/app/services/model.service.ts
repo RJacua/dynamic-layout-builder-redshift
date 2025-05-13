@@ -1,5 +1,5 @@
 import { computed, effect, Injectable, Signal, signal, untracked, ViewContainerRef, WritableSignal } from '@angular/core';
-import { ContainerData, LayoutElement, AtomicElementData, LayoutData } from '../interfaces/layout-elements';
+import { ContainerData, LayoutElement, AtomicElementData, LayoutData, Styles } from '../interfaces/layout-elements';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -64,9 +64,9 @@ export class ModelService {
   }
 
 
-  writeElementModel(componentType: string, parentId: string, componentData?: LayoutData): LayoutElement<any> {
+  writeElementModel(componentType: string, parentId: string, componentData?: LayoutData, defaultStyle?: Styles): LayoutElement<any> {
     const id = crypto.randomUUID().split('-')[0];
-    let style = {};
+    let style = defaultStyle || {};
     let enabler = {};
     let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
     if (componentData?.style) {

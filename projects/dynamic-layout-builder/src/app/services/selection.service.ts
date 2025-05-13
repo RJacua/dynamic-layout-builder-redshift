@@ -53,4 +53,30 @@ export class SelectionService {
     this._selectedId.set('canvas');
   }
 
+  private _hoveredId = signal<string>('canvas');
+  hoveredElementId = computed(this._hoveredId);
+  hoveredNode = computed(() => this.modelSvc.getNodeById(this.hoveredElementId(), this.modelSvc.canvasModel()));
+
+  hover(element: ContainerData | AtomicElementData): void {
+    if(element.type === 'canvas') {
+      this.unhover();
+      return
+    }
+    else if (element.id) {
+      this._hoveredId.set(element.id);
+    }
+  }
+
+  hoverById(id: string) {
+    if (id !== this._hoveredId()) {
+      this._hoveredId.set(id);
+    }
+    else this.unhover();
+  }
+
+  unhover() {
+    this._hoveredId.set('canvas');
+  }
+
+
 }

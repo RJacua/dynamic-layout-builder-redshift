@@ -10,6 +10,13 @@ import { SelectionService } from '../services/selection.service';
 import { CommonModule } from '@angular/common';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CornerStylesService } from '../services/styles/cornerStyles.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MenuComponent } from '../canvas/new-area-menu/menu.component';
+import { NewAreaMenuService } from '../services/new-area-menu.service';
 
 @Component({
   selector: 'app-area',
@@ -18,6 +25,12 @@ import { CornerStylesService } from '../services/styles/cornerStyles.service';
     HeaderComponent,
     ParagraphComponent,
     CommonModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MenuComponent,
+    MatTooltipModule
   ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss'
@@ -30,6 +43,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, enabler: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
+
     effect(() => {
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
@@ -39,6 +53,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
         this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
       console.log("aqui: ", this.nodeSignal().data.style)
       }
+
+
 
 
       // console.log("on effect style:", this.dynamicStyle());
@@ -51,12 +67,18 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
   readonly cornerStylesSvc = inject(CornerStylesService);
+  readonly newAreaMenuSvc = inject(NewAreaMenuService);
 
   id = signal('0');
   parentId = signal('0');
+  initialData: {id: string, rootNodes: string[]} =  { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
+  });
+
+  isHover = computed(() => {
+    return this.id() === this.selectionSvc.hoveredElementId();
   });
 
   canvasModel = computed(() => { this.modelSvc.canvasModel() });
@@ -76,6 +98,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
     this.modelSvc.updateModel(this.id(), this.nodeSignal());
+
+    this.initialData =  { id: this.id(), rootNodes: this.newAreaMenuSvc.rootLevelNodesAdd.slice() };
+
   }
 
   ngAfterViewInit() {

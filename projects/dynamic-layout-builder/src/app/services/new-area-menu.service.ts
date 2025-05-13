@@ -1,28 +1,69 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { of } from 'rxjs';
+import { ModelService } from './model.service';
+import { SelectionService } from './selection.service';
+import { Styles } from '../interfaces/layout-elements';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewAreaMenuService {
+  readonly modelSvc = inject(ModelService);
+  readonly selectionSvc = inject(SelectionService);
 
   constructor() { }
-  dataMap = new Map<string, string[]>([
-    ["New Area Layout", ["Linear", "Flex"]],
-    ["Insert Component", ["Heading", "Paragraph"]],
-    ["Properties", ["Margin", "Padding"]],
-    ["Linear",  ["Rows", "Columns"]],
-    ["Flex",  ["Grid", "Mosaic"]],
-  ]);
+  // dataMap = new Map<string, string[]>([
+  //   ["New Area Layout", ["Linear", "Flex"]],
+  //   ["Insert Component", ["Heading", "Paragraph"]],
+  //   ["Properties", ["Margin", "Padding"]],
+  //   ["Linear",  ["Rows", "Columns"]],
+  //   ["Flex",  ["Grid", "Mosaic"]],
+  // ]);
 
-  rootLevelNodes: string[] = ["New Area Layout", "Insert Component", "Properties"];
+  // rootLevelNodes: string[] = ["New Area Layout", "Insert Component", "Properties"];
+
+  addMap = new Map<string, string[]>([
+    ["New Container", ["Rows", "Columns"]],
+    ["New Component", ["Heading", "Paragraph"]],
+  ]);
+  rootLevelNodesAdd: string[] = ["New Container", "New Component"];
+
+  // newContainerMap = new Map<string, string[]>([
+  //   ["New Container", ["Rows", "Columns"]],
+  // ]);
+  rootLevelNodes: string[] = ["New Container"];
+
+  ActionMap(parentId: string) {
+    return new Map<string, () => void>([
+      ['Rows', () => this.addLayoutElement('container', parentId, { "flex-direction": "row" })],
+      ['Columns', () => this.addLayoutElement('container', parentId, { "flex-direction": "column" })],
+      ['Heading', () => this.addLayoutElement('header', parentId)],
+      ['Paragraph', () => this.addLayoutElement('paragraph', parentId)],
+    ])
+  };
 
   getChildren(node: string) {
-    return of(this.dataMap.get(node));
+    return of(this.addMap.get(node));
   }
 
   isExpandable(node: string): boolean {
-    return this.dataMap.has(node);
+    return this.addMap.has(node);
+  }
+
+  runAction(node: string, parentId: string): void {
+    const actionMap = this.ActionMap(parentId);
+    const action = actionMap.get(node);
+    if (action) {
+      action();
+    } else {
+      console.warn(`No action defined for ${node}`);
+    }
+  }
+
+  addLayoutElement(componentType: string, parentId: string, defaultStyle?: Styles) {
+    const newLayoutElement = this.modelSvc.writeElementModel(componentType, parentId, undefined, defaultStyle);
+    this.modelSvc.addChildNode(this.selectionSvc.selectedElementId(), newLayoutElement);
+    setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 0 });
   }
 
 }

@@ -1,19 +1,23 @@
-body, html {
+body,
+html {
     height: 100%;
     width: 100%;
     margin: 0 !important;
     padding: 0 !important;
-  }
+}
 
 .container-border {
     margin: .5% .5%;
     padding: 5% 1% 1%;
     border: 1px solid #81828555;
 }
+
 .element {
     border: 1px solid rgba(0, 0, 0, 0);
 }
-.container-border:hover, .element:hover {
+
+.container-border:hover,
+.element:hover {
     border: 1px solid #818285;
 }
 
@@ -21,6 +25,7 @@ body, html {
     border-radius: 35%;
     font-size: x-small;
 }
+
 .round-button:hover {
     background-color: #008CBA;
     color: white;
@@ -32,25 +37,35 @@ body, html {
 
 .container {
     height: 100vh;
-  }
+}
 
 
-.align-left, .paragraph-align-left, .header-alignment-left {
+.align-left,
+.paragraph-align-left,
+.header-alignment-left {
     text-align: left;
 }
-.align-right, .paragraph-align-right, .header-alignment-right {
+
+.align-right,
+.paragraph-align-right,
+.header-alignment-right {
     text-align: right;
 }
-.align-center, .paragraph-align-center, .header-alignment-center {
+
+.align-center,
+.paragraph-align-center,
+.header-alignment-center {
     text-align: center;
 }
 
 .hidden {
     display: none;
 }
+
 .in-focus {
     display: block;
 }
+
 .editable-content:focus {
     border: 1px solid rgba(0, 0, 0, 0);
     background-color: rgba(255, 0, 0, 0.1);
@@ -70,12 +85,13 @@ body, html {
 
 .container-flex {
     display: flex;
-    
+
     justify-content: center;
     align-items: stretch;
     gap: 2px;
 }
-.container-flex >* {
+
+.container-flex>* {
     flex: 1 1 0%;
     min-width: 0;
 }
@@ -87,11 +103,24 @@ body, html {
 // .container-flex-column {
 //     flex-direction: column;
 // }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .main.active {
     background-color: blanchedalmond;
     outline: none;
     transition: background-color 0.2s ease;
-  }
+}
+
+
+mat-card {
+    background: rgba(255,255,255,0)  !important;
+    box-shadow: 2px 2px 2px 1px rgba(255, 0, 0, 0) !important;
+}
