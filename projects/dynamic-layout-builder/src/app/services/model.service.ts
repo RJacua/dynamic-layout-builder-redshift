@@ -214,13 +214,12 @@ export class ModelService {
 
     let node = this.getNodeById(nodeId);
     let newParentNode = this.getNodeById(newParentId);
-    if (nodeId === newParentId || newParentNode.data.id === node.data.parentId) {
+    if (nodeId === newParentId || (newParentId !== 'canvas' && newParentNode.data.id === node.data.parentId)) {
       return;
     }
 
-    if (newParentNode.data.type === 'container') {
-      this.removeNodeById(nodeId);
-
+    if (newParentId === 'canvas' || newParentNode.data.type === 'container') {
+    
       node = {
         ...node,
         data: {
@@ -229,12 +228,13 @@ export class ModelService {
         }
       }
 
-      if (newParentId) {
+      if (newParentId !== 'canvas') {
+        this.removeNodeById(nodeId);
         this.addChildNode(newParentId, node);
       }
-      else {
+      else if(node.data.type === 'container') {
+        this.removeNodeById(nodeId);
         this.addChildNode('canvas', node);
-
       }
     }
   }
