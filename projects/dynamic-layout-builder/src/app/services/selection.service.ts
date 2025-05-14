@@ -42,11 +42,11 @@ export class SelectionService {
     }
   }
 
-  selectById(id: string, tree = false) {
+  selectById(id: string, keep = false) {
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
-    else if(!tree) this.unselect();
+    else if(!keep) this.unselect();
   }
 
   unselect() {

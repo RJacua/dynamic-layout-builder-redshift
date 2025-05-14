@@ -170,7 +170,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   onPlusClick(){
-    this.selectionSvc.selectById(this.id());
+    this.selectionSvc.selectById(this.id(), true);
   }
 
 }
