@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, computed, effect, Signal, untracked, ViewChild, ViewContainerRef, Input } from '@angular/core';
+import { Component, inject, computed, effect, Signal, untracked, ViewChild, ViewContainerRef, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +20,7 @@ import { layoutModels } from '../model';
   selector: 'app-canvas',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     ContainerComponent,
     MatFormFieldModule,
     MatButtonModule,
@@ -34,7 +34,7 @@ import { layoutModels } from '../model';
   providers: []
 })
 
-export class CanvasComponent {
+export class CanvasComponent implements OnInit {
   @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
 
@@ -48,8 +48,9 @@ export class CanvasComponent {
 
   addContainer() {
     const newLayoutElement = this.modelSvc.writeElementModel('container', 'canvas');
+    console.log(newLayoutElement);
     this.modelSvc.addChildNode('canvas', newLayoutElement);
-    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
+    setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 0 });
   }
 
   renderFromModel() {
@@ -57,9 +58,13 @@ export class CanvasComponent {
   }
 
   private selectionService = inject(SelectionService)
-  initialData: {id: string, rootNodes: string[]};
+  initialData: string[];
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
-    this.initialData = {id: 'canvas', rootNodes: this.newAreaMenuSvc.rootLevelNodes.slice()};
+    this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
+  }
+
+  ngOnInit(): void {
+    this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
   }
 
   // readonly defaultBorder = this.stylesService.defaultBorder;
@@ -71,20 +76,23 @@ export class CanvasComponent {
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
     let el = event.target as HTMLElement;
-  
+
     while (el && el.tagName && !el.tagName.startsWith('APP-') && el.parentElement) {
       el = el.parentElement;
     }
-  
+
     if (el && el.tagName.startsWith('APP-')) {
       const componentInstance = (window as any).ng?.getComponent?.(el);
-  
+
       if (componentInstance) {
-        this.selectionService.select(componentInstance.data); 
+        this.selectionService.select(componentInstance.data);
       } else {
         console.warn("ng.getComponent não disponível (modo produção?).");
       }
     }
+  }
 
+  onPlusClick() {
+    this.selectionSvc.unselect();
   }
 }

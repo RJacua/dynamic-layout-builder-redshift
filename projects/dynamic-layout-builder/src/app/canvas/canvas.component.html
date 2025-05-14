@@ -18,7 +18,7 @@
     
     <div class="align-center">
         <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true"
-        matTooltip="New Container"></app-menu>
+        matTooltip="New Container" (click)="onPlusClick()"></app-menu>
         <!-- <button class="round-button" (click)="addContainer()">A</button>
         <button class="round-button" (click)="renderFromModel()">M</button> -->
     </div>

@@ -33,12 +33,12 @@ export class NewAreaMenuService {
   // ]);
   rootLevelNodes: string[] = ["New Container"];
 
-  ActionMap(parentId: string) {
+  ActionMap() {
     return new Map<string, () => void>([
-      ['Rows', () => this.addLayoutElement('container', parentId, { "flex-direction": "row" })],
-      ['Columns', () => this.addLayoutElement('container', parentId, { "flex-direction": "column" })],
-      ['Heading', () => this.addLayoutElement('header', parentId)],
-      ['Paragraph', () => this.addLayoutElement('paragraph', parentId)],
+      ['Rows', () => this.addLayoutElement('container', this.selectionSvc.selectedElementId(), { "flex-direction": "row" })],
+      ['Columns', () => this.addLayoutElement('container', this.selectionSvc.selectedElementId(), { "flex-direction": "column" })],
+      ['Heading', () => this.addLayoutElement('header', this.selectionSvc.selectedElementId())],
+      ['Paragraph', () => this.addLayoutElement('paragraph', this.selectionSvc.selectedElementId())],
     ])
   };
 
@@ -50,8 +50,8 @@ export class NewAreaMenuService {
     return this.addMap.has(node);
   }
 
-  runAction(node: string, parentId: string): void {
-    const actionMap = this.ActionMap(parentId);
+  runAction(node: string): void {
+    const actionMap = this.ActionMap();
     const action = actionMap.get(node);
     if (action) {
       action();
