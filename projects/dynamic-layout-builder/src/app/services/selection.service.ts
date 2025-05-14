@@ -57,6 +57,8 @@ export class SelectionService {
   hoveredElementId = computed(this._hoveredId);
   hoveredNode = computed(() => this.modelSvc.getNodeById(this.hoveredElementId(), this.modelSvc.canvasModel()));
 
+  isEditing = signal(false);
+
   hover(element: ContainerData | AtomicElementData): void {
     if(element.type === 'canvas') {
       this.unhover();
@@ -74,6 +76,5 @@ export class SelectionService {
   unhover() {
     this._hoveredId.set('canvas');
   }
-
 
 }

@@ -73,7 +73,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   id = signal('0');
   parentId = signal('0');
-  initialData:  string[] = this.newAreaMenuSvc.rootLevelNodesAdd.slice() ;
+  initialData:  string[] = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
+
+  isEditing = this.selectionSvc.isEditing;
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
