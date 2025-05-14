@@ -6,10 +6,11 @@ import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { ComponentsService } from '../../services/components.service';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-insert-panel',
-  imports: [MatButtonModule, MatMenuModule, MatIconModule, CommonModule],
+  imports: [MatButtonModule, MatMenuModule, MatIconModule, CommonModule,  MatTooltipModule],
   templateUrl: './insert-panel.component.html',
   styleUrl: './insert-panel.component.scss'
 })

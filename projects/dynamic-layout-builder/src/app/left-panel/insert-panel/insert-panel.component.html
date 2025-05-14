@@ -1,34 +1,73 @@
+<div>
+    <h3 class="align-center">Actions</h3>
+</div>
+
 <div class="buttons-list">
     <button mat-icon-button [matMenuTriggerFor]="handMenu" aria-label="Example icon-button with a menu">
-        <!-- <mat-icon>back_hand</mat-icon> -->
-        <p>move</p>
+        <mat-icon matTooltip="Move">back_hand</mat-icon>
+        <!-- <p>move</p> -->
     </button>
 
-    <button mat-icon-button [matMenuTriggerFor]="containerMenu" aria-label="Example icon-button with a menu">
-        <p>container</p>
+    <button mat-icon-button aria-label="Example icon-button with a menu" (click)="addLayoutElement('container')"
+    *ngIf="selectedElementType() == 'container' || selectedElementType() == undefined">
+        <!-- [matMenuTriggerFor]="containerMenu" -->
+        <mat-icon matTooltip="Add Container">add_box</mat-icon>
+        <!-- <p>container</p> -->
     </button>
 
-    <button mat-icon-button [matMenuTriggerFor]="componentMenu" aria-label="Example icon-button with a menu"  *ngIf="selectedElementType() == 'container'">
-        <p>component</p>
+    <button mat-icon-button [matMenuTriggerFor]="componentMenu" aria-label="Example icon-button with a menu"
+        *ngIf="selectedElementType() == 'container'">
+        <mat-icon matTooltip="Add Component">description</mat-icon>
+        <!-- <p>component</p> -->
+    </button>
+
+    <button mat-icon-button aria-label="Example icon-button with a menu" (click)="removeSelectedNode()">
+        <!-- [matMenuTriggerFor]="containerMenu" -->
+        <mat-icon matTooltip="Delete">delete</mat-icon>
+        <!-- <p>container</p> -->
     </button>
 </div>
 
 <mat-menu #handMenu="matMenu">
-    <button mat-menu-item>Move</button>
-    <button mat-menu-item>Scale</button>
-    <!-- <button mat-menu-item>
-        <mat-icon>dialpad</mat-icon>
-        <span>Redial</span>
-    </button> -->
+    <button mat-menu-item >
+        <mat-icon>back_hand</mat-icon>
+        <span>Move</span>
+    </button>
+    <!-- <button mat-menu-item>Move</button> -->
+    <button mat-menu-item >
+        <mat-icon>photo_size_select_small</mat-icon>
+        <span>Scale</span>
+    </button>
+    <!-- <button mat-menu-item>Scale</button> -->
 </mat-menu>
 
-<mat-menu #containerMenu="matMenu">
+<!-- <mat-menu #containerMenu="matMenu">
+    <button mat-menu-item (click)="addLayoutElement('container')">
+        <mat-icon>add</mat-icon>
+        <span>Add</span>
+    </button>
     <button mat-menu-item (click)="addLayoutElement('container')">Add</button>
+    <button mat-menu-item (click)="removeSelectedNode()">
+        <mat-icon>remove</mat-icon>
+        <span>Remove</span>
+    </button>
     <button mat-menu-item (click)="removeSelectedNode()">Remove</button>
-</mat-menu>
+</mat-menu> -->
 
 <mat-menu #componentMenu="matMenu">
-    <button mat-menu-item (click)="addLayoutElement('header')">Header</button>
-    <button mat-menu-item (click)="addLayoutElement('paragraph')">Paragraph</button>
-    <button mat-menu-item (click)="addLayoutElement('container')">Container</button>
+    <button mat-menu-item (click)="addLayoutElement('header')">
+        <mat-icon>title</mat-icon>
+        <span>Header</span>
+    </button>
+    <!-- <button mat-menu-item (click)="addLayoutElement('header')">Header</button> -->
+    <button mat-menu-item (click)="addLayoutElement('paragraph')">
+        <mat-icon>subtitles</mat-icon>
+        <span>Paragraph</span>
+    </button>
+    <!-- <button mat-menu-item (click)="addLayoutElement('paragraph')">Paragraph</button> -->
+    <button mat-menu-item (click)="addLayoutElement('container')">
+        <mat-icon>add_box</mat-icon>
+        <span>Container</span>
+    </button>
+    <!-- <button mat-menu-item (click)="addLayoutElement('container')">Container</button> -->
 </mat-menu>

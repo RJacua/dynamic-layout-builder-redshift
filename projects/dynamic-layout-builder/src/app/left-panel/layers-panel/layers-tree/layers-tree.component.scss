@@ -1,27 +1,87 @@
-.node-item {
-    width: 100%;
-    display:inline;
-    overflow: hidden;
+// .node-item {
+//     width: 100%;
+//     display:inline;
+//     overflow: hidden;
+// }
+
+// .tree-node {
+//     width: calc(100% - 2px);
+//     border: solid 1px;
+
+//     // background: red;
+
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+// }
+
+// .new-node {
+//     padding-left: 20px;
+//     border-left: solid 1px;
+// }
+
+// .main.active {
+//     background-color: blanchedalmond;
+//     outline: none;
+//     transition: background-color 0.2s ease;
+//   }
+
+
+/* Estilo base da árvore */
+mat-tree.main {
+    background-color: rgba(255, 255, 255, 0);
+    color: #333;
 }
 
-.tree-node {
-    width: calc(100% - 2px);
-    border: solid 1px;
+/* Linha de cada nó */
+.node-line {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 3px;
+    // margin: 2px 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
 
-    // background: red;
+.node-line:hover {
+    background-color: #cac9c9;
+}
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* Nó selecionado */
+.node-line.selected {
+    background-color: #9c9c9c;
+    font-weight: 500;
+    color: #000000;
+}
+
+button[mat-icon-button] {
+    background-color: transparent !important; // remove fundo normal
+  }
+  
+  button[mat-icon-button]:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important; // cor customizada de hover
+    border-radius: 4px; // opcional, mais quadrado
+  }
+
+/* Ícone de expandir/recolher */
+.expand-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: #666666;
+    transition: transform 0.2s ease;
+}
+
+.expand-icon:hover {
+    color: #000000;
+}
+
+mat-icon-button:hover {
+    background-color: #000000;
 }
 
 .new-node {
-    padding-left: 20px;
-    border-left: solid 1px;
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 2px dashed #939393;
 }
-
-.main.active {
-    background-color: blanchedalmond;
-    outline: none;
-    transition: background-color 0.2s ease;
-  }
