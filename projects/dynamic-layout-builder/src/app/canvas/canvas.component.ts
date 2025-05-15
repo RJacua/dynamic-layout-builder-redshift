@@ -15,6 +15,7 @@ import { ModelService } from '../services/model.service';
 import { HeaderComponent } from "../header/header.component";
 import { Canvas, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { layoutModels } from '../model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-canvas',
@@ -27,7 +28,8 @@ import { layoutModels } from '../model';
     MatMenuModule,
     MatIconModule,
     MenuComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    RouterLink,
   ],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',
@@ -35,7 +37,7 @@ import { layoutModels } from '../model';
 })
 
 export class CanvasComponent {
-  @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
+  // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
 
   readonly modelSvc = inject(ModelService);
@@ -43,9 +45,16 @@ export class CanvasComponent {
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
-    // () => JSON.stringify(this.canvasModel(), null, 2)
-    () => this.customStringify(this.canvasModel())
+    () => JSON.stringify(this.canvasModel(), null, 2)
+    // () => this.customStringify(this.canvasModel())
   )
+
+  utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasModelsString()));
+  btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
+  atob: Signal<string> = computed(() => atob(this.btoa()));
+  decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
+
+
 
   addContainer() {
     const newLayoutElement = this.modelSvc.writeElementModel('container', 'canvas');
@@ -61,6 +70,7 @@ export class CanvasComponent {
   initialData: { id: string, rootNodes: string[] };
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
     this.initialData = { id: 'canvas', rootNodes: this.newAreaMenuSvc.rootLevelNodes.slice() };
+    // effect(() => console.log("TEST: ", JSON.parse(this.decoded())))
   }
 
   // readonly defaultBorder = this.stylesService.defaultBorder;
@@ -116,11 +126,11 @@ export class CanvasComponent {
 
       if (typeof value === "string") {
         return `"${value}"`;
-      } 
-        return String(value);
       }
-
-      return format(obj, 0);
+      return String(value);
     }
 
+    return format(obj, 0);
   }
+
+}
