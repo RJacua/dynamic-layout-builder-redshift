@@ -54,11 +54,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       untracked(() => {
         if (node) {
           this.dynamicStyle.set(node.data.style);
-          console.log("zeresimo processo:", this.dynamicStyle());
           this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-          console.log("primeiro processo:", this.dynamicStyle());
           this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
-          console.log("segundo processo:", this.dynamicStyle());
         }
       })
 
@@ -83,8 +80,12 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   });
 
   isHover = computed(() => {
-    return this.id() === this.selectionSvc.hoveredElementId();
+    if (this.id() === this.selectionSvc.hoveredElementId()) return true;
+    if(!this.isDragging()) return false;
+    return (this.modelSvc.isChildof(this.selectionSvc.hoveredElementId(), this.nodeSignal()) && this.modelSvc.getNodeById(this.selectionSvc.hoveredElementId()).data.type !== 'container');
   });
+
+  isDragging = this.selectionSvc.isDragging;
 
   canvasModel = computed(() => { this.modelSvc.canvasModel() });
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
@@ -159,16 +160,10 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.selectionSvc.unhover();
   }
 
-  onDrag(event: CdkDragStart) {
-    const element = event.source.element.nativeElement;
-    const id = element.getAttribute('data-id');
-    if (id) {
-      this.selectionSvc.selectById(id, true);
-    }
-  }
-
   onDrop() {
     this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
+    this.isDragging.set(false);
+    console.log("drop:", this.selectionSvc.isDragging());
   }
 
   onPlusClick() {

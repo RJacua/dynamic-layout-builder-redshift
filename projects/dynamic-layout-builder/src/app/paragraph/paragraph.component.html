@@ -1,5 +1,5 @@
-<div class="main paragraph" (focusout)="hideMenu($event)" tabindex="0" [class.active]="isFocused()"
-    (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" cdkDrag (cdkDragStarted)="onDrag($event)"
+<div class="main paragraph" tabindex="0" [class.active]="isFocused() || (isHovered() && !isDragging())"
+    cdkDrag
     [cdkDragDisabled]="false">
     <br>
     <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">☰</div>

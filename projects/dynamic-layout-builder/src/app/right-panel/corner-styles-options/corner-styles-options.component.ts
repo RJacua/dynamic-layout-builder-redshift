@@ -84,7 +84,7 @@ export class CornerStylesOptionsComponent implements OnInit {
     this.enableIndividualCornerCheckbox.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(individualCorner => {
-        console.log('Add individualCorner:', individualCorner);
+        // console.log('Add individualCorner:', individualCorner);
         if (individualCorner !== null)
           this.cornerStylesSvc.setIndividualCorner(individualCorner, this.cornerOptions.controls, this.strokeRadius.value);
       });

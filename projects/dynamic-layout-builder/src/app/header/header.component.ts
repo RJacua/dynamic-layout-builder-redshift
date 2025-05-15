@@ -99,15 +99,11 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     return this.id() === this.selectionSvc.selectedElementId();
   });
 
-  isHovered = false;
+  isHovered = computed(() => {
+    return this.id() === this.selectionSvc.hoveredElementId();
+  });
 
-  onMouseEnter() {
-    this.isHovered = true;
-  }
-
-  onMouseLeave() {
-    this.isHovered = false;
-  }
+  isDragging = this.selectionSvc.isDragging;
 
   textSyncOnBlur(event: Event) {
     const element = event.target as HTMLElement;
@@ -115,39 +111,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.text.set(value);
   }
 
-  //Lógica do Menu, passar para um serviço depois
-  menuIsOn = signal(false);
-
-  hideMenu(event: Event) {
-    const related = (event as FocusEvent).relatedTarget as HTMLElement | null;
-
-    if (!related || !(event.currentTarget as HTMLElement).contains(related)) {
-      this.menuIsOn.set(false);
-    }
-
-  }
-
-  showMenu(event: Event) {
-    this.menuIsOn.set(true);
-  }
-
-  deleteHeader() {
-    this.modelSvc.removeNodeById(this.id());
-  }
-
-  onDrag(event: CdkDragStart) {
-    const element = event.source.element.nativeElement;
-    const id = element.getAttribute('data-id');
-    if (id) {
-      this.selectionSvc.selectById(id, true);
-    }
-  }
-
-  onDrop() {
-    this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
-  }
-
-  onHandleClick() {
+  onHandleClick(){
+    this.isDragging.set(true);
+    // console.log("handle click: ",this.selectionSvc.isDragging());
     this.selectionSvc.selectById(this.id(), true);
   }
 

@@ -15,20 +15,12 @@ export class SelectionService {
   constructor() { }
 
   readonly modelSvc = inject(ModelService);
-  // private selectedElement = new BehaviorSubject<ContainerData | AtomicElementData | any>({});
-  // selectedElement$ = this.selectedElement.asObservable();
-  // selectedElementId = signal('');
-  // selectedNode:WritableSignal<LayoutElement<ContainerData | AtomicElementData> | undefined> = signal(undefined);
-
-  // select(element: ContainerData | AtomicElementData) {
-  //   // this.selectedElement.next(element);
-  //   console.log("id selected: ", element.id);
-  //   this.selectedElementId.set(element.id);
-  //   this.selectedNode.set(this.modelSvc.getNodeById(element.id));
-  //   //console.log(this.selectedNode());
-  // }
 
   private _selectedId = signal<string>('canvas');
+
+  isDragging = signal(false);
+
+
   selectedElementId = computed(this._selectedId);
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 

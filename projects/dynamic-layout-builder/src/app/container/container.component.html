@@ -1,8 +1,8 @@
-<div class="main" [class.active]="isFocused()" (mouseover)="onElementHover($event)" (mouseleave)="onElementMouseLeave($event)" 
+<div class="main" [class.active]="isFocused() || isHover()" (mouseover)="onElementHover($event)" (mouseleave)="onElementMouseLeave($event)" 
     cdkDropList
     (cdkDropListDropped)="onDrop()"
     [cdkDropListData]="[data]" [attr.data-id]="data.id">
-    <div [class]="'container-border container-flex'" [style]="dynamicStyle()" cdkDrag (cdkDragStarted)="onDrag($event)" 
+    <div [class]="'container-border container-flex'" [style]="dynamicStyle()" cdkDrag
     [cdkDragDisabled]="false" [attr.data-id]="data.id">
     <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">☰</div>
         <!-- [class]="'container-border container-flex ' + direction()" -->

@@ -1,13 +1,9 @@
-<div class="main header" (focusout)="hideMenu($event)" [class.active]="isFocused() || isHovered"
-(mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" cdkDrag (cdkDragStarted)="onDrag($event)">
+<div class="main header"  [class.active]="isFocused() || isHovered() && !isDragging()"
+cdkDrag>
   <br>
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">☰</div>
   <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true"
-     [style]="dynamicStyle()" [class]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>
-
-  <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()" (focus)="showMenu($event)">
-    <!-- <button class="round-button" (click)="deleteHeader()">del</button> -->
-  </div>
+     [style]="dynamicStyle()" [class]="'element editable-content ' + dynamicHeader()"></p>
 
   <br>
 </div>

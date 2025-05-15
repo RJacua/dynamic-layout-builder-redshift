@@ -4,9 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
-import { TextStylesService } from '../services/styles/textStyles.service';
-import { TextStylesOptionsComponent } from '../right-panel/text-styles-options/text-styles-options.component';
-import { StylesService } from '../services/styles/styles.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -84,31 +81,14 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
   }
 
-
-
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
   });
-  isHovered = false;
+  isHovered = computed(() => {
+    return this.id() === this.selectionSvc.hoveredElementId();
+  });
 
-  onMouseEnter() {
-    this.isHovered = true;
-  }
-
-  onMouseLeave() {
-    this.isHovered = false;
-  }
-  hideMenu(event: Event) {
-    const related = (event as FocusEvent).relatedTarget as HTMLElement | null;
-
-    if (!related || !(event.currentTarget as HTMLElement).contains(related)) {
-      this.menuIsOn.set(false);
-    }
-  }
-
-  showMenu(event: Event) {
-    this.menuIsOn.set(true);
-  }
+  isDragging = this.selectionSvc.isDragging;
 
   updateTextContent(event: Event) {
     const value = (event.target as HTMLElement).innerText;
@@ -121,21 +101,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
   @Output() editingChanged = new EventEmitter<boolean>();
 
-  @HostListener('focusin', ['$event'])
-
-  onDrag(event: CdkDragStart) {
-    const element = event.source.element.nativeElement;
-    const id = element.getAttribute('data-id');
-    if (id) {
-      this.selectionSvc.selectById(id, true);
-    }
-  }
-
-  onDrop() {
-    this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
-  }
-
   onHandleClick(){
+    this.isDragging.set(true);
+    // console.log("handle click: ",this.selectionSvc.isDragging());
     this.selectionSvc.selectById(this.id(), true);
   }
 

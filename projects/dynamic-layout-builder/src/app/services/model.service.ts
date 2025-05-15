@@ -210,6 +210,7 @@ export class ModelService {
 
   moveNodeTo(nodeId: string, newParentId?: string) {
 
+    console.log("aqui")
     newParentId = newParentId || 'canvas';
 
     let node = this.getNodeById(nodeId);
@@ -219,12 +220,12 @@ export class ModelService {
     }
 
     if (newParentId === 'canvas' || newParentNode.data.type === 'container') {
-    
+
       node = {
         ...node,
         data: {
           ...node.data,
-        'parentId': newParentId
+          'parentId': newParentId
         }
       }
 
@@ -232,7 +233,7 @@ export class ModelService {
         this.removeNodeById(nodeId);
         this.addChildNode(newParentId, node);
       }
-      else if(node.data.type === 'container') {
+      else if (node.data.type === 'container') {
         this.removeNodeById(nodeId);
         this.addChildNode('canvas', node);
       }
@@ -267,6 +268,18 @@ export class ModelService {
 
   unsetLastAddedId() {
     this.lastAddedNodeId.set('canvas');
+  }
+
+  isChildof(childId: string, node: LayoutElement<ContainerData>): boolean {
+    let found = false;
+    if(node && node.data.children && node.data.children.length > 0){
+      node.data.children.forEach(child => {
+        if (child.data.id === childId) {
+          found = true;
+        }
+      });
+    }
+    return found
   }
 
 }
