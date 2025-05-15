@@ -31,8 +31,8 @@ import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
     MatMenuModule,
     MatIconModule,
     MenuComponent,
-    MatTooltipModule, 
-    CdkDrag, 
+    MatTooltipModule,
+    CdkDrag,
     DragDropModule
   ],
   templateUrl: './container.component.html',
@@ -51,15 +51,17 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
-      if (node) {
-        this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-        this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
-      }
+      untracked(() => {
+        if (node) {
+          this.dynamicStyle.set(node.data.style);
+          console.log("zeresimo processo:", this.dynamicStyle());
+          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+          console.log("primeiro processo:", this.dynamicStyle());
+          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
+          console.log("segundo processo:", this.dynamicStyle());
+        }
+      })
 
-
-
-
-      // console.log("on effect style:", this.dynamicStyle());
     });
 
   }
@@ -73,7 +75,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   id = signal('0');
   parentId = signal('0');
-  initialData:  string[] = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
+  initialData: string[] = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
 
   isEditing = this.selectionSvc.isEditing;
 
@@ -103,7 +105,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
     this.modelSvc.updateModel(this.id(), this.nodeSignal());
 
-    this.initialData = this.newAreaMenuSvc.rootLevelNodesAdd.slice() ;
+    this.initialData = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
 
   }
 
@@ -122,7 +124,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   processContainerStyle() {
-    // this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
     this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
     // console.log("aqui: ", this.dynamicStyle())
   }
@@ -158,7 +160,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.selectionSvc.unhover();
   }
 
-
   onDrag(event: CdkDragStart) {
     const element = event.source.element.nativeElement;
     const id = element.getAttribute('data-id');
@@ -171,7 +172,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
   }
 
-  onPlusClick(){
+  onPlusClick() {
     this.selectionSvc.selectById(this.id(), true);
   }
 

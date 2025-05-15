@@ -92,7 +92,7 @@ export class CornerStylesOptionsComponent implements OnInit {
     this.strokeRadius.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(strokeRadius => {
-        console.log('Add strokeRadius:', strokeRadius);
+        // console.log('Add strokeRadius:', strokeRadius);
         if (strokeRadius !== null)
           this.cornerStylesSvc.setStrokeRadius(strokeRadius);
       });
@@ -100,7 +100,7 @@ export class CornerStylesOptionsComponent implements OnInit {
     this.cornerOptions.controls.topLeft.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(topLeft => {
-        console.log('Add topLeft:', topLeft);
+        // console.log('Add topLeft:', topLeft);
         if (topLeft !== null)
           this.cornerStylesSvc.setTopLeft(topLeft);
       });
@@ -108,7 +108,7 @@ export class CornerStylesOptionsComponent implements OnInit {
     this.cornerOptions.controls.topRight.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(topRight => {
-        console.log('Add topRight:', topRight);
+        // console.log('Add topRight:', topRight);
         if (topRight !== null)
           this.cornerStylesSvc.setTopRight(topRight);
       });
@@ -116,7 +116,7 @@ export class CornerStylesOptionsComponent implements OnInit {
     this.cornerOptions.controls.bottomLeft.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(bottomLeft => {
-        console.log('Add bottomLeft:', bottomLeft);
+        // console.log('Add bottomLeft:', bottomLeft);
         if (bottomLeft !== null)
           this.cornerStylesSvc.setBottomLeft(bottomLeft);
       });
@@ -124,7 +124,7 @@ export class CornerStylesOptionsComponent implements OnInit {
     this.cornerOptions.controls.bottomRight.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(bottomRight => {
-        console.log('Add bottomRight:', bottomRight);
+        // console.log('Add bottomRight:', bottomRight);
         if (bottomRight !== null)
           this.cornerStylesSvc.setBottomRight(bottomRight);
       });
