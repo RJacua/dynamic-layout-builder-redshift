@@ -1,8 +1,8 @@
-<div class="main" (focusout)="hideMenu($event)" tabindex="0" [class.active]="isFocused()"
+<div class="main paragraph" (focusout)="hideMenu($event)" tabindex="0" [class.active]="isFocused()"
     (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" cdkDrag (cdkDragStarted)="onDrag($event)"
     [cdkDragDisabled]="false">
     <br>
-    <div cdkDragHandle class="drag-handle">☰</div>
+    <div cdkDragHandle class="drag-handle" (cdkDragStarted)="onHandleDrag()">☰</div>
     <p #target contentEditable="true" [style]="dynamicStyle()" (input)="updateTextContent($event)"></p>
     <br>
 </div>

@@ -1,6 +1,7 @@
-<div class="main" (focusout)="hideMenu($event)" [class.active]="isFocused() || isHovered"
+<div class="main header" (focusout)="hideMenu($event)" [class.active]="isFocused() || isHovered"
 (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
   <br>
+  <div cdkDragHandle class="drag-handle" (cdkDragStarted)="onHandleDrag()">☰</div>
   <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true"
      [style]="dynamicStyle()" [class]="'element editable-content ' + dynamicHeader() " (focus)="showMenu($event)"></p>
 

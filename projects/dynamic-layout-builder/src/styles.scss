@@ -10,6 +10,7 @@ html {
     margin: .5% .5%;
     padding: 5% 1% 1%;
     border: 1px solid #81828555;
+    position: relative;
 }
 
 .element {
@@ -78,6 +79,10 @@ html {
     box-sizing: border-box;
 }
 
+.paragraph, .header {
+    position: relative;
+}
+
 
 .left {
     align-items: flex-end;
@@ -141,5 +146,17 @@ mat-card {
 }
 
 .drag-handle {
-    background: red;
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  z-index: 10;
+  cursor: grab;
+  user-select: none;
+  font-size: 16px;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.drag-handle:hover {
+  opacity: 1;
 }

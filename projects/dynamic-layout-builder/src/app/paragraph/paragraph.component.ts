@@ -137,8 +137,8 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       this.isEditing.set(false);
     }
   }
-  
-    onDrag(event: CdkDragStart) {
+
+  onDrag(event: CdkDragStart) {
     const element = event.source.element.nativeElement;
     const id = element.getAttribute('data-id');
     if (id) {
@@ -148,5 +148,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
   onDrop() {
     this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
+  }
+
+  onHandleDrag() {
+    this.selectionSvc.selectById(this.id(), true);
   }
 }
