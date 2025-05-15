@@ -56,7 +56,7 @@ export interface Styles { //vai crescer
 
   // Background Styles
   ["background-color"]?: string;
-  opacity?: number;
+  opacity?: string;
   ["flex-direction"]?: string;
 
   // Border Styles

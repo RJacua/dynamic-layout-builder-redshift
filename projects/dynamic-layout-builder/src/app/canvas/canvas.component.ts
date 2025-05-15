@@ -20,7 +20,7 @@ import { layoutModels } from '../model';
   selector: 'app-canvas',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     ContainerComponent,
     MatFormFieldModule,
     MatButtonModule,
@@ -43,23 +43,24 @@ export class CanvasComponent {
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null, 2)
+    // () => JSON.stringify(this.canvasModel(), null, 2)
+    () => this.customStringify(this.canvasModel())
   )
 
   addContainer() {
     const newLayoutElement = this.modelSvc.writeElementModel('container', 'canvas');
     this.modelSvc.addChildNode('canvas', newLayoutElement);
-    setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
+    setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 0 });
   }
 
   renderFromModel() {
-    this.modelSvc.setCanvasModel([layoutModels[2]]);
+    this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
 
   private selectionService = inject(SelectionService)
-  initialData: {id: string, rootNodes: string[]};
+  initialData: { id: string, rootNodes: string[] };
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
-    this.initialData = {id: 'canvas', rootNodes: this.newAreaMenuSvc.rootLevelNodes.slice()};
+    this.initialData = { id: 'canvas', rootNodes: this.newAreaMenuSvc.rootLevelNodes.slice() };
   }
 
   // readonly defaultBorder = this.stylesService.defaultBorder;
@@ -71,20 +72,55 @@ export class CanvasComponent {
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
     let el = event.target as HTMLElement;
-  
+
     while (el && el.tagName && !el.tagName.startsWith('APP-') && el.parentElement) {
       el = el.parentElement;
     }
-  
+
     if (el && el.tagName.startsWith('APP-')) {
       const componentInstance = (window as any).ng?.getComponent?.(el);
-  
+
       if (componentInstance) {
-        this.selectionService.select(componentInstance.data); 
+        this.selectionService.select(componentInstance.data);
       } else {
         console.warn("ng.getComponent não disponível (modo produção?).");
       }
     }
+  }
+
+  customStringify(obj: any, indent = 2): string {
+    const noQuoteKeys = new Set([
+      "id", "parentId", "type", "data", "style", "children",
+      "text", "headerSize", "enabler", "enableStroke", "enableIndividualCorner",
+    ]);
+
+    function format(value: any, level: number): string {
+      const space = " ".repeat(level * indent);
+
+      if (Array.isArray(value)) {
+        if (value.length === 0) return "[]";
+        return `[\n${value.map(item => space + " ".repeat(indent) + format(item, level + 1)).join(',\n')}\n${space}]`;
+      }
+
+      if (typeof value === "object" && value !== null) {
+        const entries = Object.entries(value);
+        if (entries.length === 0) return "{}";
+
+        const formatted = entries.map(([key, val]) => {
+          const displayKey = noQuoteKeys.has(key) ? key : `"${key}"`;
+          return `${" ".repeat((level + 1) * indent)}${displayKey}: ${format(val, level + 1)}`;
+        });
+
+        return `{\n${formatted.join(',\n')}\n${space}}`;
+      }
+
+      if (typeof value === "string") {
+        return `"${value}"`;
+      } 
+        return String(value);
+      }
+
+      return format(obj, 0);
+    }
 
   }
-}
