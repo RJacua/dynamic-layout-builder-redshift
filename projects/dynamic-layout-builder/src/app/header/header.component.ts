@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewInit, Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, OnInit, Output, Signal, signal, untracked, viewChild } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, OnInit, Output, Signal, signal, untracked, viewChild, WritableSignal } from '@angular/core';
 import { HeaderData, LayoutElement } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
@@ -6,6 +6,7 @@ import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragdropService } from '../services/dragdrop.service';
 
 @Component({
   selector: 'app-header',
@@ -28,7 +29,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     // effect(() => {
     //   const model = this.layoutModel();
     //   untracked(() =>
-    //     this.modelSvc.updateModel(this.id(), model)
+    //     this.modelSvc.updateModel(this.id, model)
     //   )
     // });
     effect(() => {
@@ -36,7 +37,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       const headerSize = this.headerSize();
 
       untracked(() => {
-        const nodeModel = this.modelSvc.getNodeById(this.id());
+        const nodeModel = this.modelSvc.getNodeById(this.id);
         if (!nodeModel) return;
 
         const updatedModel = {
@@ -48,7 +49,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
           }
         };
 
-        this.modelSvc.updateModel(this.id(), updatedModel);
+        this.modelSvc.updateModel(this.id, updatedModel);
         // console.log("on effect: ", this.modelSvc.canvasModel())
       });
     });
@@ -69,25 +70,30 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
+  readonly dragDropSvc = inject(DragdropService);
 
   text = signal<string>('');
 
   headerSize = signal('h1');
-  id = signal('0');
+  id = '0';
   parentId = signal('-1')
-  data2 = input();
   target = viewChild.required<ElementRef<HTMLHeadElement>>('target');
-  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-
-  dynamicHeader = signal(this.nodeSignal()?.data.headerSize);
-
+  nodeSignal: Signal<any> = signal(null);
+  dynamicStyle: WritableSignal<any> = signal(null);
+  dynamicHeader: WritableSignal<any> = signal(null);
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');
     // this.size.set(this.data.style.size ?? 1);
-    this.id.set(this.data.id);
+    this.id = this.data.id;
     this.parentId.set(this.data.parentId);
     this.headerSize.set(this.data.headerSize ?? 'h1');
+
+    this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
+    this.dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+
+    console.log(this.nodeSignal()?.data.headerSize)
+    this.dynamicHeader = signal(this.nodeSignal()?.data.headerSize);
+
   }
 
   ngAfterViewInit(): void {
@@ -96,14 +102,14 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   }
 
   isFocused = computed(() => {
-    return this.id() === this.selectionSvc.selectedElementId();
+    return this.id === this.selectionSvc.selectedElementId();
   });
 
   isHovered = computed(() => {
-    return this.id() === this.selectionSvc.hoveredElementId();
+    return this.id === this.selectionSvc.hoveredElementId();
   });
 
-  isDragging = this.selectionSvc.isDragging;
+  isDragging = this.dragDropSvc.isDragging;
 
   textSyncOnBlur(event: Event) {
     const element = event.target as HTMLElement;
@@ -113,8 +119,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   onHandleClick(){
     this.isDragging.set(true);
-    // console.log("handle click: ",this.selectionSvc.isDragging());
-    this.selectionSvc.selectById(this.id(), true);
+    this.selectionSvc.selectById(this.id, true);
   }
 
 }

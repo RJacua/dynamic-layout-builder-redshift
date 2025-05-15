@@ -6,6 +6,7 @@ import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragdropService } from '../services/dragdrop.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -39,7 +40,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
           }
         };
 
-        this.modelSvc.updateModel(this.id(), updatedModel as LayoutElement<any>);
+        this.modelSvc.updateModel(this.id, updatedModel as LayoutElement<any>);
       });
     });
     effect(() => {
@@ -59,8 +60,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
+    readonly dragDropSvc = inject(DragdropService);
 
-  id = signal('0');
+  id = '0';
   parentId = signal('-1');
   alignment = signal('align-center ');
   text = signal<string>('');
@@ -68,10 +70,10 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   menuIsOn = signal(false);
   data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
-  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
+  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
   dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
   ngOnInit(): void {
-    this.id.set(this.data.id);
+    this.id = this.data.id;
     this.parentId.set(this.data.parentId);
     this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
@@ -82,13 +84,13 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   }
 
   isFocused = computed(() => {
-    return this.id() === this.selectionSvc.selectedElementId();
+    return this.id === this.selectionSvc.selectedElementId();
   });
   isHovered = computed(() => {
-    return this.id() === this.selectionSvc.hoveredElementId();
+    return this.id === this.selectionSvc.hoveredElementId();
   });
 
-  isDragging = this.selectionSvc.isDragging;
+  isDragging = this.dragDropSvc.isDragging;
 
   updateTextContent(event: Event) {
     const value = (event.target as HTMLElement).innerText;
@@ -96,7 +98,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   }
 
   deleteParagraph() {
-    this.modelSvc.removeNodeById(this.id());
+    this.modelSvc.removeNodeById(this.id);
   }
 
   @Output() editingChanged = new EventEmitter<boolean>();
@@ -104,7 +106,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   onHandleClick(){
     this.isDragging.set(true);
     // console.log("handle click: ",this.selectionSvc.isDragging());
-    this.selectionSvc.selectById(this.id(), true);
+    this.selectionSvc.selectById(this.id, true);
   }
 
 }

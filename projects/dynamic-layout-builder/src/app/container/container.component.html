@@ -4,7 +4,7 @@
     [cdkDropListData]="[data]" [attr.data-id]="data.id">
     <div [class]="'container-border container-flex'" [style]="dynamicStyle()" cdkDrag
     [cdkDragDisabled]="false" [attr.data-id]="data.id">
-    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
+    <div cdkDragHandle class="drag-handle" (pointerdown)="forceSelection()">⋮⋮</div>
         <!-- [class]="'container-border container-flex ' + direction()" -->
         <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
         @for (node of nodeSignal().data.children; track node.data.id) {
@@ -32,6 +32,6 @@
         
     </div>
     <div class="align-center add-sign" [class.active]="(isFocused() || isHover())">
-        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add" (click)="onPlusClick()"></app-menu>
+        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add" (click)="forceSelection()"></app-menu>
     </div>
 </div>

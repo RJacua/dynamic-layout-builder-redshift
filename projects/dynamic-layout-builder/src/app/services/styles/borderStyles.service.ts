@@ -19,23 +19,10 @@ export class BorderStylesService {
     ['border-width']: '1px',
   };
   readonly defaultComponentStyles: Styles = {
-    ['border-color']: '',
-    ['border-style']: '',
+    ['border-color']: '#000000',
+    ['border-style']: 'solid',
     ['border-width']: '0px',
   };
-
-  // private enableStrokeSubject = new BehaviorSubject<boolean>(false);
-  // enableStroke$ = this.enableStrokeSubject.asObservable();
-
-  // private strokeColorSubject = new BehaviorSubject<string>('#000000');
-  // strokeColor$ = this.strokeColorSubject.asObservable();
-
-  // private strokeStyleSubject = new BehaviorSubject<string>('solid');
-  // strokeStyle$ = this.strokeStyleSubject.asObservable();
-
-  // private strokeWidthSubject = new BehaviorSubject<number>(1);
-  // strokeWidth$ = this.strokeWidthSubject.asObservable();
-
 
   setAddStroke(enableStroke: boolean) {
     // this.enableStrokeSubject.next(enableStroke);

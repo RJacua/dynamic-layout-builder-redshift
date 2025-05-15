@@ -6,6 +6,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { ModelService } from '../../../services/model.service';
 import { SelectionService } from '../../../services/selection.service';
 import { CdkDrag, CdkDragDrop, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragdropService } from '../../../services/dragdrop.service';
 
 @Component({
   selector: 'app-layers-tree',
@@ -17,8 +18,10 @@ export class LayersTreeComponent {
   @Input() data: string = '0';
   readonly selectionSvc = inject(SelectionService);
   readonly modelSvc = inject(ModelService);
+  readonly dragDropSvc = inject(DragdropService);
 
   isSelected = computed(() => { return this.data === this.selectionSvc.selectedElementId() })
+  isDragging = this.dragDropSvc.isDragging;
 
   isFocused = computed(() => {
     return this.data === this.selectionSvc.selectedElementId();
@@ -134,6 +137,7 @@ export class LayersTreeComponent {
 
 
   onDrag(event: CdkDragStart) {
+    this.isDragging.set(true);
     const element = event.source.element.nativeElement;
     const id = element.getAttribute('data-id');
     if (id) {
@@ -142,7 +146,7 @@ export class LayersTreeComponent {
   }
 
   onDrop() {
-    this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
+    this.dragDropSvc.onDrop();
   }
 
 }

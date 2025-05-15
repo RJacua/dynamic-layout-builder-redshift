@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MenuComponent } from '../canvas/new-area-menu/menu.component';
 import { NewAreaMenuService } from '../services/new-area-menu.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { DragdropService } from '../services/dragdrop.service';
 
 @Component({
   selector: 'app-area',
@@ -46,7 +47,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, enabler: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
-
     effect(() => {
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
@@ -58,9 +58,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
           this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
         }
       })
-
     });
-
   }
 
   readonly modelSvc = inject(ModelService);
@@ -69,41 +67,43 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly borderStylesSvc = inject(BorderStylesService);
   readonly cornerStylesSvc = inject(CornerStylesService);
   readonly newAreaMenuSvc = inject(NewAreaMenuService);
+  readonly dragDropSvc = inject(DragdropService);
 
-  id = signal('0');
+  id: string = '0';
   parentId = signal('0');
   initialData: string[] = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
 
 
   isFocused = computed(() => {
-    return this.id() === this.selectionSvc.selectedElementId();
+    return this.id === this.selectionSvc.selectedElementId();
   });
 
   isHover = computed(() => {
-    if (this.id() === this.selectionSvc.hoveredElementId()) return true;
+    if (this.id === this.selectionSvc.hoveredElementId()) return true;
     if(!this.isDragging()) return false;
     return (this.modelSvc.isChildof(this.selectionSvc.hoveredElementId(), this.nodeSignal()) && this.modelSvc.getNodeById(this.selectionSvc.hoveredElementId()).data.type !== 'container');
   });
 
-  isDragging = this.selectionSvc.isDragging;
+  isDragging = this.dragDropSvc.isDragging;
 
   canvasModel = computed(() => { this.modelSvc.canvasModel() });
   children = signal([] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]);
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
-  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
+  nodeSignal: any;
 
-  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+  dynamicStyle: WritableSignal<any> = signal(null);
 
 
   ngOnInit() {
-    // this.setDirection(this.data.style?.direction ?? 'column');
-    this.id.set(this.data.id);
+    this.id = this.data.id;
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
+    this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
+
     this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
-    this.modelSvc.updateModel(this.id(), this.nodeSignal());
+    this.modelSvc.updateModel(this.id, this.nodeSignal());
 
     this.initialData = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
 
@@ -113,20 +113,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.elementRef.next(this.containerDiv);
   }
 
-  addLayoutElement(componentType: string) {
-    const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.id());
-    this.modelSvc.addChildNode(this.id(), newLayoutElement);
-    setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 1 });
-  }
-
-  deleteContainer() {
-    this.modelSvc.removeNodeById(this.id());
-  }
-
   processContainerStyle() {
     this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
     this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
-    // console.log("aqui: ", this.dynamicStyle())
   }
 
   onElementHover(event: MouseEvent) {
@@ -142,36 +131,18 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
         this.selectionSvc.hoverById(id);
       }
     }
-    // console.log("selected: ", this.selectionSvc.selectedElementId());
-    // console.log("hovered: ", this.selectionSvc.hoveredElementId());
   }
 
   onElementMouseLeave(event: MouseEvent) {
-    const toElement = event.relatedTarget as HTMLElement;
-
-    let el = toElement;
-    while (el && el !== document.body) {
-      if (el.hasAttribute && el.hasAttribute('data-id')) {
-        return;
-      }
-      el = el.parentElement!;
-    }
-
     this.selectionSvc.unhover();
   }
 
   onDrop() {
-    this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
-    this.isDragging.set(false);
-    console.log("drop:", this.selectionSvc.isDragging());
+    this.dragDropSvc.onDrop();
   }
 
-  onPlusClick() {
-    this.selectionSvc.selectById(this.id(), true);
-  }
-
-  onHandleClick() {
-    this.selectionSvc.selectById(this.id(), true);
+  forceSelection() {
+    this.selectionSvc.selectById(this.id, true);
   }
 
 }
