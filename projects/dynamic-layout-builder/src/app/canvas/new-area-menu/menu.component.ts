@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,13 +22,11 @@ import { NewAreaMenuService } from '../../services/new-area-menu.service';
 })
 export class MenuComponent {
 
-  @Input() data: {
-    id: string,
-    rootNodes: string[],
-  } = {id: '0', rootNodes: []}
-;
+  @Input() data: string[] =   [];
   @Input() trigger = "Trigger";
   @Input() isRootNode = false;
+
+  id = signal('0')
 
   private newAreaMenuSvc = inject(NewAreaMenuService)
 
@@ -39,12 +37,11 @@ export class MenuComponent {
   isLoading = false;
   dataLoaded = false;
 
-  getData(node: string, data: any) {
+  getData(menuNode: string) {
     if (!this.dataLoaded) {
       this.isLoading = true;
-      this.newAreaMenuSvc.getChildren(node).subscribe((d) => {
-        this.data.rootNodes = d?.slice() || ([] as string[]);
-        this.data.id = data.id;
+      this.newAreaMenuSvc.getChildren(menuNode).subscribe((d) => {
+        this.data = d?.slice() || ([] as string[]);
         this.isLoading = false;
         this.dataLoaded = true;
       });
@@ -52,8 +49,9 @@ export class MenuComponent {
   }
 
   onMenuClick(node: string): void {
+    console.log(this.id())
     if (!this.newAreaMenuSvc.isExpandable(node)) {
-      this.newAreaMenuSvc.runAction(node, this.data.id);
+      this.newAreaMenuSvc.runAction(node);
     }
   }
 

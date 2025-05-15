@@ -1,15 +1,8 @@
-<div class="main" (focusout)="hideMenu($event)" tabindex="0" [class.active]="isFocused()"
-    (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-    <!-- (focusin)="onFocus()" (focusout)="onBlur()" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"> -->
+<div class="main paragraph" tabindex="0" [class.active]="isFocused() || (isHovered() && !isDragging())"
+    cdkDrag
+    [cdkDragDisabled]="false">
     <br>
-    <p #target contentEditable="true" [style]="dynamicStyle()" (focus)="showMenu($event)"
-        (input)="updateTextContent($event)" ></p>
+    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
+    <p #target contentEditable="true" [style]="dynamicStyle()" (input)="updateTextContent($event)"></p>
     <br>
-    <!-- <div [ngClass]="'when-focused focus-menu '" *ngIf="menuIsOn()">
-        <button class="round-button" (click)="setAlignment('left')">←</button>
-        <button class="round-button" (click)="setAlignment('center')">⨀</button>
-        <button class="round-button" (click)="setAlignment('right')">→</button> 
-        <button class="round-button" (click)="deleteParagraph()">del</button>
-    </div> -->
 </div>
-<!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->

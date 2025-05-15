@@ -114,8 +114,8 @@ export class LayersTreeComponent {
         this.selectionSvc.hoverById(id);
       }
     }
-    console.log("selected: ", this.selectionSvc.selectedElementId());
-    console.log("hovered: ", this.selectionSvc.hoveredElementId());
+    // console.log("selected: ", this.selectionSvc.selectedElementId());
+    // console.log("hovered: ", this.selectionSvc.hoveredElementId());
   }
 
   onElementMouseLeave(event: MouseEvent) {

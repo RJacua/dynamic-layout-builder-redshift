@@ -1,19 +1,19 @@
-import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector } from '@angular/core';
+import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector, HostListener } from '@angular/core';
 import { LayoutElement, ParagraphData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
-import { TextStylesService } from '../services/styles/textStyles.service';
-import { TextStylesOptionsComponent } from '../right-panel/text-styles-options/text-styles-options.component';
-import { StylesService } from '../services/styles/styles.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
+import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-paragraph',
   standalone: true,
   imports: [
     CommonModule,
+    CdkDrag,
+    DragDropModule
   ],
   templateUrl: './paragraph.component.html',
   styleUrl: './paragraph.component.scss'
@@ -58,7 +58,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
-   readonly borderStylesSvc = inject(BorderStylesService);
+  readonly borderStylesSvc = inject(BorderStylesService);
 
   id = signal('0');
   parentId = signal('-1');
@@ -76,36 +76,19 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     // this.alignment.set(this.data.style.alignment ?? 'align-center ');
-    
+
     this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
   }
 
-
-
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
   });
-  isHovered = false;
+  isHovered = computed(() => {
+    return this.id() === this.selectionSvc.hoveredElementId();
+  });
 
-  onMouseEnter() {
-    this.isHovered = true;
-  }
-  
-  onMouseLeave() {
-    this.isHovered = false;
-  }
-  hideMenu(event: Event) {
-    const related = (event as FocusEvent).relatedTarget as HTMLElement | null;
-
-    if (!related || !(event.currentTarget as HTMLElement).contains(related)) {
-      this.menuIsOn.set(false);
-    }
-  }
-
-  showMenu(event: Event) {
-    this.menuIsOn.set(true);
-  }
+  isDragging = this.selectionSvc.isDragging;
 
   updateTextContent(event: Event) {
     const value = (event.target as HTMLElement).innerText;
@@ -116,22 +99,12 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.modelSvc.removeNodeById(this.id());
   }
 
-  //   nodeModel: Signal<LayoutElement<ParagraphData> | undefined> = computed(
-  //     () => this.modelSvc.getNodeById(this.id)
-  // );
+  @Output() editingChanged = new EventEmitter<boolean>();
 
-  // const updatedModel = {
-  //   ...currentNode,
-  //   data: {
-  //     ...currentNode.data,
-  //     style: {
-  //       ...currentNode.data.style,
-  //       [styleType]: value
-  //     }
-  //   }
-
-  // layoutModelString: Signal<string> = computed(
-  //   () => JSON.stringify(this.nodeModel(), null, 2)
-  // )
+  onHandleClick(){
+    this.isDragging.set(true);
+    // console.log("handle click: ",this.selectionSvc.isDragging());
+    this.selectionSvc.selectById(this.id(), true);
+  }
 
 }
