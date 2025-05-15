@@ -120,23 +120,8 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   }
 
   @Output() editingChanged = new EventEmitter<boolean>();
-  isEditing = this.selectionSvc.isEditing;
 
   @HostListener('focusin', ['$event'])
-  onFocusIn(event: FocusEvent) {
-    if ((event.target as HTMLElement).contentEditable === 'true') {
-      console.log("focus in");
-      this.isEditing.set(true);
-    }
-  }
-
-  @HostListener('focusout', ['$event'])
-  onFocusOut(event: FocusEvent) {
-    if ((event.target as HTMLElement).contentEditable === 'true') {
-      console.log("focus out");
-      this.isEditing.set(false);
-    }
-  }
 
   onDrag(event: CdkDragStart) {
     const element = event.source.element.nativeElement;
@@ -150,7 +135,8 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
   }
 
-  onHandleDrag() {
+  onHandleClick(){
     this.selectionSvc.selectById(this.id(), true);
   }
+
 }

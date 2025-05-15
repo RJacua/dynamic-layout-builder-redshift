@@ -237,6 +237,7 @@ export class ModelService {
         this.addChildNode('canvas', node);
       }
     }
+    else this.moveNodeTo(nodeId, newParentNode.data.parentId);
   }
 
   setCanvasModel(model: LayoutElement<ContainerData>[]) {

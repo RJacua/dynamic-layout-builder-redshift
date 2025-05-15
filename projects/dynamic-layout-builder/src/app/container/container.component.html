@@ -4,18 +4,16 @@
     [cdkDropListData]="[data]" [attr.data-id]="data.id">
     <div [class]="'container-border container-flex'" [style]="dynamicStyle()" cdkDrag (cdkDragStarted)="onDrag($event)" 
     [cdkDragDisabled]="false" [attr.data-id]="data.id">
-    <div cdkDragHandle class="drag-handle" (cdkDragStarted)="onPlusClick()">☰</div>
+    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">☰</div>
         <!-- [class]="'container-border container-flex ' + direction()" -->
         <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
         @for (node of nodeSignal().data.children; track node.data.id) {
             @switch (node.data.type) {
                 @case ('container') {
-                <app-area [data]="node.data" cdkDrag (cdkDragStarted)="onDrag($event)"
-                [cdkDragDisabled]="false" [attr.data-id]="node.data.id"/>
+                <app-area [data]="node.data" [attr.data-id]="node.data.id"/>
                 }
                 @case ('header') {
-                <app-header [data]="node.data" cdkDrag (cdkDragStarted)="onDrag($event)"
-                [cdkDragDisabled]="false" [attr.data-id]="node.data.id"/>
+                <app-header [data]="node.data" [attr.data-id]="node.data.id"/>
                 }
                 @case ('paragraph') {
                 <app-paragraph [data]="node.data" [attr.data-id]="node.data.id"/>

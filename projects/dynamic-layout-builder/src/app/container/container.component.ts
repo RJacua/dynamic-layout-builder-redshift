@@ -77,7 +77,6 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   parentId = signal('0');
   initialData: string[] = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
 
-  isEditing = this.selectionSvc.isEditing;
 
   isFocused = computed(() => {
     return this.id() === this.selectionSvc.selectedElementId();
@@ -173,6 +172,10 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   onPlusClick() {
+    this.selectionSvc.selectById(this.id(), true);
+  }
+
+  onHandleClick() {
     this.selectionSvc.selectById(this.id(), true);
   }
 

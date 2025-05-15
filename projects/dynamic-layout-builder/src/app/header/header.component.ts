@@ -5,12 +5,15 @@ import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
+import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     CommonModule,
+    CdkDrag,
+    DragDropModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -132,7 +135,20 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.modelSvc.removeNodeById(this.id());
   }
 
-  onHandleDrag() {
+  onDrag(event: CdkDragStart) {
+    const element = event.source.element.nativeElement;
+    const id = element.getAttribute('data-id');
+    if (id) {
+      this.selectionSvc.selectById(id, true);
+    }
+  }
+
+  onDrop() {
+    this.modelSvc.moveNodeTo(this.selectionSvc.selectedElementId(), this.selectionSvc.hoveredElementId());
+  }
+
+  onHandleClick() {
     this.selectionSvc.selectById(this.id(), true);
   }
+
 }

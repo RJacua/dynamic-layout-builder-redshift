@@ -2,7 +2,7 @@
     (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" cdkDrag (cdkDragStarted)="onDrag($event)"
     [cdkDragDisabled]="false">
     <br>
-    <div cdkDragHandle class="drag-handle" (cdkDragStarted)="onHandleDrag()">☰</div>
+    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">☰</div>
     <p #target contentEditable="true" [style]="dynamicStyle()" (input)="updateTextContent($event)"></p>
     <br>
 </div>
