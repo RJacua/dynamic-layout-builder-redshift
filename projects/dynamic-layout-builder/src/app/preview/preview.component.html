@@ -1,14 +1,15 @@
-<h3>Preview</h3>
+<!-- <h3>Preview</h3>
 <p><strong>Encoded:</strong> {{ encoded() }}</p>
 <pre><strong>Decoded:</strong> {{ decoded() }}</pre>
 
-<h1>RENDER</h1>
+<h1>RENDER</h1> -->
 
-<div >
-<pre>{{canvasModel()[0] | json}}</pre>
+<div>
+    <!-- <pre>{{canvasModel()[0] | json}}</pre> -->
 
+    <app-canvas [editMode]="false"></app-canvas>
 
-    @for (node of canvasModel(); track node.data.id) {
+    <!-- @for (node of canvasModel(); track node.data.id) {
          @switch (node.data.type) {
             @case ('container') {
                 <app-area [data]="node.data" />
@@ -16,6 +17,6 @@
             @default {
             }
          }
-    }
-    
+    } -->
+
 </div>

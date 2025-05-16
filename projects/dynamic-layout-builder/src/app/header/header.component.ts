@@ -6,6 +6,7 @@ import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CornerStylesService } from '../services/styles/cornerStyles.service';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +23,7 @@ import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, AfterViewInit {
   type = 'header';
   @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: {}, enabler: {}, headerSize: 'h1' };
+  @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   constructor() {
@@ -32,6 +34,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     //   )
     // });
     effect(() => {
+      const node = this.nodeSignal();
       const text = this.text();
       const headerSize = this.headerSize();
 
@@ -50,6 +53,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
         this.modelSvc.updateModel(this.id(), updatedModel);
         // console.log("on effect: ", this.modelSvc.canvasModel())
+        this.dynamicStyle.set(node.data.style);
+        this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+        this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
+
       });
     });
     effect(() => {
@@ -57,7 +64,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       if (node) {
-        this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+        this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
         this.dynamicHeader.set(node.data.headerSize);
       }
 
@@ -70,6 +77,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
 
+
+  readonly cornerStylesSvc = inject(CornerStylesService);
+
   text = signal<string>('');
 
   headerSize = signal('h1');
@@ -78,7 +88,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   data2 = input();
   target = viewChild.required<ElementRef<HTMLHeadElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
 
   dynamicHeader = signal(this.nodeSignal()?.data.headerSize);
 
@@ -111,7 +121,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.text.set(value);
   }
 
-  onHandleClick(){
+  onHandleClick() {
     this.isDragging.set(true);
     // console.log("handle click: ",this.selectionSvc.isDragging());
     this.selectionSvc.selectById(this.id(), true);

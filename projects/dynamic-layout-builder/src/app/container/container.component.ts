@@ -44,6 +44,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   type = "container";
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas',  type: 'container', style: {}, enabler: {}, children: [] };
+  @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
 
@@ -54,8 +55,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       untracked(() => {
         if (node) {
           this.dynamicStyle.set(node.data.style);
-          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
+          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
         }
       })
 
@@ -92,7 +93,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
 
-  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
 
 
   ngOnInit() {
@@ -101,7 +102,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.parentId.set(this.data.parentId);
     this.children.set(this.data.children ?? []);
 
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
 
     this.modelSvc.updateModel(this.id(), this.nodeSignal());
 
@@ -124,8 +125,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   processContainerStyle() {
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
-    this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
     // console.log("aqui: ", this.dynamicStyle())
   }
 

@@ -40,6 +40,7 @@ import { RouterLink } from '@angular/router';
 export class CanvasComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
+  @Input() editMode: boolean = true;
 
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);

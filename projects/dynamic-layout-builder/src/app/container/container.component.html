@@ -1,37 +1,44 @@
-<div class="main" [class.active]="isFocused() || isHover()" (mouseover)="onElementHover($event)" (mouseleave)="onElementMouseLeave($event)" 
+<div class="main" [class.active]="editMode && (isFocused() || isHover())" (mouseover)="onElementHover($event)" (mouseleave)="onElementMouseLeave($event)" 
     cdkDropList
     (cdkDropListDropped)="onDrop()"
     [cdkDropListData]="[data]" [attr.data-id]="data.id">
-    <div [class]="'container-border container-flex'" [style]="dynamicStyle()" cdkDrag
-    [cdkDragDisabled]="false" [attr.data-id]="data.id">
-    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
+    <div [class.container-border]="editMode" [class]="'container-flex'" [style]="dynamicStyle()" cdkDrag
+    [cdkDragDisabled]="!editMode" [attr.data-id]="data.id">
+
+    @if(editMode){
+        <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
+    }
         <!-- [class]="'container-border container-flex ' + direction()" -->
         <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
         @for (node of nodeSignal().data.children; track node.data.id) {
             @switch (node.data.type) {
                 @case ('container') {
-                <app-area [data]="node.data" [attr.data-id]="node.data.id"/>
+                <app-area [data]="node.data" [editMode]="editMode" [attr.data-id]="node.data.id"/>
                 }
                 @case ('header') {
-                <app-header [data]="node.data" [attr.data-id]="node.data.id"/>
+                <app-header [data]="node.data" [editMode]="editMode" [attr.data-id]="node.data.id"/>
                 }
                 @case ('paragraph') {
-                <app-paragraph [data]="node.data" [attr.data-id]="node.data.id"/>
+                <app-paragraph [data]="node.data" [editMode]="editMode" [attr.data-id]="node.data.id"/>
                 }
                 @default {
                 }
             }
         }
-        @if (nodeSignal().data.children.length === 0){
+        @if (!editMode && nodeSignal().data.children.length === 0){
             <p class="default-text">This Container is Empty</p>
         }
         <br>
-        <br>
-        <br>
-        <br>
+        @if(editMode){
+            <br>
+            <br>
+            <br>
+        }
         
     </div>
-    <div class="align-center add-sign" [class.active]="(isFocused() || isHover())">
-        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add" (click)="onPlusClick()"></app-menu>
-    </div>
+    @if(editMode){
+        <div class="align-center add-sign" [class.active]="(isFocused() || isHover())">
+            <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add" (click)="onPlusClick()"></app-menu>
+        </div>
+    }
 </div>

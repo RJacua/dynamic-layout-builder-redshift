@@ -6,6 +6,7 @@ import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CornerStylesService } from '../services/styles/cornerStyles.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -22,6 +23,7 @@ import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit {
   type = 'paragraph';
   @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
+  @Input() editMode: boolean = true;
 
   constructor() {
     effect(() => {
@@ -46,9 +48,14 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       const node = this.nodeSignal();
       // const canvasModel = this.modelSvc.canvasModel();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
-      if (node) {
-        this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-      }
+      untracked(() => {
+        if (node) {
+          this.dynamicStyle.set(node.data.style);
+          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
+          console.log(this.dynamicStyle())
+        }
+      })
 
       // console.log("on effect style:", this.dynamicStyle());
     });
@@ -59,6 +66,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
+  readonly cornerStylesSvc = inject(CornerStylesService);
 
   id = signal('0');
   parentId = signal('-1');
@@ -69,7 +77,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
   ngOnInit(): void {
     this.id.set(this.data.id);
     this.parentId.set(this.data.parentId);
@@ -77,7 +85,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     // this.alignment.set(this.data.style.alignment ?? 'align-center ');
 
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
 
   }
 
@@ -101,7 +109,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
   @Output() editingChanged = new EventEmitter<boolean>();
 
-  onHandleClick(){
+  onHandleClick() {
     this.isDragging.set(true);
     // console.log("handle click: ",this.selectionSvc.isDragging());
     this.selectionSvc.selectById(this.id(), true);

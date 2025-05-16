@@ -1,10 +1,10 @@
-<div class="main header"  [class.active]="isFocused() || isHovered() && !isDragging()"
-cdkDrag>
+<div class="main header" [class.active]="editMode && (isFocused() || isHovered() && !isDragging())" cdkDrag>
   <br>
+  @if(editMode){
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
-  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="true"
-     [style]="dynamicStyle()" [class]="'element editable-content ' + dynamicHeader()"></p>
-
+  }
+  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" [style]="dynamicStyle()"
+    [class]="'element editable-content ' + dynamicHeader()"></p>
   <br>
 </div>
 <!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->

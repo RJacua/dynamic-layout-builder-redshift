@@ -5,12 +5,14 @@ import { LayoutElement, ContainerData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../container/container.component';
 import { layoutModels } from '../model';
+import { CanvasComponent } from '../canvas/canvas.component';
 
 @Component({
   selector: 'app-preview',
   imports: [
     CommonModule,
-    ContainerComponent
+    ContainerComponent,
+    CanvasComponent
   ],
   templateUrl: './preview.component.html',
   styleUrl: './preview.component.scss'

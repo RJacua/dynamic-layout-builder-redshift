@@ -20,7 +20,7 @@ export class BorderStylesService {
   };
   readonly defaultComponentStyles: Styles = {
     ['border-color']: '',
-    ['border-style']: '',
+    ['border-style']: 'solid',
     ['border-width']: '0px',
   };
 
