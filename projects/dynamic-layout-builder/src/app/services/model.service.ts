@@ -27,7 +27,7 @@ export class ModelService {
 
   getNodeSignalById(id: string) {
     // this.updatedNode.next({});
-    
+
     const _ = this.canvasModel();
     return signal(this.getNodeById(id, this.canvasModel()));
   }
@@ -36,7 +36,7 @@ export class ModelService {
     id: string,
     branch?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
   ): any {
-    if(id === 'canvas'){
+    if (id === 'canvas') {
       return this.canvasModel();
     }
     const currentBranch = branch ?? this.canvasModel();
@@ -87,7 +87,7 @@ export class ModelService {
     }
     else {
       return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style}
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style }
       }
     }
   }
@@ -208,26 +208,37 @@ export class ModelService {
     return false;
   }
 
-  moveNodeTo(nodeId: string, newParentId?: string){
-    
+  moveNodeTo(nodeId: string, newParentId?: string) {
+
+    console.log("aqui")
     newParentId = newParentId || 'canvas';
 
     let node = this.getNodeById(nodeId);
     let newParentNode = this.getNodeById(newParentId);
-    if(nodeId === newParentId || newParentNode.data.id === node.data.parentId) {
+    if (nodeId === newParentId || (newParentId !== 'canvas' && newParentNode.data.id === node.data.parentId)) {
       return;
     }
-    
-    if(newParentNode.data.type === 'container'){
-      this.removeNodeById(nodeId);
-      if(newParentId){
+
+    if (newParentId === 'canvas' || newParentNode.data.type === 'container') {
+
+      node = {
+        ...node,
+        data: {
+          ...node.data,
+          'parentId': newParentId
+        }
+      }
+
+      if (newParentId !== 'canvas') {
+        this.removeNodeById(nodeId);
         this.addChildNode(newParentId, node);
       }
-      else {
+      else if (node.data.type === 'container') {
+        this.removeNodeById(nodeId);
         this.addChildNode('canvas', node);
-
       }
     }
+    else this.moveNodeTo(nodeId, newParentNode.data.parentId);
   }
 
   setCanvasModel(model: LayoutElement<ContainerData>[]) {
@@ -238,13 +249,13 @@ export class ModelService {
     childrenModels.map((childModel) => this.addChildNode(parentId, childModel));
   }
 
-  getGenealogicalTreeIdsById(id: string){
+  getGenealogicalTreeIdsById(id: string) {
     let currentId = id;
     let genealogicalTree: string[] = [];
-    
-    while(!genealogicalTree.includes('canvas')){
+
+    while (!genealogicalTree.includes('canvas')) {
       let currentNode = this.getNodeById(currentId);
-      if(!currentNode){
+      if (!currentNode) {
         return []
       }
       currentId = currentNode.data.parentId;
@@ -255,8 +266,20 @@ export class ModelService {
     return genealogicalTree;
   }
 
-  unsetLastAddedId(){
+  unsetLastAddedId() {
     this.lastAddedNodeId.set('canvas');
+  }
+
+  isChildof(childId: string, node: LayoutElement<ContainerData>): boolean {
+    let found = false;
+    if(node && node.data.children && node.data.children.length > 0){
+      node.data.children.forEach(child => {
+        if (child.data.id === childId) {
+          found = true;
+        }
+      });
+    }
+    return found
   }
 
 }

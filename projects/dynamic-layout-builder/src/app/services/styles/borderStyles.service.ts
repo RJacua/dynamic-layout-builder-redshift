@@ -17,7 +17,6 @@ export class BorderStylesService {
     ['border-color']: '#81828555',
     ['border-style']: 'solid',
     ['border-width']: '1px',
-    ['border-radius']: "0px"
   };
   readonly defaultComponentStyles: Styles = {
     ['border-color']: '',

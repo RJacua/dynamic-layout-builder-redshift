@@ -5,12 +5,15 @@ import { ComponentsService } from '../services/components.service';
 import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
+import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     CommonModule,
+    CdkDrag,
+    DragDropModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -18,7 +21,7 @@ import { BorderStylesService } from '../services/styles/borderStyles.service';
 
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, AfterViewInit {
   type = 'header';
-  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: {}, enabler: {}, headerSize: 'h1'};
+  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: {}, enabler: {}, headerSize: 'h1' };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   constructor() {
@@ -57,7 +60,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
         this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
         this.dynamicHeader.set(node.data.headerSize);
       }
-    
+
       // console.log("on effect style:", this.dynamicStyle());
       // console.log("on effect header:", this.dynamicHeader());
     });
@@ -66,10 +69,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
-  
+
   text = signal<string>('');
-  // size = signal<number>(1);
-  // headerSize = computed(() => 'h' + this.size())
+
   headerSize = signal('h1');
   id = signal('0');
   parentId = signal('-1')
@@ -87,7 +89,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.parentId.set(this.data.parentId);
     this.headerSize.set(this.data.headerSize ?? 'h1');
   }
-  
+
   ngAfterViewInit(): void {
     this.target().nativeElement.innerText = this.data.text ?? 'Your Title Here';
 
@@ -97,20 +99,11 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     return this.id() === this.selectionSvc.selectedElementId();
   });
 
-  isHovered = false;
+  isHovered = computed(() => {
+    return this.id() === this.selectionSvc.hoveredElementId();
+  });
 
-  onMouseEnter() {
-    this.isHovered = true;
-  }
-  
-  onMouseLeave() {
-    this.isHovered = false;
-  }
-
-  // setSize(size: number) {
-  //   this.size.set(size);
-  //   console.log("memoryContent", this.layoutModel());
-  // }
+  isDragging = this.selectionSvc.isDragging;
 
   textSyncOnBlur(event: Event) {
     const element = event.target as HTMLElement;
@@ -118,46 +111,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.text.set(value);
   }
 
-  //Lógica do Menu, passar para um serviço depois
-  menuIsOn = signal(false);
-
-  hideMenu(event: Event) {
-    const related = (event as FocusEvent).relatedTarget as HTMLElement | null;
-
-    if (!related || !(event.currentTarget as HTMLElement).contains(related)) {
-      this.menuIsOn.set(false);
-    }
-
+  onHandleClick(){
+    this.isDragging.set(true);
+    // console.log("handle click: ",this.selectionSvc.isDragging());
+    this.selectionSvc.selectById(this.id(), true);
   }
-
-  showMenu(event: Event) {
-    this.menuIsOn.set(true);
-  }
-
-  deleteHeader(){
-    this.modelSvc.removeNodeById(this.id());
-  }
-
-
-  // layoutModel: Signal<LayoutElement<HeaderData>> = computed(
-  //   () => ({
-  //     data: {
-  //       id: this.id(),
-  //       parentId: this.parentId(),
-  //       type: 'header',
-  //       text: this.text(),
-  //       style: {
-  //         size: this.size()
-  //       }
-  //     }
-  //   })
-  // );
-
-
-
-  // layoutModelString: Signal<string> = computed(
-  //   () => JSON.stringify(this.layoutModel(), null, 2)
-  // )
-
 
 }

@@ -55,19 +55,11 @@ mat-tree.main {
     color: #000000;
 }
 
-button[mat-icon-button] {
-    background-color: transparent !important; // remove fundo normal
-  }
-  
-  button[mat-icon-button]:hover {
-    background-color: rgba(0, 0, 0, 0.1) !important; // cor customizada de hover
-    border-radius: 4px; // opcional, mais quadrado
-  }
 
 /* Ícone de expandir/recolher */
 .expand-icon {
     font-size: 20px;
-    margin-right: 8px;
+    margin-right: 3px;
     color: #666666;
     transition: transform 0.2s ease;
 }
@@ -76,9 +68,7 @@ button[mat-icon-button] {
     color: #000000;
 }
 
-mat-icon-button:hover {
-    background-color: #000000;
-}
+
 
 .new-node {
     margin-left: 20px;

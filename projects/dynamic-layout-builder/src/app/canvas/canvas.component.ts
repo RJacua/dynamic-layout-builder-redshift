@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, computed, effect, Signal, untracked, ViewChild, ViewContainerRef, Input } from '@angular/core';
+import { Component, inject, computed, effect, Signal, untracked, ViewChild, ViewContainerRef, Input, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +21,7 @@ import { RouterLink } from '@angular/router';
   selector: 'app-canvas',
   standalone: true,
   imports: [
+    CommonModule,
     CommonModule,
     ContainerComponent,
     MatFormFieldModule,
@@ -58,7 +59,9 @@ export class CanvasComponent {
 
   addContainer() {
     const newLayoutElement = this.modelSvc.writeElementModel('container', 'canvas');
+    console.log(newLayoutElement);
     this.modelSvc.addChildNode('canvas', newLayoutElement);
+    setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 0 });
     setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 0 });
   }
 
@@ -67,10 +70,13 @@ export class CanvasComponent {
   }
 
   private selectionService = inject(SelectionService)
-  initialData: { id: string, rootNodes: string[] };
+  initialData: string[];
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
-    this.initialData = { id: 'canvas', rootNodes: this.newAreaMenuSvc.rootLevelNodes.slice() };
-    // effect(() => console.log("TEST: ", JSON.parse(this.decoded())))
+    this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
+  }
+
+  ngOnInit(): void {
+    this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
   }
 
   // readonly defaultBorder = this.stylesService.defaultBorder;
@@ -133,4 +139,7 @@ export class CanvasComponent {
     return format(obj, 0);
   }
 
+  onPlusClick() {
+    this.selectionSvc.unselect();
+  }
 }

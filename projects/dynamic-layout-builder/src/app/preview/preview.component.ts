@@ -23,7 +23,7 @@ export class PreviewComponent {
   encoded = signal<string>('');
   decoded = signal<string>('');
   canvasModel = computed(() => this.modelSvc.canvasModel());
-  parsed: LayoutElement<ContainerData>[] = [];
+  parsed: Signal<LayoutElement<ContainerData>[]> = signal([]);
 
   constructor( ) {
     effect(() => console.log("TEST: ", this.parsed))
@@ -40,9 +40,9 @@ export class PreviewComponent {
       try {
         var decodedStr = decodeURIComponent(atob(param));
         this.decoded.set(decodedStr);
-        this.parsed = JSON.parse(this.decoded());
-        console.log("INIT: ", this.parsed[0].data)
-        this.renderFromModel(this.parsed[0]);
+        console.log("INIT: ", this.decoded())
+        this.parsed = computed(() => JSON.parse(this.decoded()));
+        this.renderFromModel(this.parsed());
       } catch (error) {
         console.error("Can not decode url", error)
       }
@@ -51,8 +51,8 @@ export class PreviewComponent {
 
   }
 
-  renderFromModel(model: LayoutElement<ContainerData>) {
-    this.modelSvc.setCanvasModel([model]);
+  renderFromModel(model: LayoutElement<ContainerData>[]) {
+    this.modelSvc.setCanvasModel(model);
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
 

@@ -1,4 +1,3 @@
-<br>
 <mat-tree
   class="main"
   [dataSource]="nodeModel()"
@@ -23,7 +22,7 @@
       [class.tree-node]="node.data.type == 'container'"
       [class.node-item]="node.data.type !== 'container' || !node.data.children.length"
     >
-        <mat-icon  mat-icon-button
+        <mat-icon  class="expand-icon"
         (click)="toggleNode(node.data.id)"
         [attr.aria-label]="'toggle ' + node.data.type"
         *ngIf="node.data.children?.length > 0">

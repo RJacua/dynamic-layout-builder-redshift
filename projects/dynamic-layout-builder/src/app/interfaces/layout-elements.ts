@@ -22,6 +22,8 @@ export interface LayoutData {
 export interface ParagraphData extends LayoutData {
   text?: string;
 
+  isEditing?: boolean;
+
 }
 
 export interface HeaderData extends LayoutData {
