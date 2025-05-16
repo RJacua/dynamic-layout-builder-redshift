@@ -46,7 +46,7 @@ export class CornerStylesService {
 
   setIndividualCorner(enableIndividualCorner: boolean, cornerOptions: any, generalRadius: number | null) {
     // this.enableIndividualCornerSubject.next(individualCorner);
-    this.stylesSvc.updateSelectedNodeEnabler('enableIndividualCorner', enableIndividualCorner.toString());
+    this.stylesSvc.updateSelectedNodeEnabler('enableIndividualCorner', enableIndividualCorner);
 
     if(cornerOptions.topLeft.value === cornerOptions.topRight.value && cornerOptions.topRight.value === cornerOptions.bottomLeft.value && cornerOptions.bottomLeft.value === cornerOptions.bottomRight.value && cornerOptions.topLeft.value === 0){
       console.log("tudo zero");

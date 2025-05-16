@@ -39,7 +39,7 @@ export class BorderStylesService {
 
   setAddStroke(enableStroke: boolean) {
     // this.enableStrokeSubject.next(enableStroke);
-    this.stylesSvc.updateSelectedNodeEnabler('enableStroke', enableStroke.toString());
+    this.stylesSvc.updateSelectedNodeEnabler('enableStroke', enableStroke);
   }
   setStrokeColor(strokeColor: string) {
     // this.strokeColorSubject.next(strokeColor);

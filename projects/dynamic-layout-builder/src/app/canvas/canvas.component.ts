@@ -15,11 +15,13 @@ import { ModelService } from '../services/model.service';
 import { HeaderComponent } from "../header/header.component";
 import { Canvas, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { layoutModels } from '../model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-canvas',
   standalone: true,
   imports: [
+    CommonModule,
     CommonModule,
     ContainerComponent,
     MatFormFieldModule,
@@ -27,15 +29,16 @@ import { layoutModels } from '../model';
     MatMenuModule,
     MatIconModule,
     MenuComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    RouterLink,
   ],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',
   providers: []
 })
 
-export class CanvasComponent implements OnInit {
-  @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
+export class CanvasComponent {
+  // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
 
   readonly modelSvc = inject(ModelService);
@@ -44,17 +47,26 @@ export class CanvasComponent implements OnInit {
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null, 2)
+    // () => this.customStringify(this.canvasModel())
   )
+
+  utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasModelsString()));
+  btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
+  atob: Signal<string> = computed(() => atob(this.btoa()));
+  decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
+
+
 
   addContainer() {
     const newLayoutElement = this.modelSvc.writeElementModel('container', 'canvas');
     console.log(newLayoutElement);
     this.modelSvc.addChildNode('canvas', newLayoutElement);
     setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 0 });
+    setTimeout(() => { this.selectionSvc.select(newLayoutElement.data), 0 });
   }
 
   renderFromModel() {
-    this.modelSvc.setCanvasModel([layoutModels[2]]);
+    this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
 
   private selectionService = inject(SelectionService)
@@ -90,6 +102,41 @@ export class CanvasComponent implements OnInit {
         console.warn("ng.getComponent não disponível (modo produção?).");
       }
     }
+  }
+
+  customStringify(obj: any, indent = 2): string {
+    const noQuoteKeys = new Set([
+      "id", "parentId", "type", "data", "style", "children",
+      "text", "headerSize", "enabler", "enableStroke", "enableIndividualCorner",
+    ]);
+
+    function format(value: any, level: number): string {
+      const space = " ".repeat(level * indent);
+
+      if (Array.isArray(value)) {
+        if (value.length === 0) return "[]";
+        return `[\n${value.map(item => space + " ".repeat(indent) + format(item, level + 1)).join(',\n')}\n${space}]`;
+      }
+
+      if (typeof value === "object" && value !== null) {
+        const entries = Object.entries(value);
+        if (entries.length === 0) return "{}";
+
+        const formatted = entries.map(([key, val]) => {
+          const displayKey = noQuoteKeys.has(key) ? key : `"${key}"`;
+          return `${" ".repeat((level + 1) * indent)}${displayKey}: ${format(val, level + 1)}`;
+        });
+
+        return `{\n${formatted.join(',\n')}\n${space}}`;
+      }
+
+      if (typeof value === "string") {
+        return `"${value}"`;
+      }
+      return String(value);
+    }
+
+    return format(obj, 0);
   }
 
   onPlusClick() {

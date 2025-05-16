@@ -170,7 +170,7 @@ export class StylesService {
   }
 
 
-  updateSelectedNodeEnabler(enablerType: string, value: string) {
+  updateSelectedNodeEnabler(enablerType: string, value: boolean) {
     var currentNode = this.selectedNode();
     if (currentNode) {
 

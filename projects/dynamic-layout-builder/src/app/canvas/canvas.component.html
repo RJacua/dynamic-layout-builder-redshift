@@ -13,16 +13,21 @@
              }
         }
         
-        <ng-template #containerDiv [class]="'container-border'"></ng-template>
+        <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
     </div>
     
     <div class="align-center">
         <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true"
         matTooltip="New Container" (click)="onPlusClick()"></app-menu>
-        <!-- <button class="round-button" (click)="addContainer()">A</button>
-        <button class="round-button" (click)="renderFromModel()">M</button> -->
+        <!-- <button class="round-button" (click)="addContainer()">A</button>-->
+        <button class="round-button" (click)="renderFromModel()">M</button> 
+        <button class="round-button" [routerLink]="['/preview', btoa()]">Preview</button> 
     </div>
 
 </div>
 
+<pre>{{btoa()}}</pre>
+<pre>--------------------</pre>
+<pre>{{decoded()}}</pre>
+<pre>--------------------</pre>
 <pre>{{ canvasModelsString() }}</pre>

@@ -42,8 +42,8 @@ import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 export class ContainerComponent implements LayoutElement<ContainerData>, OnInit, AfterViewInit {
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = "container";
-  @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', containerDiv: this.containerDiv, type: 'container', style: {}, enabler: {}, children: [] };
+  // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
+  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas',  type: 'container', style: {}, enabler: {}, children: [] };
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
 
@@ -110,7 +110,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   ngAfterViewInit() {
-    this.elementRef.next(this.containerDiv);
+    // this.elementRef.next(this.containerDiv);
   }
 
   addLayoutElement(componentType: string) {
