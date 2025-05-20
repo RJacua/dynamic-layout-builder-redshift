@@ -67,7 +67,7 @@ export class CanvasComponent {
   }
 
   renderFromModel() {
-    this.modelSvc.setCanvasModel([layoutModels[0]]);
+    this.modelSvc.setCanvasModel([layoutModels[0][0]]);
   }
 
   private selectionService = inject(SelectionService)

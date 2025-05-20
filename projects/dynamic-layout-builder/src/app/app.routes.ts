@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { CanvasComponent } from './canvas/canvas.component';
 import { WorkSpaceComponent } from './work-space/work-space.component';
 import { PreviewComponent } from './preview/preview.component';
+import { PresentationComponent } from './presentation/presentation.component';
 
 export const routes: Routes = [
     {
@@ -10,5 +11,8 @@ export const routes: Routes = [
     }, {
         path:'preview/:encoded',
         component: PreviewComponent
+    }, {
+        path:'presentation',
+        component: PresentationComponent
     }
 ];

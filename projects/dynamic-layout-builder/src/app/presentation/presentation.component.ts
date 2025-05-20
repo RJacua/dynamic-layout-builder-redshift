@@ -4,57 +4,63 @@ import { ActivatedRoute } from '@angular/router';
 import { LayoutElement, ContainerData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../container/container.component';
+import { layoutModels } from '../model';
 import { CanvasComponent } from '../canvas/canvas.component';
 
 @Component({
-  selector: 'app-preview',
+  selector: 'app-presentation',
   imports: [
     CommonModule,
     ContainerComponent,
     CanvasComponent
   ],
-  templateUrl: './preview.component.html',
-  styleUrl: './preview.component.scss'
+  templateUrl: './presentation.component.html',
+  styleUrl: './presentation.component.scss'
 })
-export class PreviewComponent {
+export class PresentationComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   readonly modelSvc = inject(ModelService);
   readonly route = inject(ActivatedRoute);
 
-  encoded = signal<string>('');
-  decoded = signal<string>('');
   canvasModel = computed(() => this.modelSvc.canvasModel());
-  parsed: Signal<LayoutElement<ContainerData>[]> = signal([]);
-
+  models: LayoutElement<ContainerData>[][] = [[]];
+  modelIndex = -1;
   constructor() {
 
   }
 
   ngOnInit() {
-    let param = this.route.snapshot.paramMap.get('encoded');
-    // console.log("rota: ", param);
-    
-    if (param) {
-        
-      this.encoded.set(param);
-
-      try {
-        var decodedStr = decodeURIComponent(atob(param));
-        this.decoded.set(decodedStr);
-        console.log("INIT: ", this.decoded())
-        this.parsed = computed(() => JSON.parse(this.decoded()));
-        this.renderFromModel(this.parsed());
-      } catch (error) {
-        console.error("Can not decode url", error)
-      }
-    }
-
-
+    this.loadPresentation();
   }
 
   renderFromModel(model: LayoutElement<ContainerData>[]) {
     this.modelSvc.resetCanvasModel();
     this.modelSvc.setCanvasModel(model);
-    // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
+
+  loadPresentation() {
+    this.models = layoutModels;
+    this.modelIndex = 0;
+    this.renderFromModel(this.models[this.modelIndex]);
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleGlobalKey(event: KeyboardEvent) {
+    if (this.models.length > 1) {
+      if (event.key === 'ArrowLeft') {
+        if (this.modelIndex >= 1) {
+          this.modelIndex = this.modelIndex - 1;
+          this.renderFromModel(this.models[this.modelIndex]);
+        }
+      }
+      if (event.key === 'ArrowRight') {
+        if (this.modelIndex < this.models.length - 1) {
+          this.modelIndex = this.modelIndex + 1;
+          this.renderFromModel(this.models[this.modelIndex]);
+        }
+      }
+    }
+  }
+
+
 }
