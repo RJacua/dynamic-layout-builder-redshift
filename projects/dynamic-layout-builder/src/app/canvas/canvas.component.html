@@ -1,33 +1,33 @@
 <!-- <div class="canvas" [ngStyle]="dynamicStyles$ | async"  -->
-<div class="canvas" [ngStyle]="" 
-    (click)="onElementClick($event)">
+<div [class.canvas-edit]="editMode" [ngStyle]="" (click)="onElementClick($event)">
     <div class="align-center">
 
         @for (node of canvasModel(); track node.data.id) {
-             @switch (node.data.type) {
-                @case ('container') {
-                    <app-area [data]="node.data" />
-                }
-                @default {
-                }
-             }
+        @switch (node.data.type) {
+        @case ('container') {
+        <app-area [data]="node.data" [editMode]="editMode" />
         }
-        
+        @default {
+        }
+        }
+        }
+
         <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
     </div>
-    
+
+    @if (editMode) {
     <div class="align-center">
-        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true"
-        matTooltip="New Container" (click)="onPlusClick()"></app-menu>
+        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="New Container"
+            (click)="onPlusClick()"></app-menu>
         <!-- <button class="round-button" (click)="addContainer()">A</button>-->
-        <button class="round-button" (click)="renderFromModel()">M</button> 
-        <button class="round-button" [routerLink]="['/preview', btoa()]">Preview</button> 
+        <button class="round-button" (click)="renderFromModel()">M</button>
+        <button class="round-button" (click)="goToRender()">Preview</button>
     </div>
-
+    }
 </div>
-
-<!-- <pre>{{btoa()}}</pre>
-<pre>--------------------</pre>
-<pre>{{decoded()}}</pre> -->
-<pre>--------------------</pre>
-<pre>{{ canvasModelsString() }}</pre>
+<!-- <pre>{{btoa()}}</pre> -->
+<!-- <pre>--------------------</pre> -->
+<!-- <pre>{{decoded()}}</pre> -->
+<!-- <pre>--------------------</pre> -->
+<!-- <pre>{{ canvasModelsString() }}</pre> -->
+<pre>{{ canvasCustomString() }}</pre>

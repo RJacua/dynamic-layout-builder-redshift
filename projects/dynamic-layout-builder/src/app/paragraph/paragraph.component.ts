@@ -24,6 +24,7 @@ import { EnablerService } from '../services/styles/enabler.service';
 export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit {
   type = 'paragraph';
   @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
+  @Input() editMode: boolean = true;
 
   constructor() {
     effect(() => {

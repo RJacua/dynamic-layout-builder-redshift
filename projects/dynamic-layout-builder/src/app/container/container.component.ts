@@ -46,6 +46,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   type = "container";
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas',  type: 'container', style: {}, enabler: {}, children: [] };
+  @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {

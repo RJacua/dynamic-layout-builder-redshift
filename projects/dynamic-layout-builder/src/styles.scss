@@ -6,8 +6,8 @@ html {
     padding: 0 !important;
 }
 
-.container-border {
-    margin: .5% .5%;
+.border {
+    // margin: .5% .5%;
     padding: 5% 1% 1%;
     border: 1px solid #81828555;
     position: relative;
@@ -17,7 +17,7 @@ html {
     border: 1px solid rgba(0, 0, 0, 0);
 }
 
-.container-border:hover,
+.border:hover,
 .element:hover {
     border: 1px solid #818285;
 }
@@ -93,7 +93,7 @@ html {
 
     justify-content: center;
     align-items: stretch;
-    gap: 2px;
+    // gap: 2px;
 }
 
 .container-flex>* {
@@ -119,9 +119,9 @@ body {
 }
 
 .main.active {
-    background-color: blanchedalmond;
+    background-color: rgba(150,150,200,0.2);
     outline: none;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.1s ease;
 }
 
 
@@ -143,6 +143,7 @@ mat-card {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   background-color: white;
+  opacity: 0.5;
 }
 
 .drag-handle {
@@ -154,7 +155,7 @@ mat-card {
   user-select: none;
   font-size: 16px;
   opacity: 0.3;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.1s ease;
 }
 
 .drag-handle:hover {

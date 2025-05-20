@@ -15,7 +15,7 @@ import { ModelService } from '../services/model.service';
 import { HeaderComponent } from "../header/header.component";
 import { Canvas, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { layoutModels } from '../model';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-canvas',
@@ -40,14 +40,21 @@ import { RouterLink } from '@angular/router';
 export class CanvasComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
+  @Input() editMode: boolean = true;
 
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
+  readonly router = inject(Router);
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null, 2)
+    () => JSON.stringify(this.canvasModel(), null)
     // () => this.customStringify(this.canvasModel())
+  )
+
+  canvasCustomString: Signal<string> = computed(
+    // () => JSON.stringify(this.canvasModel(), null)
+    () => this.customStringify(this.canvasModel())
   )
 
   utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasModelsString()));
@@ -66,7 +73,7 @@ export class CanvasComponent {
   }
 
   renderFromModel() {
-    this.modelSvc.setCanvasModel([layoutModels[0]]);
+    this.modelSvc.setCanvasModel([layoutModels[0][0]]);
   }
 
   private selectionService = inject(SelectionService)
@@ -141,5 +148,11 @@ export class CanvasComponent {
 
   onPlusClick() {
     this.selectionSvc.unselect();
+  }
+
+  goToRender() {
+    this.router.navigate(['/preview'], {
+      queryParams: { encoded: this.btoa() }
+    });
   }
 }

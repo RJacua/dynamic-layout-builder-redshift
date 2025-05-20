@@ -245,6 +245,10 @@ export class ModelService {
     this.canvasModel.set(model)
   }
 
+  resetCanvasModel() {
+    this.canvasModel.set([])
+  }
+
   addChildrenTemplate(parentId: string, childrenModels: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]) {
     childrenModels.map((childModel) => this.addChildNode(parentId, childModel));
   }

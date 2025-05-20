@@ -24,6 +24,7 @@ import { EnablerService } from '../services/styles/enabler.service';
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, AfterViewInit {
   type = 'header';
   @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: {}, enabler: {}, headerSize: 'h1' };
+  @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   constructor() {
@@ -34,6 +35,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     //   )
     // });
     effect(() => {
+      const node = this.nodeSignal();
       const text = this.text();
       const headerSize = this.headerSize();
 
@@ -52,6 +54,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
         this.modelSvc.updateModel(this.id, updatedModel);
         // console.log("on effect: ", this.modelSvc.canvasModel())
+        // this.dynamicStyle.set(node.data.style);
+        // this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+        // this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
+
       });
     });
     effect(() => {
@@ -75,6 +81,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   // readonly borderStylesSvc = inject(BorderStylesService);
   readonly enablerSvc = inject(EnablerService);
   readonly dragDropSvc = inject(DragDropService);
+
+
+  // readonly cornerStylesSvc = inject(CornerStylesService);
 
   text = signal<string>('');
 
