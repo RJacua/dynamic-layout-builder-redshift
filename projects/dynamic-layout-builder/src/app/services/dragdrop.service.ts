@@ -5,7 +5,7 @@ import { SelectionService } from './selection.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DragdropService {
+export class DragDropService {
 
   constructor() { }
 

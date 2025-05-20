@@ -6,7 +6,7 @@ import { ModelService } from '../services/model.service';
 import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
-import { DragdropService } from '../services/dragdrop.service';
+import { DragDropService } from '../services/dragdrop.service';
 
 @Component({
   selector: 'app-header',
@@ -58,8 +58,8 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       if (node) {
-        this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-        this.dynamicHeader.set(node.data.headerSize);
+        // this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+        // this.dynamicHeader.set(node.data.headerSize);
       }
 
       // console.log("on effect style:", this.dynamicStyle());
@@ -70,7 +70,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
-  readonly dragDropSvc = inject(DragdropService);
+  readonly dragDropSvc = inject(DragDropService);
 
   text = signal<string>('');
 
@@ -89,7 +89,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.headerSize.set(this.data.headerSize ?? 'h1');
 
     this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
-    this.dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+    // this.dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
 
     console.log(this.nodeSignal()?.data.headerSize)
     this.dynamicHeader = signal(this.nodeSignal()?.data.headerSize);

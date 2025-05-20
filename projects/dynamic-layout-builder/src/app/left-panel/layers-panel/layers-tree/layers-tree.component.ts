@@ -6,7 +6,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { ModelService } from '../../../services/model.service';
 import { SelectionService } from '../../../services/selection.service';
 import { CdkDrag, CdkDragDrop, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
-import { DragdropService } from '../../../services/dragdrop.service';
+import { DragDropService as DragDropService } from '../../../services/dragdrop.service';
 
 @Component({
   selector: 'app-layers-tree',
@@ -18,7 +18,7 @@ export class LayersTreeComponent {
   @Input() data: string = '0';
   readonly selectionSvc = inject(SelectionService);
   readonly modelSvc = inject(ModelService);
-  readonly dragDropSvc = inject(DragdropService);
+  readonly dragDropSvc = inject(DragDropService);
 
   isSelected = computed(() => { return this.data === this.selectionSvc.selectedElementId() })
   isDragging = this.dragDropSvc.isDragging;

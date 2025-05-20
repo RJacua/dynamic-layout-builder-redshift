@@ -62,7 +62,7 @@ export class CornerStylesOptionsComponent implements OnInit {
       })
       // }
 
-      this.strokeRadius.setValue(parseInt(node.data.style["border-radius"]) || parseInt(this.defaultCornerStyles['border-radius']!), { emitEvent: false });
+      this.strokeRadius.setValue(parseInt(node.data.style["border-radius"]) ?? parseInt(this.defaultCornerStyles['border-radius']!), { emitEvent: false });
       // console.log("EFFECT: ", this.strokeRadius.value);
 
       // if (this.enableIndividualCornerCheckbox.value === true) {

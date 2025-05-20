@@ -49,7 +49,7 @@ export class CornerStylesService {
     this.stylesSvc.updateSelectedNodeEnabler('enableIndividualCorner', enableIndividualCorner);
 
     console.log("AQUI", generalRadius)
-
+    if(!enableIndividualCorner) return  
     if (cornerOptions.topLeft.value === cornerOptions.topRight.value && cornerOptions.topRight.value === cornerOptions.bottomLeft.value && cornerOptions.bottomLeft.value === cornerOptions.bottomRight.value && cornerOptions.topLeft.value === 0) {
       console.log("tudo zero");
 
@@ -108,7 +108,7 @@ export class CornerStylesService {
 
   changeCornerStylesByEnablers(nodeStyle: Styles, individualCornerEnabler: boolean, type: string) {
 
-    let defaultIndividualCornerStyles: Styles = {
+    let defaultIndividualCornerStylesInside: Styles = {
       ['border-radius']: '0px',
       ['border-top-left-radius']: nodeStyle['border-radius'],
       ['border-top-right-radius']: nodeStyle['border-radius'],
@@ -117,7 +117,7 @@ export class CornerStylesService {
     };
 
     if (nodeStyle && !individualCornerEnabler) {
-      return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, defaultIndividualCornerStyles));
+      return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, defaultIndividualCornerStylesInside));
     }
 
     return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultCornerStyles));

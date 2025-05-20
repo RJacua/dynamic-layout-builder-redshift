@@ -18,7 +18,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MenuComponent } from '../canvas/new-area-menu/menu.component';
 import { NewAreaMenuService } from '../services/new-area-menu.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
-import { DragdropService } from '../services/dragdrop.service';
+import { DragDropService } from '../services/dragdrop.service';
+import { EnablerService } from '../services/styles/enabler.service';
 
 @Component({
   selector: 'app-area',
@@ -50,12 +51,10 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     effect(() => {
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
-
+      
       untracked(() => {
         if (node) {
-          this.dynamicStyle.set(node.data.style);
-          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
-          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
+        this.processContainerStyle(node)
         }
       })
     });
@@ -66,8 +65,9 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly selectionSvc = inject(SelectionService);
   readonly borderStylesSvc = inject(BorderStylesService);
   readonly cornerStylesSvc = inject(CornerStylesService);
+  readonly enablerSvc = inject(EnablerService);
   readonly newAreaMenuSvc = inject(NewAreaMenuService);
-  readonly dragDropSvc = inject(DragdropService);
+  readonly dragDropSvc = inject(DragDropService);
 
   id: string = '0';
   parentId = signal('0');
@@ -101,7 +101,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
     this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
 
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
+    // this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
 
     this.modelSvc.updateModel(this.id, this.nodeSignal());
 
@@ -113,9 +113,14 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     // this.elementRef.next(this.containerDiv);
   }
 
-  processContainerStyle() {
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
-    this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
+  processContainerStyle(node: any) {
+    this.dynamicStyle.set(node.data.style);
+    this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
+    // console.log(this.dynamicStyle())
+    // this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+    // this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
+    // this.dynamicStyle.update(() => this.enablerSvc.applyEnableStroke(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+    // this.dynamicStyle.update(() => this.enablerSvc.applyEnableIndividualCorner(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
   }
 
   onElementHover(event: MouseEvent) {
