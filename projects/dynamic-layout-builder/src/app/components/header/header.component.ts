@@ -1,13 +1,13 @@
 import { AfterContentInit, AfterViewInit, Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, OnInit, Output, Signal, signal, untracked, viewChild, WritableSignal } from '@angular/core';
-import { HeaderData, LayoutElement } from '../interfaces/layout-elements';
+import { HeaderData, LayoutElement } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
-import { ComponentsService } from '../services/components.service';
-import { ModelService } from '../services/model.service';
-import { SelectionService } from '../services/selection.service';
-import { BorderStylesService } from '../services/styles/borderStyles.service';
+import { ComponentsService } from '../../services/components.service';
+import { ModelService } from '../../services/model.service';
+import { SelectionService } from '../../services/selection.service';
+import { BorderStylesService } from '../../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
-import { DragDropService } from '../services/dragdrop.service';
-import { EnablerService } from '../services/styles/enabler.service';
+import { DragDropService } from '../../services/dragdrop.service';
+import { EnablerService } from '../../services/styles/enabler.service';
 
 @Component({
   selector: 'app-header',

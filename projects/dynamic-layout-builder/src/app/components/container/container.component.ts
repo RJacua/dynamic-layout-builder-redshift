@@ -1,25 +1,25 @@
 import { AfterViewInit, Component, computed, effect, ElementRef, inject, Input, OnInit, Signal, signal, untracked, ViewChild, ViewContainerRef, WritableSignal } from '@angular/core';
 import { HeaderComponent } from "../header/header.component";
 import { ParagraphComponent } from "../paragraph/paragraph.component";
-import { ComponentsService } from '../services/components.service';
-import { ContainerData, LayoutElement, AtomicElementData, Styles, Enablers } from '../interfaces/layout-elements';
+import { ComponentsService } from '../../services/components.service';
+import { ContainerData, LayoutElement, AtomicElementData, Styles, Enablers } from '../../interfaces/layout-elements';
 import { BehaviorSubject } from 'rxjs';
-import { layoutModels } from '../model'
-import { ModelService } from '../services/model.service';
-import { SelectionService } from '../services/selection.service';
+import { layoutModels } from '../../model'
+import { ModelService } from '../../services/model.service';
+import { SelectionService } from '../../services/selection.service';
 import { CommonModule } from '@angular/common';
-import { BorderStylesService } from '../services/styles/borderStyles.service';
-import { CornerStylesService } from '../services/styles/cornerStyles.service';
+import { BorderStylesService } from '../../services/styles/borderStyles.service';
+import { CornerStylesService } from '../../services/styles/cornerStyles.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MenuComponent } from '../canvas/new-area-menu/menu.component';
-import { NewAreaMenuService } from '../services/new-area-menu.service';
+import { NewAreaMenuService } from '../../services/new-area-menu.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
-import { DragDropService } from '../services/dragdrop.service';
-import { EnablerService } from '../services/styles/enabler.service';
+import { DragDropService } from '../../services/dragdrop.service';
+import { EnablerService } from '../../services/styles/enabler.service';
 
 @Component({
   selector: 'app-area',
@@ -107,6 +107,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
     this.modelSvc.updateModel(this.id, this.nodeSignal());
 
     this.initialData = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
+
+    this.processContainerStyle(this.nodeSignal());
 
   }
 
