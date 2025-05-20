@@ -78,7 +78,7 @@ export class BorderStylesOptionsComponent implements OnInit {
       })
       // }
 
-      this.enableStrokeCheckbox.setValue(node.data.enabler.enableStroke === 'true' || this.defaultEnabler.enableStroke);
+      this.enableStrokeCheckbox.setValue(node.data.enabler.enableStroke || this.defaultEnabler.enableStroke);
 
       
       this.strokeOptions.setValue({

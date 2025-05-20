@@ -59,7 +59,7 @@ export class CornerStylesOptionsComponent implements OnInit {
       })
       // }
 
-      this.enableIndividualCornerCheckbox.setValue(node.data.enabler.enableIndividualCorner === 'true' || this.defaultEnabler.enableIndividualCorner);
+      this.enableIndividualCornerCheckbox.setValue(node.data.enabler.enableIndividualCorner || this.defaultEnabler.enableIndividualCorner);
 
 
       this.strokeRadius.setValue(parseInt(node.data.style["border-radius"]) || 0);
@@ -71,9 +71,7 @@ export class CornerStylesOptionsComponent implements OnInit {
           bottomLeft: parseInt(node.data.style["border-bottom-left-radius"]) ||  this.strokeRadius.value,
           bottomRight: parseInt(node.data.style["border-bottom-right-radius"]) ||  this.strokeRadius.value,
         });
-
-      // }
-
+      //
 
     });
   }
@@ -84,7 +82,6 @@ export class CornerStylesOptionsComponent implements OnInit {
     this.enableIndividualCornerCheckbox.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(individualCorner => {
-        // console.log('Add individualCorner:', individualCorner);
         if (individualCorner !== null)
           this.cornerStylesSvc.setIndividualCorner(individualCorner, this.cornerOptions.controls, this.strokeRadius.value);
       });
