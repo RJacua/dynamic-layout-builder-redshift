@@ -1,5 +1,5 @@
 <!-- <div class="canvas" [ngStyle]="dynamicStyles$ | async"  -->
-<div [class.canvas]="editMode" [ngStyle]="" (click)="onElementClick($event)">
+<div [class.canvas-edit]="editMode" [ngStyle]="" (click)="onElementClick($event)">
     <div class="align-center">
 
         @for (node of canvasModel(); track node.data.id) {

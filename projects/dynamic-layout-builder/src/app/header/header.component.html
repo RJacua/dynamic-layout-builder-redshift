@@ -1,4 +1,5 @@
-<div class="main header" [class.active]="editMode && (isFocused() || isHovered() && !isDragging())" cdkDrag>
+<div class="main header" [class.border]="editMode" [class.active]="editMode && (isFocused() || isHovered() && !isDragging())"
+[cdkDragDisabled]="!editMode" cdkDrag>
   <br>
   @if(editMode){
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
