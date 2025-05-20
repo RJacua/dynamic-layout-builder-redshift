@@ -12,7 +12,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class CornerStylesService {
 
   readonly stylesSvc = inject(StylesService);
-  readonly generalSvc = inject(GeneralFunctionsService);
 
   readonly defaultCornerStyles: Styles = {
     ['border-radius']: '0px',
@@ -25,25 +24,7 @@ export class CornerStylesService {
     ['border-bottom-right-radius']: '0px',
   };
 
-  // private strokeRadiusSubject = new BehaviorSubject<number>(50);
-  // strokeRadius$ = this.strokeRadiusSubject.asObservable();
-
-  // private enableIndividualCornerSubject = new BehaviorSubject<boolean>(false);
-  // enableIndividualCorner$ = this.enableIndividualCornerSubject.asObservable();
-
-  // private topLeftSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // topLeft$ = this.topLeftSubject.asObservable();
-
-  // private topRightSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // topRight$ = this.topRightSubject.asObservable();
-
-  // private bottomLeftSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // bottomLeft$ = this.bottomLeftSubject.asObservable();
-
-  // private bottomRightSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // bottomRight$ = this.bottomRightSubject.asObservable();
-
-
+ 
   setIndividualCorner(enableIndividualCorner: boolean, cornerOptions: any, generalRadius: number | null) {
     // this.enableIndividualCornerSubject.next(individualCorner);
     this.stylesSvc.updateSelectedNodeEnabler('enableIndividualCorner', enableIndividualCorner);

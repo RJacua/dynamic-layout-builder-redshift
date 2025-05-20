@@ -57,6 +57,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     effect(() => {
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
+      this.dynamicHeader.set(node.data.headerSize);
 
       untracked(() => {
         if (node) {
@@ -94,7 +95,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
     // this.dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
 
-    console.log(this.nodeSignal()?.data.headerSize)
+    // console.log(this.nodeSignal()?.data.headerSize)
     this.dynamicHeader = signal(this.nodeSignal()?.data.headerSize);
 
   }

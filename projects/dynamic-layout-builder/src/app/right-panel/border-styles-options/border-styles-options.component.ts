@@ -82,9 +82,9 @@ export class BorderStylesOptionsComponent implements OnInit {
 
       
       this.strokeOptions.setValue({
-        strokeColor: node.data.style["border-color"] || (componentType === 'container' ? '#81828555' : ''),
-        strokeStyle: node.data.style["border-style"] || (componentType === 'container' ? 'solid' : ''),
-        strokeWidth:  parseInt(node.data.style["border-width"]) || (componentType === 'container' ? 1 : 0),
+        strokeColor: node.data.style["border-color"] || (componentType === 'container' ? this.containerStyles['border-color'] : ''),
+        strokeStyle: node.data.style["border-style"] || (componentType === 'container' ? this.containerStyles['border-style'] : ''),
+        strokeWidth:  parseInt(node.data.style["border-width"]) || (componentType === 'container' ? parseInt(this.containerStyles['border-width']!) : 0),
       });
 
 

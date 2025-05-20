@@ -28,7 +28,7 @@ export class EnablerService {
         const methodName = `apply${this.generalSvc.capitalize(enabler)}`;
         const fn = (this as any)[methodName];
         if (typeof fn === 'function') {
-          console.log("value: ", enablerValue)
+          // console.log("value: ", enablerValue)
           nodeStyle = fn.call(this, nodeStyle, enablerValue, type)();
         } else {
           console.warn(`Handler ${methodName} não encontrado para o enabler:`, enabler);

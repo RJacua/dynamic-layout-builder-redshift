@@ -58,7 +58,7 @@ export class CornerStylesOptionsComponent implements OnInit {
         this.cornerStylesSvc.setAllMissingStyles(this.defaultCornerStyles, node.data.style);
         this.cornerStylesSvc.setAllMissingStyles(this.defaultIndividualCornerStyles, node.data.style);
         this.cornerStylesSvc.setAllMissingEnablers(this.defaultEnabler, node.data.enabler);
-        console.log("STYLES: ", node.data.style);
+        // console.log("STYLES: ", node.data.style);
       })
       // }
 
@@ -90,7 +90,7 @@ export class CornerStylesOptionsComponent implements OnInit {
       .pipe(distinctUntilChanged())
       .subscribe(strokeRadius => {
         // console.log('Add strokeRadius:', strokeRadius);
-        console.log("SLIDER: ", this.strokeRadius.value);
+        // console.log("SLIDER: ", this.strokeRadius.value);
         if (strokeRadius !== null)
           this.cornerStylesSvc.setStrokeRadius(strokeRadius);
       });
@@ -101,7 +101,7 @@ export class CornerStylesOptionsComponent implements OnInit {
       .pipe(distinctUntilChanged())
       .subscribe(individualCorner => {
         // console.log('Add individualCorner:', individualCorner);
-        console.log("CHECK: ", this.strokeRadius.value)
+        // console.log("CHECK: ", this.strokeRadius.value)
         if (individualCorner !== null)
           this.cornerStylesSvc.setIndividualCorner(individualCorner, this.cornerOptions.controls, this.strokeRadius.value);
       });

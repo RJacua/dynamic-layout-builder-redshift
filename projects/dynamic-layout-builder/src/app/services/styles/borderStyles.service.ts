@@ -11,7 +11,6 @@ export class BorderStylesService {
 
   constructor() { }
   readonly stylesSvc = inject(StylesService);
-  readonly generalSvc = inject(GeneralFunctionsService);
 
   readonly defaultContainerStyles: Styles = {
     ['border-color']: '#81828555',
