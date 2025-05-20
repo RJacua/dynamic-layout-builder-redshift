@@ -48,22 +48,24 @@ export class CornerStylesService {
     // this.enableIndividualCornerSubject.next(individualCorner);
     this.stylesSvc.updateSelectedNodeEnabler('enableIndividualCorner', enableIndividualCorner);
 
-    if(cornerOptions.topLeft.value === cornerOptions.topRight.value && cornerOptions.topRight.value === cornerOptions.bottomLeft.value && cornerOptions.bottomLeft.value === cornerOptions.bottomRight.value && cornerOptions.topLeft.value === 0){
+    console.log("AQUI", generalRadius)
+
+    if (cornerOptions.topLeft.value === cornerOptions.topRight.value && cornerOptions.topRight.value === cornerOptions.bottomLeft.value && cornerOptions.bottomLeft.value === cornerOptions.bottomRight.value && cornerOptions.topLeft.value === 0) {
       console.log("tudo zero");
 
-      this.stylesSvc.updateSelectedNodeStyle('border-top-left-radius', (generalRadius || 0) + 'px');
-      cornerOptions.topLeft.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-top-left-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.topLeft.value = (generalRadius ?? 0);
 
-      this.stylesSvc.updateSelectedNodeStyle('border-top-right-radius', (generalRadius || 0) + 'px');
-      cornerOptions.topRight.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-top-right-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.topRight.value = (generalRadius ?? 0);
 
-      this.stylesSvc.updateSelectedNodeStyle('border-bottom-left-radius', (generalRadius || 0) + 'px');
-      cornerOptions.bottomLeft.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-bottom-left-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.bottomLeft.value = (generalRadius ?? 0);
 
-      this.stylesSvc.updateSelectedNodeStyle('border-bottom-right-radius', (generalRadius || 0) + 'px');
-      cornerOptions.bottomRight.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-bottom-right-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.bottomRight.value = (generalRadius ?? 0);
     }
-    
+
   }
   setStrokeRadius(strokeRadius: number) {
     // this.strokeRadiusSubject.next(strokeRadius);

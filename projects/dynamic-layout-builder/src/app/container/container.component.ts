@@ -54,8 +54,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       untracked(() => {
         if (node) {
           this.dynamicStyle.set(node.data.style);
-          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
+          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
         }
       })
     });
@@ -101,7 +101,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
     this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
 
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
 
     this.modelSvc.updateModel(this.id, this.nodeSignal());
 
@@ -114,8 +114,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   }
 
   processContainerStyle() {
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
-    this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner === 'true'), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
+    this.dynamicStyle.set(this.cornerStylesSvc.changeCornerStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
   }
 
   onElementHover(event: MouseEvent) {
