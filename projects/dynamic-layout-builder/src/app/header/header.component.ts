@@ -7,6 +7,7 @@ import { SelectionService } from '../services/selection.service';
 import { BorderStylesService } from '../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../services/dragdrop.service';
+import { EnablerService } from '../services/styles/enabler.service';
 
 @Component({
   selector: 'app-header',
@@ -57,10 +58,11 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
-      if (node) {
-        // this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
-        // this.dynamicHeader.set(node.data.headerSize);
-      }
+      untracked(() => {
+        if (node) {
+          this.processContainerStyle(node);
+        }
+      })
 
       // console.log("on effect style:", this.dynamicStyle());
       // console.log("on effect header:", this.dynamicHeader());
@@ -69,7 +71,8 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
-  readonly borderStylesSvc = inject(BorderStylesService);
+  // readonly borderStylesSvc = inject(BorderStylesService);
+  readonly enablerSvc = inject(EnablerService);
   readonly dragDropSvc = inject(DragDropService);
 
   text = signal<string>('');
@@ -96,6 +99,12 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   }
 
+  processContainerStyle(node: any) {
+    this.dynamicStyle.set(node.data.style);
+    this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
+  }
+
+
   ngAfterViewInit(): void {
     this.target().nativeElement.innerText = this.data.text ?? 'Your Title Here';
 
@@ -117,7 +126,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.text.set(value);
   }
 
-  onHandleClick(){
+  onHandleClick() {
     this.isDragging.set(true);
     this.selectionSvc.selectById(this.id, true);
   }

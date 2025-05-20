@@ -54,7 +54,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
       
       untracked(() => {
         if (node) {
-        this.processContainerStyle(node)
+        this.processContainerStyle(node);
         }
       })
     });
@@ -63,8 +63,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly modelSvc = inject(ModelService);
   readonly componentsSvc = inject(ComponentsService);
   readonly selectionSvc = inject(SelectionService);
-  readonly borderStylesSvc = inject(BorderStylesService);
-  readonly cornerStylesSvc = inject(CornerStylesService);
+  // readonly borderStylesSvc = inject(BorderStylesService);
+  // readonly cornerStylesSvc = inject(CornerStylesService);
   readonly enablerSvc = inject(EnablerService);
   readonly newAreaMenuSvc = inject(NewAreaMenuService);
   readonly dragDropSvc = inject(DragDropService);
