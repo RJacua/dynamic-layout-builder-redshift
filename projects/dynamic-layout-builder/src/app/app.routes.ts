@@ -9,7 +9,7 @@ export const routes: Routes = [
         path: 'create',
         component: WorkSpaceComponent
     }, {
-        path:'preview/:encoded',
+        path:'preview',
         component: PreviewComponent
     }, {
         path:'presentation',

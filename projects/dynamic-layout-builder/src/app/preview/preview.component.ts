@@ -31,15 +31,13 @@ export class PreviewComponent {
   }
 
   ngOnInit() {
-    let param = this.route.snapshot.paramMap.get('encoded');
-    // console.log("rota: ", param);
-    
-    if (param) {
-        
-      this.encoded.set(param);
+    this.route.queryParams.subscribe(params => {
+      this.encoded.set(params['encoded']);
+    });
 
+    if (this.encoded()) {
       try {
-        var decodedStr = decodeURIComponent(atob(param));
+        var decodedStr = decodeURIComponent(atob(this.encoded()));
         this.decoded.set(decodedStr);
         console.log("INIT: ", this.decoded())
         this.parsed = computed(() => JSON.parse(this.decoded()));
