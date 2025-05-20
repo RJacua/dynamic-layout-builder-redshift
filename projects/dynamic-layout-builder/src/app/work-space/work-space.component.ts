@@ -21,7 +21,7 @@ export class WorkSpaceComponent implements OnInit {
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null, 2)
+    () => JSON.stringify(this.canvasModel(), null)
   )
 
   utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasModelsString()));
