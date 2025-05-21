@@ -47,8 +47,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
           ...nodeModel,
           data: {
             ...nodeModel.data,
-            text,
-            headerSize
+            text
           }
         };
 
@@ -63,10 +62,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     effect(() => {
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
-      this.dynamicHeader.set(node.data.headerSize);
-
+      
       untracked(() => {
         if (node) {
+          this.dynamicHeader.set(node.data.headerSize);
           this.processContainerStyle(node);
         }
       })

@@ -121,7 +121,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   processContainerStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
     this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
-    console.log(this.dynamicStyle());
+    // console.log(this.dynamicStyle());
     // this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
     // this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
     // this.dynamicStyle.update(() => this.enablerSvc.applyEnableStroke(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());

@@ -198,13 +198,9 @@ export class StylesService {
         data: {
           ...currentNode.data,
           headerSize: value,
-          // style: {
-          //   ...currentNode.data.style,
-          //   [styleType]: value
-          // }
         }
       };
-
+console.log(updatedModel)
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
     }
   }
