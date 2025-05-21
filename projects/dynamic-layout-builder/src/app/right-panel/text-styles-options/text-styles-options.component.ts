@@ -4,12 +4,12 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { TextStylesService } from '../../services/styles/textStyles.service';
+import { TextStylesService } from '../../services/styles/text-styles.service';
 import { distinctUntilChanged } from 'rxjs';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { Styles } from '../../interfaces/layout-elements';
-import { GeneralFunctionsService } from '../../services/generalFunctions.service';
+import { GeneralFunctionsService } from '../../services/general-functions.service';
 
 @Component({
   selector: 'app-text-styles-options',

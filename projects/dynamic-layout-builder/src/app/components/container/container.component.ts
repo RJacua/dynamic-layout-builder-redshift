@@ -8,8 +8,8 @@ import { layoutModels } from '../../model'
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { CommonModule } from '@angular/common';
-import { BorderStylesService } from '../../services/styles/borderStyles.service';
-import { CornerStylesService } from '../../services/styles/cornerStyles.service';
+import { BorderStylesService } from '../../services/styles/border-styles.service';
+import { CornerStylesService } from '../../services/styles/corner-styles.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,10 +20,10 @@ import { NewAreaMenuService } from '../../services/new-area-menu.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
-import { GeneralFunctionsService } from '../../services/generalFunctions.service';
+import { GeneralFunctionsService } from '../../services/general-functions.service';
 
 @Component({
-  selector: 'app-area',
+  selector: 'app-container',
   standalone: true,
   imports: [
     HeaderComponent,

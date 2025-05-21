@@ -5,7 +5,7 @@
         @for (node of canvasModel(); track node.data.id) {
         @switch (node.data.type) {
         @case ('container') {
-        <app-area [data]="node.data" [editMode]="editMode" />
+        <app-container [data]="node.data" [editMode]="editMode" />
         }
         @default {
         }

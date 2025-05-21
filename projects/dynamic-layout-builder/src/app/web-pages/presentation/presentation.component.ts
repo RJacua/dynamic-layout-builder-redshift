@@ -1,17 +1,16 @@
 import { Component, computed, effect, HostListener, inject, signal, Signal, ViewChild, ViewContainerRef } from '@angular/core';
-import { ModelService } from '../services/model.service';
+import { ModelService } from '../../services/model.service';
 import { ActivatedRoute } from '@angular/router';
-import { LayoutElement, ContainerData } from '../interfaces/layout-elements';
+import { LayoutElement, ContainerData } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
-import { ContainerComponent } from '../components/container/container.component';
-import { layoutModels } from '../model';
-import { CanvasComponent } from '../components/canvas/canvas.component';
+import { ContainerComponent } from '../../components/container/container.component';
+import { layoutModels } from '../../model';
+import { CanvasComponent } from '../../components/canvas/canvas.component';
 
 @Component({
   selector: 'app-presentation',
   imports: [
     CommonModule,
-    ContainerComponent,
     CanvasComponent
   ],
   templateUrl: './presentation.component.html',
@@ -20,9 +19,9 @@ import { CanvasComponent } from '../components/canvas/canvas.component';
 export class PresentationComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   readonly modelSvc = inject(ModelService);
-  readonly route = inject(ActivatedRoute);
+  // readonly activeRoute = inject(ActivatedRoute);
 
-  canvasModel = computed(() => this.modelSvc.canvasModel());
+  // canvasModel = computed(() => this.modelSvc.canvasModel());
   models: LayoutElement<ContainerData>[][] = [[]];
   modelIndex = -1;
   constructor() {

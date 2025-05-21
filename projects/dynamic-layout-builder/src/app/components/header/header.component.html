@@ -4,8 +4,10 @@
   @if(editMode){
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
   }
-  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" [style]="dynamicStyle()"
-    [class]="'element editable-content ' + dynamicHeader()"></p>
+  <div [style]="dynamicStyle()">
+  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" 
+    [class.editable-content]="editMode" [class.element]="editMode" [class]="dynamicHeader()"></p>
   <br>
+</div>
 </div>
 <!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->

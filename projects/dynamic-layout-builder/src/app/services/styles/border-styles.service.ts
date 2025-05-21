@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StylesService } from './styles.service';
 import { Enablers, Styles } from '../../interfaces/layout-elements';
-import { GeneralFunctionsService } from '../generalFunctions.service';
+import { GeneralFunctionsService } from '../general-functions.service';
 
 @Injectable({
   providedIn: 'root'
