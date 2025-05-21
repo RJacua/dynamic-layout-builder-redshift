@@ -12,7 +12,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class CornerStylesService {
 
   readonly stylesSvc = inject(StylesService);
-  readonly generalSvc = inject(GeneralFunctionsService);
 
   readonly defaultCornerStyles: Styles = {
     ['border-radius']: '0px',
@@ -25,45 +24,29 @@ export class CornerStylesService {
     ['border-bottom-right-radius']: '0px',
   };
 
-  // private strokeRadiusSubject = new BehaviorSubject<number>(50);
-  // strokeRadius$ = this.strokeRadiusSubject.asObservable();
-
-  // private enableIndividualCornerSubject = new BehaviorSubject<boolean>(false);
-  // enableIndividualCorner$ = this.enableIndividualCornerSubject.asObservable();
-
-  // private topLeftSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // topLeft$ = this.topLeftSubject.asObservable();
-
-  // private topRightSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // topRight$ = this.topRightSubject.asObservable();
-
-  // private bottomLeftSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // bottomLeft$ = this.bottomLeftSubject.asObservable();
-
-  // private bottomRightSubject = new BehaviorSubject<number>(this.strokeRadiusSubject.value);
-  // bottomRight$ = this.bottomRightSubject.asObservable();
-
-
+ 
   setIndividualCorner(enableIndividualCorner: boolean, cornerOptions: any, generalRadius: number | null) {
     // this.enableIndividualCornerSubject.next(individualCorner);
     this.stylesSvc.updateSelectedNodeEnabler('enableIndividualCorner', enableIndividualCorner);
 
-    if(cornerOptions.topLeft.value === cornerOptions.topRight.value && cornerOptions.topRight.value === cornerOptions.bottomLeft.value && cornerOptions.bottomLeft.value === cornerOptions.bottomRight.value && cornerOptions.topLeft.value === 0){
-      console.log("tudo zero")
+    console.log("AQUI", generalRadius)
+    if(!enableIndividualCorner) return  
+    if (cornerOptions.topLeft.value === cornerOptions.topRight.value && cornerOptions.topRight.value === cornerOptions.bottomLeft.value && cornerOptions.bottomLeft.value === cornerOptions.bottomRight.value && cornerOptions.topLeft.value === 0) {
+      console.log("tudo zero");
 
-      this.stylesSvc.updateSelectedNodeStyle('border-top-left-radius', (generalRadius || 0) + 'px');
-      cornerOptions.topLeft.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-top-left-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.topLeft.value = (generalRadius ?? 0);
 
-      this.stylesSvc.updateSelectedNodeStyle('border-top-right-radius', (generalRadius || 0) + 'px');
-      cornerOptions.topRight.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-top-right-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.topRight.value = (generalRadius ?? 0);
 
-      this.stylesSvc.updateSelectedNodeStyle('border-bottom-left-radius', (generalRadius || 0) + 'px');
-      cornerOptions.bottomLeft.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-bottom-left-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.bottomLeft.value = (generalRadius ?? 0);
 
-      this.stylesSvc.updateSelectedNodeStyle('border-bottom-right-radius', (generalRadius || 0) + 'px');
-      cornerOptions.bottomRight.value = (generalRadius || 0);
+      this.stylesSvc.updateSelectedNodeStyle('border-bottom-right-radius', (generalRadius ?? 0) + 'px');
+      cornerOptions.bottomRight.value = (generalRadius ?? 0);
     }
-    
+
   }
   setStrokeRadius(strokeRadius: number) {
     // this.strokeRadiusSubject.next(strokeRadius);
@@ -106,7 +89,7 @@ export class CornerStylesService {
 
   changeCornerStylesByEnablers(nodeStyle: Styles, individualCornerEnabler: boolean, type: string) {
 
-    let defaultIndividualCornerStyles: Styles = {
+    let defaultIndividualCornerStylesInside: Styles = {
       ['border-radius']: '0px',
       ['border-top-left-radius']: nodeStyle['border-radius'],
       ['border-top-right-radius']: nodeStyle['border-radius'],
@@ -115,7 +98,7 @@ export class CornerStylesService {
     };
 
     if (nodeStyle && !individualCornerEnabler) {
-      return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, defaultIndividualCornerStyles));
+      return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, defaultIndividualCornerStylesInside));
     }
 
     return signal(this.stylesSvc.changeToDefaultStyles(nodeStyle, this.defaultCornerStyles));

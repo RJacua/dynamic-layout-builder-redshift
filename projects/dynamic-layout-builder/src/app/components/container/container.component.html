@@ -5,7 +5,7 @@
         <div [class]="'container-flex'" [style]="dynamicStyle()" [attr.data-id]="data.id">
 
             @if(editMode){
-            <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
+            <div cdkDragHandle class="drag-handle" (pointerdown)="forceSelection()">⋮⋮</div>
             }
             <!-- [class]="'container-border container-flex ' + direction()" -->
             <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
@@ -36,10 +36,10 @@
 
         </div>
     </div>
+    @if(editMode){
+    <div class="align-center add-sign" [class.active]="(isFocused() || isHover())">
+        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add"
+            (click)="forceSelection()"></app-menu>
+    </div>
+    }
 </div>
-@if(editMode){
-<div class="align-center add-sign" [class.active]="(isFocused() || isHover())">
-    <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add"
-        (click)="onPlusClick()"></app-menu>
-</div>
-}

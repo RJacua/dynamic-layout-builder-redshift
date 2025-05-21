@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, OnInit, Signal, signal, untracked } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CanvasComponent } from "../canvas/canvas.component";
+import { CanvasComponent } from "../components/canvas/canvas.component";
 import { RightPanelComponent } from "../right-panel/right-panel.component";
 import { LeftPanelComponent } from '../left-panel/left-panel.component';
 import { AngularSplitModule } from 'angular-split';
@@ -33,7 +33,7 @@ export class WorkSpaceComponent implements OnInit {
   constructor() {
 
     effect(() => {
-      const canvasModel = this.canvasModel();
+      this.canvasModel();
 
       untracked(() => {
         this.updateQueryParam('encoded', this.encodedStr())

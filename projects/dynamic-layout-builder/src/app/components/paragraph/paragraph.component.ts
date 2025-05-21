@@ -1,12 +1,13 @@
 import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector, HostListener } from '@angular/core';
-import { LayoutElement, ParagraphData } from '../interfaces/layout-elements';
+import { LayoutElement, ParagraphData } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
-import { ComponentsService } from '../services/components.service';
-import { ModelService } from '../services/model.service';
-import { SelectionService } from '../services/selection.service';
-import { BorderStylesService } from '../services/styles/borderStyles.service';
+import { ComponentsService } from '../../services/components.service';
+import { ModelService } from '../../services/model.service';
+import { SelectionService } from '../../services/selection.service';
+import { BorderStylesService } from '../../services/styles/borderStyles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
-import { CornerStylesService } from '../services/styles/cornerStyles.service';
+import { DragDropService } from '../../services/dragdrop.service';
+import { EnablerService } from '../../services/styles/enabler.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -41,19 +42,17 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
           }
         };
 
-        this.modelSvc.updateModel(this.id(), updatedModel as LayoutElement<any>);
+        this.modelSvc.updateModel(this.id, updatedModel as LayoutElement<any>);
       });
     });
     effect(() => {
       const node = this.nodeSignal();
       // const canvasModel = this.modelSvc.canvasModel();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
+
       untracked(() => {
         if (node) {
-          this.dynamicStyle.set(node.data.style);
-          this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
-          this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
-          console.log(this.dynamicStyle())
+          this.processContainerStyle(node);
         }
       })
 
@@ -65,10 +64,11 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly componentsSvc = inject(ComponentsService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
-  readonly borderStylesSvc = inject(BorderStylesService);
-  readonly cornerStylesSvc = inject(CornerStylesService);
+  // readonly borderStylesSvc = inject(BorderStylesService);
+  readonly enablerSvc = inject(EnablerService);
+  readonly dragDropSvc = inject(DragDropService);
 
-  id = signal('0');
+  id = '0';
   parentId = signal('-1');
   alignment = signal('align-center ');
   text = signal<string>('');
@@ -76,27 +76,33 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   menuIsOn = signal(false);
   data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
-  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id()));
-  dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
+  nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
+  // dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
+  dynamicStyle = signal({});
   ngOnInit(): void {
-    this.id.set(this.data.id);
+    this.id = this.data.id;
     this.parentId.set(this.data.parentId);
     this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
     this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     // this.alignment.set(this.data.style.alignment ?? 'align-center ');
 
-    this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)() ?? {});
+    // this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
   }
 
+  processContainerStyle(node: any) {
+    this.dynamicStyle.set(node.data.style);
+    this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
+  }
+
   isFocused = computed(() => {
-    return this.id() === this.selectionSvc.selectedElementId();
+    return this.id === this.selectionSvc.selectedElementId();
   });
   isHovered = computed(() => {
-    return this.id() === this.selectionSvc.hoveredElementId();
+    return this.id === this.selectionSvc.hoveredElementId();
   });
 
-  isDragging = this.selectionSvc.isDragging;
+  isDragging = this.dragDropSvc.isDragging;
 
   updateTextContent(event: Event) {
     const value = (event.target as HTMLElement).innerText;
@@ -104,7 +110,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   }
 
   deleteParagraph() {
-    this.modelSvc.removeNodeById(this.id());
+    this.modelSvc.removeNodeById(this.id);
   }
 
   @Output() editingChanged = new EventEmitter<boolean>();
@@ -112,7 +118,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   onHandleClick() {
     this.isDragging.set(true);
     // console.log("handle click: ",this.selectionSvc.isDragging());
-    this.selectionSvc.selectById(this.id(), true);
+    this.selectionSvc.selectById(this.id, true);
   }
 
 }

@@ -32,11 +32,12 @@ export class CornerStylesOptionsComponent implements OnInit {
   defaultEnabler: Enablers = {
     enableIndividualCorner: false,
   }
-  defaultCornerStyles = this.cornerStylesSvc.defaultIndividualCornerStyles;
+  defaultCornerStyles = this.cornerStylesSvc.defaultCornerStyles;
+  defaultIndividualCornerStyles = this.cornerStylesSvc.defaultIndividualCornerStyles;
 
   strokeRadius = new FormControl<number>(0)
   enableIndividualCornerCheckbox = new FormControl()
-  cornerOptions = new FormGroup({ // SO PODE SER PREENCIDO DEPOIS DO CHECKBOX SER TRUE ????
+  cornerOptions = new FormGroup({
     topLeft: new FormControl<number>(0),
     topRight: new FormControl<number>(0),
     bottomLeft: new FormControl<number>(0),
@@ -47,52 +48,64 @@ export class CornerStylesOptionsComponent implements OnInit {
     // this.strokeOptions.controls.strokeStyle.setValue(this.strokeStyleOptionsDefault);
 
     effect(() => {
-      let defaultStyles: Styles;
+      // let defaultStyles: Styles;
       const node = this.selectedNode();
       if (!node) return;
 
-      let componentType = node.data.type;
+      // let componentType = node.data.type;
 
       untracked(() => {
         this.cornerStylesSvc.setAllMissingStyles(this.defaultCornerStyles, node.data.style);
+        this.cornerStylesSvc.setAllMissingStyles(this.defaultIndividualCornerStyles, node.data.style);
         this.cornerStylesSvc.setAllMissingEnablers(this.defaultEnabler, node.data.enabler);
+        // console.log("STYLES: ", node.data.style);
       })
       // }
 
-      this.enableIndividualCornerCheckbox.setValue(node.data.enabler.enableIndividualCorner || this.defaultEnabler.enableIndividualCorner);
-
-
-      this.strokeRadius.setValue(parseInt(node.data.style["border-radius"]) || 0);
+      this.strokeRadius.setValue(parseInt(node.data.style["border-radius"]) ?? parseInt(this.defaultCornerStyles['border-radius']!), { emitEvent: false });
+      // console.log("EFFECT: ", this.strokeRadius.value);
 
       // if (this.enableIndividualCornerCheckbox.value === true) {
-        this.cornerOptions.setValue({
-          topLeft: parseInt(node.data.style["border-top-left-radius"]) || this.strokeRadius.value ,
-          topRight: parseInt(node.data.style["border-top-right-radius"]) ||  this.strokeRadius.value,
-          bottomLeft: parseInt(node.data.style["border-bottom-left-radius"]) ||  this.strokeRadius.value,
-          bottomRight: parseInt(node.data.style["border-bottom-right-radius"]) ||  this.strokeRadius.value,
-        });
-      //
+      this.cornerOptions.setValue({
+        topLeft: parseInt(node.data.style["border-top-left-radius"]) ?? this.strokeRadius.value,
+        topRight: parseInt(node.data.style["border-top-right-radius"]) ?? this.strokeRadius.value,
+        bottomLeft: parseInt(node.data.style["border-bottom-left-radius"]) ?? this.strokeRadius.value,
+        bottomRight: parseInt(node.data.style["border-bottom-right-radius"]) ?? this.strokeRadius.value,
+      }, { emitEvent: false });
+      // }
+
+      this.enableIndividualCornerCheckbox.setValue(node.data.enabler.enableIndividualCorner || this.defaultEnabler.enableIndividualCorner, { emitEvent: false });
 
     });
   }
 
   // enableIndividualCorner$ = this.cornerStylesSvc.enableIndividualCorner$;
 
-  ngOnInit() {
-    this.enableIndividualCornerCheckbox.valueChanges
-      .pipe(distinctUntilChanged())
-      .subscribe(individualCorner => {
-        if (individualCorner !== null)
-          this.cornerStylesSvc.setIndividualCorner(individualCorner, this.cornerOptions.controls, this.strokeRadius.value);
-      });
+  // ngOnDestroy() {
+  //   console.log("destroy");
+  // }
 
+  ngOnInit() {
     this.strokeRadius.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(strokeRadius => {
         // console.log('Add strokeRadius:', strokeRadius);
+        // console.log("SLIDER: ", this.strokeRadius.value);
         if (strokeRadius !== null)
           this.cornerStylesSvc.setStrokeRadius(strokeRadius);
       });
+
+    // console.log("BETWEEN: ", this.strokeRadius.value)
+
+    this.enableIndividualCornerCheckbox.valueChanges
+      .pipe(distinctUntilChanged())
+      .subscribe(individualCorner => {
+        // console.log('Add individualCorner:', individualCorner);
+        // console.log("CHECK: ", this.strokeRadius.value)
+        if (individualCorner !== null)
+          this.cornerStylesSvc.setIndividualCorner(individualCorner, this.cornerOptions.controls, this.strokeRadius.value);
+      });
+
 
     this.cornerOptions.controls.topLeft.valueChanges
       .pipe(distinctUntilChanged())

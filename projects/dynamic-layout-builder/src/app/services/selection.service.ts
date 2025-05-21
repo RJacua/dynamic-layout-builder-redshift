@@ -18,9 +18,6 @@ export class SelectionService {
 
   private _selectedId = signal<string>('canvas');
 
-  isDragging = signal(false);
-
-
   selectedElementId = computed(this._selectedId);
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 

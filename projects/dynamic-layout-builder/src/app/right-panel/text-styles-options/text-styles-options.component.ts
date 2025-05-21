@@ -34,28 +34,26 @@ export class TextStylesOptionsComponent {
   // dynamicStyle = signal(this.node()?.data.style);
   selectedNode = this.selectionSvc.selectedNode;
 
-  hOptions = [
-    { value: 'left', label: 'Left' },
-    { value: 'center', label: 'Center' },
-    { value: 'right', label: 'Right' },
-    { value: 'justify', label: 'Justify' }
-  ];
-  hOptionDefault = this.hOptions[1].value;
+  hOptions = this.textStylesSvc.hOptions;
+  hOptionDefault = this.textStylesSvc.hOptionDefault;
 
-  headerOptions = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-  headerOptionDefault = this.headerOptions[0];
+  headerOptions = this.textStylesSvc.headerOptions;
+  headerOptionDefault = this.textStylesSvc.headerOptionDefault;
+  
+  headerStyles = this.textStylesSvc.defaultHeaderStyles;
+  paragraphStyles = this.textStylesSvc.defaultParagraphStyles;
 
-  paragraphStyles: Styles = {
-    ['font-size']: '16px',
-    ['font-weight']: '400',
-    color: '#000000',
-    ['text-align']: this.hOptionDefault,
-  };
-  headerStyles: Styles = {
-    color: '#000000',
-    ['text-align']: this.hOptionDefault,
-    // headerSize: this.headerOptionDefault,
-  };
+  // paragraphStyles: Styles = {
+  //   ['font-size']: '16px',
+  //   ['font-weight']: '400',
+  //   color: '#000000',
+  //   ['text-align']: this.hOptionDefault,
+  // };
+  // headerStyles: Styles = {
+  //   color: '#000000',
+  //   ['text-align']: this.hOptionDefault,
+  //   // headerSize: this.headerOptionDefault,
+  // };
 
   fontOptions = new FormGroup({
     // fontSize: new FormControl<number>(0),
@@ -119,17 +117,17 @@ export class TextStylesOptionsComponent {
 
       if (this.selectedNode()?.data.type !== 'header') {
         this.fontOptions.setValue({
-          fontColor: node.data.style["color"] || '#000000',
-          horizontalAlign: node.data.style["text-align"] || this.hOptionDefault,
-          fontSize: parseInt(node.data.style["font-size"]) || '16px',
-          fontWeight: parseInt(node.data.style["font-weight"]) || '400',
+          fontColor: node.data.style["color"] || this.paragraphStyles.color,
+          horizontalAlign: node.data.style["text-align"] || this.paragraphStyles['text-align'],
+          fontSize: parseInt(node.data.style["font-size"]) ||  this.paragraphStyles['font-size'],
+          fontWeight: parseInt(node.data.style["font-weight"]) || this.paragraphStyles['font-weight'],
         });
 
       }
       else if (this.selectedNode()?.data.type === 'header') {
         this.fontOptions.setValue({
-          fontColor: node.data.style["color"] || '#000000',
-          horizontalAlign: node.data.style["text-align"] || this.hOptionDefault,
+          fontColor: node.data.style["color"] || this.headerStyles.color,
+          horizontalAlign: node.data.style["text-align"] || this.headerStyles['text-align'],
           headerSize: node.data.headerSize || this.headerOptionDefault,
         });
 
@@ -150,7 +148,7 @@ export class TextStylesOptionsComponent {
         fontSizeControl.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(size => {
-            console.log('Selected size:', size);
+            // console.log('Selected size:', size);
             if (size !== null) {
               this.textStylesSvc.setFontSize(size);
             }
@@ -195,7 +193,7 @@ export class TextStylesOptionsComponent {
         headerSizeControl.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(size => {
-            console.log('Selected header size:', size);
+            // console.log('Selected header size:', size);
             if (size !== null) {
               this.textStylesSvc.setHeaderSize(size);
             }

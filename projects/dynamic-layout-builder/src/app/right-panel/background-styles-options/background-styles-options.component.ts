@@ -26,26 +26,34 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   private bgStylesService = inject(BackgroundStylesService);
   readonly selectionSvc = inject(SelectionService)
   readonly generalSvc = inject(GeneralFunctionsService)
+
   selectedNode = this.selectionSvc.selectedNode;
 
-  flexDirections = [
-    { value: 'row', label: 'Row' },
-    { value: 'row-reverse', label: 'Row Reverse' },
-    { value: 'column', label: 'Column' },
-    { value: 'column-reverse', label: 'Column Reverse' }
-  ];
-  flexDirectionDefault = this.flexDirections[2].value;
+  flexDirections = this.bgStylesService.flexDirections;
+  flexDirectionDefault = this.bgStylesService.flexDirectionDefault;
 
-  containerStyles: Styles = {
-    ["background-color"]: 'rgba(255, 255, 255,0)',
-    opacity: "1",
-    ['flex-direction']: this.flexDirectionDefault,
-  };
+  containerStyles = this.bgStylesService.containerStyles;
+  allStyles = this.bgStylesService.allStyles;
 
-  allStyles: Styles = {
-    ["background-color"]: 'rgba(255,255,255,0)',
-    opacity: "1",
-  };
+  // flexDirections = [
+  //   { value: 'row', label: 'Row' },
+  //   { value: 'row-reverse', label: 'Row Reverse' },
+  //   { value: 'column', label: 'Column' },
+  //   { value: 'column-reverse', label: 'Column Reverse' }
+  // ];
+  // flexDirectionDefault = this.flexDirections[2].value;
+
+  // containerStyles: Styles = {
+  //   ["background-color"]: 'rgba(255, 255, 255,0)',
+  //   opacity: "1",
+  //   ['flex-direction']: this.flexDirectionDefault,
+  // };
+
+  // allStyles: Styles = {
+  //   ["background-color"]: 'rgba(255,255,255,0)',
+  //   opacity: "1",
+  // };
+
   // bgColor = new FormControl<string>('rgba(255,255,255,0)');
   // bgOpacity = new FormControl<number>(100);
 
@@ -82,16 +90,16 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
 
       if (this.selectedNode()?.data.type !== 'container') {
-        this.backgroundOptions.setValue({
-          bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
-          bgOpacity: node.data.style["opacity"] * 100 || 100,
+        this.generalOptions.setValue({
+          bgColor: node.data.style["background-color"] || this.allStyles['background-color'],
+          bgOpacity: node.data.style["opacity"] * 100 || (parseInt(this.allStyles.opacity!) * 100),
         });
       }
       else if (this.selectedNode()?.data.type === 'container') {
-        this.backgroundOptions.setValue({
-          bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
-          bgOpacity: node.data.style["opacity"] * 100 || 100,
-          flexDirection: node.data.style["flex-direction"] || this.flexDirectionDefault,
+        this.generalOptions.setValue({
+          bgColor: node.data.style["background-color"] || this.containerStyles['background-color'],
+          bgOpacity: node.data.style["opacity"] * 100 || (parseInt(this.containerStyles.opacity!) * 100),
+          flexDirection: node.data.style["flex-direction"] || this.containerStyles['flex-direction'],
         });
       }
 

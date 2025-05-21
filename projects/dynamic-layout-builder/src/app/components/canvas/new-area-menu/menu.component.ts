@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { NewAreaMenuService } from '../../services/new-area-menu.service';
+import { NewAreaMenuService } from '../../../services/new-area-menu.service';
 
 @Component({
   selector: 'app-menu',

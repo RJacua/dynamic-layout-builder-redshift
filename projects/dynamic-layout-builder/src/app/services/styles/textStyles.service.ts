@@ -11,19 +11,28 @@ export class TextStylesService {
 
   constructor() { }
   readonly stylesSvc = inject(StylesService);
-  readonly generalSvc = inject(GeneralFunctionsService)
 
-  // private fontSizeSubject = new BehaviorSubject<number>(24);
-  // fontSize$ = this.fontSizeSubject.asObservable();
+  readonly hOptions = [
+    { value: 'left', label: 'Left' },
+    { value: 'center', label: 'Center' },
+    { value: 'right', label: 'Right' },
+    { value: 'justify', label: 'Justify' }
+  ];
+  readonly hOptionDefault = this.hOptions[1].value;
 
-  // private fontWeightSubject = new BehaviorSubject<number>(400);
-  // fontWeight$ = this.fontWeightSubject.asObservable();
+  readonly headerOptions = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+  readonly headerOptionDefault = this.headerOptions[0];
 
-  // private fontColorSubject = new BehaviorSubject<string>('#000000');
-  // fontColor$ = this.fontColorSubject.asObservable();
-
-  // private horizontalAlignSubject = new BehaviorSubject<string>('center');
-  // horizontalAlign$ = this.horizontalAlignSubject.asObservable();
+  readonly defaultHeaderStyles: Styles = {
+    color: '#000000',
+    ['text-align']: this.hOptionDefault,
+  };
+  readonly defaultParagraphStyles: Styles = {
+    ['font-size']: '16px',
+    ['font-weight']: '400',
+    color: '#000000',
+    ['text-align']: this.hOptionDefault,
+  };
 
   setFontSize(fontSize: number) {
     // this.fontSizeSubject.next(fontSize);

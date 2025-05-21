@@ -3,9 +3,9 @@ import { ModelService } from '../services/model.service';
 import { ActivatedRoute } from '@angular/router';
 import { LayoutElement, ContainerData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
-import { ContainerComponent } from '../container/container.component';
+import { ContainerComponent } from '../components/container/container.component';
 import { layoutModels } from '../model';
-import { CanvasComponent } from '../canvas/canvas.component';
+import { CanvasComponent } from '../components/canvas/canvas.component';
 
 @Component({
   selector: 'app-presentation',
