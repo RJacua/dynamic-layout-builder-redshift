@@ -49,7 +49,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   // bgColor = new FormControl<string>('rgba(255,255,255,0)');
   // bgOpacity = new FormControl<number>(100);
 
-  generalOptions = new FormGroup({});
+  backgroundOptions = new FormGroup({});
   constructor() {
 
     effect(() => {
@@ -71,24 +71,24 @@ export class BackgroundStylesOptionsComponent implements OnInit {
       })
       // }
 
-      this.generalOptions.addControl('bgColor', new FormControl(''));
-      this.generalOptions.addControl('bgOpacity', new FormControl(''));
+      this.backgroundOptions.addControl('bgColor', new FormControl(''));
+      this.backgroundOptions.addControl('bgOpacity', new FormControl(''));
 
       if (this.selectedNode()?.data.type === 'container') {
-        if (!this.generalOptions.contains('flexDirection')) {
-          this.generalOptions.addControl('flexDirection', new FormControl(''));
+        if (!this.backgroundOptions.contains('flexDirection')) {
+          this.backgroundOptions.addControl('flexDirection', new FormControl(''));
         }
       }
 
 
       if (this.selectedNode()?.data.type !== 'container') {
-        this.generalOptions.setValue({
+        this.backgroundOptions.setValue({
           bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
           bgOpacity: node.data.style["opacity"] * 100 || 100,
         });
       }
       else if (this.selectedNode()?.data.type === 'container') {
-        this.generalOptions.setValue({
+        this.backgroundOptions.setValue({
           bgColor: node.data.style["background-color"] || 'rgba(255,255,255,0)',
           bgOpacity: node.data.style["opacity"] * 100 || 100,
           flexDirection: node.data.style["flex-direction"] || this.flexDirectionDefault,
@@ -99,7 +99,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
     });
 
     effect(() => {
-      const bgColorControl = this.generalOptions.get('bgColor');
+      const bgColorControl = this.backgroundOptions.get('bgColor');
       if (bgColorControl instanceof FormControl) {
         bgColorControl.valueChanges
           .pipe(distinctUntilChanged())
@@ -111,7 +111,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
           });
       }
 
-      const bgOpacityControl = this.generalOptions.get('bgOpacity');
+      const bgOpacityControl = this.backgroundOptions.get('bgOpacity');
       if (bgOpacityControl instanceof FormControl) {
         bgOpacityControl.valueChanges
           .pipe(distinctUntilChanged())
@@ -123,7 +123,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
           });
       }
 
-      const flexDirectionControl = this.generalOptions.get('flexDirection');
+      const flexDirectionControl = this.backgroundOptions.get('flexDirection');
       if (flexDirectionControl instanceof FormControl) {
         flexDirectionControl.valueChanges
           .pipe(distinctUntilChanged())

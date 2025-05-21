@@ -7,6 +7,7 @@ import { AngularSplitModule } from 'angular-split';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModelService } from '../services/model.service';
 import { ContainerData, LayoutElement } from '../interfaces/layout-elements';
+import { EncodeService } from '../services/encode.service';
 
 @Component({
   selector: 'app-work-space',
@@ -15,22 +16,19 @@ import { ContainerData, LayoutElement } from '../interfaces/layout-elements';
   styleUrl: './work-space.component.scss'
 })
 export class WorkSpaceComponent implements OnInit {
-  private route = inject(ActivatedRoute);
+  private activeRoute = inject(ActivatedRoute);
   private router = inject(Router);
+  readonly encodeSvc = inject(EncodeService);
   readonly modelSvc = inject(ModelService);
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null)
   )
-
-  utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasModelsString()));
-  btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
-  atob: Signal<string> = computed(() => atob(this.btoa()));
-  decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
-  parsed: Signal<LayoutElement<ContainerData>[]> = signal([]);
-
-  encoded = signal('')
+  
+  encodedStr = this.encodeSvc.encodedStr;
+  encodedParam = signal<string>('');
+  parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
 
   constructor() {
 
@@ -38,27 +36,25 @@ export class WorkSpaceComponent implements OnInit {
       const canvasModel = this.canvasModel();
 
       untracked(() => {
-        this.updateQueryParam('encoded', this.btoa())
+        this.updateQueryParam('encoded', this.encodedStr())
       })
 
     });
 
   }
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.activeRoute.queryParams.subscribe(params => {
       if (params['encoded']) {
-        this.encoded.set(params['encoded']);
-        var decodedStr = decodeURIComponent(atob(this.encoded()));
-        this.renderFromModel(JSON.parse(decodedStr));
-        this.parsed = computed(() => JSON.parse(this.decoded()));
+        this.encodedParam.set(params['encoded']);
+        this.parsedJSON = computed(() => JSON.parse(this.encodeSvc.decoder(this.encodedParam)))
+        this.renderFromModel(this.parsedJSON());
       }
-      this.renderFromModel(this.parsed());
     });
   }
 
   updateQueryParam(key: string, value: string | null) {
     this.router.navigate([], {
-      relativeTo: this.route,
+      relativeTo: this.activeRoute,
       queryParams: {
         [key]: value
       },

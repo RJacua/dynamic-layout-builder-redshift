@@ -20,7 +20,6 @@ import { CornerStylesOptionsComponent } from '../corner-styles-options/corner-st
     MatListModule,
     MatDividerModule,
     ReactiveFormsModule,
-    CornerStylesOptionsComponent,
   ],
   templateUrl: './border-styles-options.component.html',
   styleUrl: './border-styles-options.component.scss'

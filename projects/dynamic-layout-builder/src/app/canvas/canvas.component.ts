@@ -16,6 +16,7 @@ import { HeaderComponent } from "../header/header.component";
 import { Canvas, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { layoutModels } from '../model';
 import { Router, RouterLink } from '@angular/router';
+import { EncodeService } from '../services/encode.service';
 
 @Component({
   selector: 'app-canvas',
@@ -30,7 +31,6 @@ import { Router, RouterLink } from '@angular/router';
     MatIconModule,
     MenuComponent,
     MatTooltipModule,
-    RouterLink,
   ],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',
@@ -43,26 +43,20 @@ export class CanvasComponent {
   @Input() editMode: boolean = true;
 
   readonly modelSvc = inject(ModelService);
+  readonly encodeSvc = inject(EncodeService);
   readonly selectionSvc = inject(SelectionService);
   readonly router = inject(Router);
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null)
-    // () => this.customStringify(this.canvasModel())
   )
 
   canvasCustomString: Signal<string> = computed(
-    // () => JSON.stringify(this.canvasModel(), null)
     () => this.customStringify(this.canvasModel())
   )
 
-  utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasModelsString()));
-  btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
-  atob: Signal<string> = computed(() => atob(this.btoa()));
-  decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
-
-
+  encodedStr = this.encodeSvc.encodedStr;
 
   addContainer() {
     const newLayoutElement = this.modelSvc.writeElementModel('container', 'canvas');
@@ -85,12 +79,6 @@ export class CanvasComponent {
   ngOnInit(): void {
     this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
   }
-
-  // readonly defaultBorder = this.stylesService.defaultBorder;
-  // readonly dynamicStyles$ = this.stylesService.dynamicStyles$;
-  // readonly dynamicBorder$ = this.stylesService.dynamicBorder$;
-  // readonly dynamicBorderRadius$ = this.stylesService.strokeRadius$;
-  // readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
 
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
@@ -152,7 +140,7 @@ export class CanvasComponent {
 
   goToRender() {
     this.router.navigate(['/preview'], {
-      queryParams: { encoded: this.btoa() }
+      queryParams: { encoded: this.encodedStr() }
     });
   }
 }

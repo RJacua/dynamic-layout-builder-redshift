@@ -5,12 +5,12 @@ import { LayoutElement, ContainerData } from '../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../container/container.component';
 import { CanvasComponent } from '../canvas/canvas.component';
+import { EncodeService } from '../services/encode.service';
 
 @Component({
   selector: 'app-preview',
   imports: [
     CommonModule,
-    ContainerComponent,
     CanvasComponent
   ],
   templateUrl: './preview.component.html',
@@ -19,29 +19,28 @@ import { CanvasComponent } from '../canvas/canvas.component';
 export class PreviewComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   readonly modelSvc = inject(ModelService);
-  readonly route = inject(ActivatedRoute);
+  readonly encodeSvc = inject(EncodeService);
+  readonly activeRoute = inject(ActivatedRoute);
 
-  encoded = signal<string>('');
-  decoded = signal<string>('');
-  canvasModel = computed(() => this.modelSvc.canvasModel());
-  parsed: Signal<LayoutElement<ContainerData>[]> = signal([]);
+  encodedStr = signal<string>('');
+  decodedStr = signal<string>('');
+  parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
 
   constructor() {
 
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.encoded.set(params['encoded']);
+    this.activeRoute.queryParams.subscribe(params => {
+      this.encodedStr.set(params['encoded']);
     });
 
-    if (this.encoded()) {
+    if (this.encodedStr()) {
       try {
-        var decodedStr = decodeURIComponent(atob(this.encoded()));
-        this.decoded.set(decodedStr);
-        console.log("INIT: ", this.decoded())
-        this.parsed = computed(() => JSON.parse(this.decoded()));
-        this.renderFromModel(this.parsed());
+        this.decodedStr.set(this.encodeSvc.decodedStr());
+        // console.log("INIT: ", this.decodedStr())
+        this.parsedJSON = computed(() => JSON.parse(this.decodedStr()));
+        this.renderFromModel(this.parsedJSON());
       } catch (error) {
         console.error("Can not decode url", error)
       }

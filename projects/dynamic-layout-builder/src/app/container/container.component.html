@@ -1,8 +1,7 @@
 <div class="main" [class.active]="editMode && (isFocused() || isHover())" (mouseover)="onElementHover($event)"
     (mouseleave)="onElementMouseLeave($event)" cdkDropList (cdkDropListDropped)="onDrop()" [cdkDropListData]="[data]"
     [attr.data-id]="data.id">
-    <div [class.border]="editMode" cdkDrag
-        [cdkDragDisabled]="!editMode" [attr.data-id]="data.id">
+    <div [class.border]="editMode" cdkDrag [cdkDragDisabled]="!editMode" [attr.data-id]="data.id">
         <div [class]="'container-flex'" [style]="dynamicStyle()" [attr.data-id]="data.id">
 
             @if(editMode){
@@ -37,10 +36,10 @@
 
         </div>
     </div>
-    @if(editMode){
-    <div class="align-center add-sign" [class.active]="(isFocused() || isHover())">
-        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add"
-            (click)="onPlusClick()"></app-menu>
-    </div>
-    }
 </div>
+@if(editMode){
+<div class="align-center add-sign" [class.active]="(isFocused() || isHover())">
+    <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add"
+        (click)="onPlusClick()"></app-menu>
+</div>
+}

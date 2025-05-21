@@ -11,7 +11,6 @@ import { CanvasComponent } from '../canvas/canvas.component';
   selector: 'app-presentation',
   imports: [
     CommonModule,
-    ContainerComponent,
     CanvasComponent
   ],
   templateUrl: './presentation.component.html',
@@ -20,9 +19,9 @@ import { CanvasComponent } from '../canvas/canvas.component';
 export class PresentationComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   readonly modelSvc = inject(ModelService);
-  readonly route = inject(ActivatedRoute);
+  // readonly activeRoute = inject(ActivatedRoute);
 
-  canvasModel = computed(() => this.modelSvc.canvasModel());
+  // canvasModel = computed(() => this.modelSvc.canvasModel());
   models: LayoutElement<ContainerData>[][] = [[]];
   modelIndex = -1;
   constructor() {
