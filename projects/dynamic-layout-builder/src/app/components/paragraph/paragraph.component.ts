@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../../services/components.service';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
-import { BorderStylesService } from '../../services/styles/borderStyles.service';
+import { BorderStylesService } from '../../services/styles/border-styles.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';

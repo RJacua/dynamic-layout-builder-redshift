@@ -4,10 +4,10 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { CornerStylesService } from '../../services/styles/cornerStyles.service';
+import { CornerStylesService } from '../../services/styles/corner-styles.service';
 import { distinctUntilChanged } from 'rxjs';
 import { SelectionService } from '../../services/selection.service';
-import { GeneralFunctionsService } from '../../services/generalFunctions.service';
+import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { Enablers, Styles } from '../../interfaces/layout-elements';
 
 @Component({

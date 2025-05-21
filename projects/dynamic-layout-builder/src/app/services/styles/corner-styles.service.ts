@@ -1,8 +1,8 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
-import { BorderStylesService } from './borderStyles.service';
+import { BorderStylesService } from './border-styles.service';
 import { StylesService } from './styles.service';
-import { GeneralFunctionsService } from '../generalFunctions.service';
+import { GeneralFunctionsService } from '../general-functions.service';
 import { ContainerData, Enablers, LayoutData, LayoutElement, Styles } from '../../interfaces/layout-elements';
 import { FormControl, FormGroup } from '@angular/forms';
 

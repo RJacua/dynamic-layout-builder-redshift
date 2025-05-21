@@ -1,11 +1,11 @@
 import { Component, computed, effect, HostListener, inject, signal, Signal, ViewChild, ViewContainerRef } from '@angular/core';
-import { ModelService } from '../services/model.service';
+import { ModelService } from '../../services/model.service';
 import { ActivatedRoute } from '@angular/router';
-import { LayoutElement, ContainerData } from '../interfaces/layout-elements';
+import { LayoutElement, ContainerData } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
-import { ContainerComponent } from '../components/container/container.component';
-import { CanvasComponent } from '../components/canvas/canvas.component';
-import { EncodeService } from '../services/encode.service';
+import { ContainerComponent } from '../../components/container/container.component';
+import { CanvasComponent } from '../../components/canvas/canvas.component';
+import { EncodeService } from '../../services/encode.service';
 
 @Component({
   selector: 'app-preview',

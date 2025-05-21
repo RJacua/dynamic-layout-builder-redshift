@@ -1,8 +1,8 @@
 import { inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { BorderStylesService } from './borderStyles.service';
-import { CornerStylesService } from './cornerStyles.service';
+import { BorderStylesService } from './border-styles.service';
+import { CornerStylesService } from './corner-styles.service';
 import { Enablers, Styles } from '../../interfaces/layout-elements';
-import { GeneralFunctionsService } from '../generalFunctions.service';
+import { GeneralFunctionsService } from '../general-functions.service';
 
 @Injectable({
   providedIn: 'root'

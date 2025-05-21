@@ -1,13 +1,13 @@
 import { Component, computed, effect, inject, OnInit, Signal, signal, untracked } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CanvasComponent } from "../components/canvas/canvas.component";
-import { RightPanelComponent } from "../right-panel/right-panel.component";
-import { LeftPanelComponent } from '../left-panel/left-panel.component';
+import { CanvasComponent } from "../../components/canvas/canvas.component";
+import { RightPanelComponent } from "../../right-panel/right-panel.component";
+import { LeftPanelComponent } from '../../left-panel/left-panel.component';
 import { AngularSplitModule } from 'angular-split';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModelService } from '../services/model.service';
-import { ContainerData, LayoutElement } from '../interfaces/layout-elements';
-import { EncodeService } from '../services/encode.service';
+import { ModelService } from '../../services/model.service';
+import { ContainerData, LayoutElement } from '../../interfaces/layout-elements';
+import { EncodeService } from '../../services/encode.service';
 
 @Component({
   selector: 'app-work-space',

@@ -30,7 +30,6 @@ import { Router, RouterLink } from '@angular/router';
     MatIconModule,
     MenuComponent,
     MatTooltipModule,
-    RouterLink,
   ],
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',

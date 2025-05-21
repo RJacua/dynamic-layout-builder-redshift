@@ -5,11 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { distinctUntilChanged } from 'rxjs';
-import { BackgroundStylesService } from '../../services/styles/backgroundStyles.service';
+import { BackgroundStylesService } from '../../services/styles/background-styles.service';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { Styles } from '../../interfaces/layout-elements';
-import { GeneralFunctionsService } from '../../services/generalFunctions.service';
+import { GeneralFunctionsService } from '../../services/general-functions.service';
 
 @Component({
   selector: 'app-background-styles-options',
@@ -90,13 +90,13 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
 
       if (this.selectedNode()?.data.type !== 'container') {
-        this.generalOptions.setValue({
+        this.backgroundOptions.setValue({
           bgColor: node.data.style["background-color"] || this.allStyles['background-color'],
           bgOpacity: node.data.style["opacity"] * 100 || (parseInt(this.allStyles.opacity!) * 100),
         });
       }
       else if (this.selectedNode()?.data.type === 'container') {
-        this.generalOptions.setValue({
+        this.backgroundOptions.setValue({
           bgColor: node.data.style["background-color"] || this.containerStyles['background-color'],
           bgOpacity: node.data.style["opacity"] * 100 || (parseInt(this.containerStyles.opacity!) * 100),
           flexDirection: node.data.style["flex-direction"] || this.containerStyles['flex-direction'],
