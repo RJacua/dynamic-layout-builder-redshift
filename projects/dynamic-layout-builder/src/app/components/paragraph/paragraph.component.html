@@ -1,11 +1,13 @@
 <div class="main paragraph" tabindex="0" [class.border]="editMode"
-    [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" cdkDrag [cdkDragDisabled]="!editMode">
+    [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" [cdkDragDisabled]="!editMode"
+    [attr.data-id]="data.id" cdkDrag>
     <br>
     @if(editMode){
     <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
     }
     <div [style]="dynamicStyle()">
-        <p #target [contentEditable]="editMode" [class.editable-content]="editMode" [class.element]="editMode" (input)="updateTextContent($event)"></p>
+        <p #target [contentEditable]="editMode" [class.editable-content]="editMode" [class.element]="editMode"
+            (input)="updateTextContent($event)"></p>
     </div>
     <br>
 </div>

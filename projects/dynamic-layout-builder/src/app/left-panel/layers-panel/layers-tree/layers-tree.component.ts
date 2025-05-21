@@ -145,8 +145,8 @@ export class LayersTreeComponent {
     }
   }
 
-  onDrop() {
-    this.dragDropSvc.onDrop();
+  onDrop(event: CdkDragDrop<any>) {
+    this.dragDropSvc.onDrop(event);
   }
 
 }

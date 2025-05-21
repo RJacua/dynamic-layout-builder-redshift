@@ -161,3 +161,7 @@ mat-card {
 .drag-handle:hover {
   opacity: 1;
 }
+
+.dragging[cdkDropList] {
+  transition: none !important;
+}
