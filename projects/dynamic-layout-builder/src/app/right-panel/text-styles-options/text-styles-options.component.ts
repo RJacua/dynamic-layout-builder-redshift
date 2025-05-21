@@ -193,7 +193,7 @@ export class TextStylesOptionsComponent {
         headerSizeControl.valueChanges
           .pipe(distinctUntilChanged())
           .subscribe(size => {
-            // console.log('Selected header size:', size);
+            console.log('Selected header size:', size);
             if (size !== null) {
               this.textStylesSvc.setHeaderSize(size);
             }
