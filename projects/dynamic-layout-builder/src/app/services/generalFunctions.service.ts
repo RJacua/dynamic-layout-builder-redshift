@@ -24,4 +24,17 @@ export class GeneralFunctionsService {
     return key.charAt(0).toUpperCase() + key.slice(1);
   }
 
+  moveKeyToFirst(obj: Record<string, any>, keyToPrioritize: string): Record<string, any> {
+    if (!(keyToPrioritize in obj)) {
+      console.warn('Key Not Founf')
+      return obj;
+    }
+
+    const { [keyToPrioritize]: prioritizedValue, ...rest } = obj;
+
+    return {
+      [keyToPrioritize]: prioritizedValue,
+      ...rest
+    };
+  }
 }

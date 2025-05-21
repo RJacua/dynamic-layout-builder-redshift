@@ -20,6 +20,7 @@ import { NewAreaMenuService } from '../../services/new-area-menu.service';
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
+import { GeneralFunctionsService } from '../../services/generalFunctions.service';
 
 @Component({
   selector: 'app-area',
@@ -69,6 +70,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   readonly enablerSvc = inject(EnablerService);
   readonly newAreaMenuSvc = inject(NewAreaMenuService);
   readonly dragDropSvc = inject(DragDropService);
+  readonly generalSvc = inject(GeneralFunctionsService);
 
   id: string = '0';
   parentId = signal('0');
@@ -119,7 +121,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   processContainerStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
     this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
-    // console.log(this.dynamicStyle())
+    console.log(this.dynamicStyle());
     // this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
     // this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
     // this.dynamicStyle.update(() => this.enablerSvc.applyEnableStroke(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
