@@ -10,14 +10,25 @@ import { GeneralFunctionsService } from '../generalFunctions.service';
 export class BackgroundStylesService {
 
   readonly stylesSvc = inject(StylesService);
-  readonly generalSvc = inject(GeneralFunctionsService)
 
-  // private bgColorSubject = new BehaviorSubject<string>('#ffffff');
-  // bgColor$ = this.bgColorSubject.asObservable();
+  readonly flexDirections = [
+    { value: 'row', label: 'Row' },
+    { value: 'row-reverse', label: 'Row Reverse' },
+    { value: 'column', label: 'Column' },
+    { value: 'column-reverse', label: 'Column Reverse' }
+  ];
+  readonly flexDirectionDefault = this.flexDirections[2].value;
 
-  // private bgOpacitySubject = new BehaviorSubject<number>(1);
-  // bgOpacity$ = this.bgOpacitySubject.asObservable();
+  readonly containerStyles: Styles = {
+    ["background-color"]: 'rgba(255, 255, 255,0)',
+    opacity: "1",
+    ['flex-direction']: this.flexDirectionDefault,
+  };
 
+  readonly allStyles: Styles = {
+    ["background-color"]: 'rgba(255,255,255,0)',
+    opacity: "1",
+  };
 
   setBgColor(bgColor: string) {
     // this.bgColorSubject.next(bgColor);

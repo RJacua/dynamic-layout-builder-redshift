@@ -11,7 +11,7 @@
               </div>
 
               <div *ngIf="fontOptions.contains('headerSize')">
-                <label for="headerSize">Font Size:</label><br>
+                <label for="headerSize">Header Size:</label><br>
                 <select name="headerSize" id="headerSize" formControlName="headerSize">
                     <option *ngFor="let headerOption of headerOptions" [ngValue]="headerOption">{{ headerOption }}</option>
                 </select>

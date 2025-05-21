@@ -3,9 +3,9 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { ComponentRegistryService } from './services/component-registry.service';
-import { ContainerComponent } from './container/container.component';
-import { HeaderComponent } from './header/header.component';
-import { ParagraphComponent } from './paragraph/paragraph.component';
+import { ContainerComponent } from './components/container/container.component';
+import { HeaderComponent } from './components/header/header.component';
+import { ParagraphComponent } from './components/paragraph/paragraph.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
