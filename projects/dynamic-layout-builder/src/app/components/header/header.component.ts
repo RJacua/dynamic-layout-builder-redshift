@@ -1,11 +1,11 @@
 import { AfterContentInit, AfterViewInit, Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, OnInit, Output, Signal, signal, untracked, viewChild, WritableSignal } from '@angular/core';
-import { HeaderData, LayoutElement } from '../../interfaces/layout-elements';
+import { AtomicElementData, ContainerData, HeaderData, LayoutElement } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../../services/components.service';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { BorderStylesService } from '../../services/styles/border-styles.service';
-import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragEnter, CdkDragMove, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 
@@ -93,6 +93,11 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   nodeSignal: Signal<any> = signal(null);
   dynamicStyle: WritableSignal<any> = signal(null);
   dynamicHeader: WritableSignal<any> = signal(null);
+
+  //PASSAR PARA DRAG AND DROP SVC
+  lastPointerX = this.dragDropSvc.lastPointerX;
+  lastPointerY = this.dragDropSvc.lastPointerY;
+  pointerRelativePosition = this.dragDropSvc.pointerInsideRelativePosition;
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');
     // this.size.set(this.data.style.size ?? 1);
@@ -139,5 +144,13 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.isDragging.set(true);
     this.selectionSvc.selectById(this.id, true);
   }
+
+
+  onDragMoved(event: CdkDragMove<any>) {
+    this.dragDropSvc.onDragMoved(event, this.nodeSignal);
+  }
+
+  // dropIndicator = computed(() => (this.isDragging() && this.isHovered()) ? this.dropIndicatorMap : '');
+  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isDragging() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
 
 }

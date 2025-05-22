@@ -81,4 +81,10 @@ export interface Enablers { //vai crescer
 
 }
 
+export interface PointerResult {
+  top: boolean;
+  bottom: boolean;
+  left: boolean;
+  right: boolean;
+};
 

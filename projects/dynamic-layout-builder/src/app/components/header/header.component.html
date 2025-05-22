@@ -1,8 +1,11 @@
-<div class="main header" [class.border]="editMode"
+<div [class]="'main header ' + dropIndicatorStyle()" [class.border]="editMode"
   [class.active]="editMode && (isFocused() || isHovered() && !isDragging())" [cdkDragDisabled]="!editMode"
-  [attr.data-id]="data.id" cdkDrag>
+  [attr.data-id]="data.id" cdkDrag
+    (cdkDragMoved)="onDragMoved($event)"
+  >
   <br>
   @if(editMode){
+  <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
   }
   <div [style]="dynamicStyle()">

@@ -6,6 +6,7 @@
     cdkDropList
     (cdkDropListDropped)="onDrop($event)"
     [cdkDropListData]="onlyContainers()"
+    (cdkDropListEntered)="onEnter($event)"
     [attr.data-id]="data.id"
   >
     <div class="align-center">

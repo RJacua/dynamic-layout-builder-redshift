@@ -77,7 +77,6 @@ export class ModelService {
     }
     if ((componentData as ContainerData)?.children) {
       children = (componentData as ContainerData).children!;
-      console.log("children: ", children);
     }
 
     if (componentType.toLowerCase() === 'container') {
@@ -245,12 +244,9 @@ export class ModelService {
     let node = this.getNodeById(nodeId);
     let newParentNode = this.getNodeById(newParentId);
 
-    console.log("node: ", this.canvasModel())
-
     if (nodeId === newParentId) {
       return;
     }
-    console.log(newIndex)
     if (newParentId !== 'canvas' && newParentNode.data.type !== 'container') {
       return this.moveNodeTo(nodeId, newParentNode.data.parentId, newIndex);
     }
@@ -270,7 +266,7 @@ export class ModelService {
     };
 
     // const parent = newParentId === 'canvas' ? this.canvasModel() : this.getNodeById(newParentId);
-    const children = newParentId === 'canvas' ? [newParentNode] : [...newParentNode.data.children];
+    const children = newParentId === 'canvas' ? this.canvasModel() : [...newParentNode.data.children];
 
     if (newIndex >= 0 && newIndex <= children.length) {
       children.splice(newIndex, 0, updatedNode);
@@ -283,7 +279,6 @@ export class ModelService {
     }
     else {
       newParentNode = children;
-      console.log(newParentNode);
     }
 
     if (newParentId !== 'canvas') {
@@ -292,7 +287,7 @@ export class ModelService {
     }
     else if (node.data.type === 'container') {
       // this.removeNodeById(nodeId);
-      this.updateModel('canvas', newParentNode);
+      this.canvasModel.set(newParentNode);
     }
 
   }
@@ -342,5 +337,6 @@ export class ModelService {
     }
     return found
   }
+  
 
 }

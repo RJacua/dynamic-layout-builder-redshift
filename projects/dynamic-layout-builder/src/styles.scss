@@ -165,3 +165,22 @@ mat-card {
 .dragging[cdkDropList] {
   transition: none !important;
 }
+
+.topHalf {
+    border-top: 12px solid #2196f3 !important;
+}
+.bottomHalf {
+    border-bottom: 12px solid #2196f3 !important;
+}
+.rightHalf {
+    border-right: 12px solid #2196f3 !important;
+}
+.leftHalf {
+    border-left: 12px solid #2196f3 !important;
+}
+
+.custom-placeholder {
+  position: absolute;
+  pointer-events: none;
+  opacity: 1;
+}

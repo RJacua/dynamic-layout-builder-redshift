@@ -1,7 +1,7 @@
 <div cdkDropListGroup>
   <div
-    class="main"
-    [class.active]="editMode && (isFocused() || isHover())"
+    [class]="'main ' + dropIndicatorStyle()"
+    [class.active]="editMode && (isFocused() || isHovered())"
     (mouseover)="onElementHover($event)"
     (mouseleave)="onElementMouseLeave($event)"
     cdkDropList
@@ -11,8 +11,13 @@
     cdkDrag
     [cdkDragDisabled]="!editMode"
     [attr.data-id]="data.id"
-  >
+    (cdkDragMoved)="onDragMoved($event)"
+    (cdkDropListSortingDisabled)="true"
+
+    [class.topHalf]="isDragging() && isParentHovered() && pointerInternalPosition().top"
+    >
     @if(editMode){
+          <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
     <div cdkDragHandle class="drag-handle" (pointerdown)="forceSelection()">
       ⋮⋮
     </div>
@@ -58,7 +63,7 @@
     @if(editMode){
     <div
       class="align-center add-sign"
-      [class.active]="isFocused() || isHover()"
+      [class.active]="isFocused() || isHovered()"
     >
       <app-menu
         [trigger]="'+'"

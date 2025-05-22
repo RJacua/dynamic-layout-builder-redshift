@@ -41,6 +41,8 @@ import { NewAreaMenuService } from '../../services/new-area-menu.service';
 import {
   CdkDrag,
   CdkDragDrop,
+  CdkDragEnter,
+  CdkDragMove,
   CdkDragStart,
   DragDropModule,
   moveItemInArray,
@@ -116,7 +118,7 @@ export class ContainerComponent
     return this.id === this.selectionSvc.selectedElementId();
   });
 
-  isHover = computed(() => {
+  isHovered = computed(() => {
     if (this.id === this.selectionSvc.hoveredElementId()) return true;
     if (!this.isDragging()) return false;
     return (
@@ -127,6 +129,11 @@ export class ContainerComponent
       this.modelSvc.getNodeById(this.selectionSvc.hoveredElementId()).data
         .type !== 'container'
     );
+  });
+
+  isParentHovered = computed(() => {
+    if (this.nodeSignal().data.parentId === this.selectionSvc.hoveredElementId()) return true;
+    return false;
   });
 
   isDragging = this.dragDropSvc.isDragging;
@@ -141,6 +148,12 @@ export class ContainerComponent
   nodeSignal: any;
 
   dynamicStyle: WritableSignal<any> = signal(null);
+
+  //PASSAR PARA DRAG AND DROP SVC
+  lastPointerX = this.dragDropSvc.lastPointerX;
+  lastPointerY = this.dragDropSvc.lastPointerY;
+  pointerInternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
+  pointerExternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
 
   ngOnInit() {
     this.id = this.data.id;
@@ -201,11 +214,17 @@ export class ContainerComponent
         event.previousIndex,
         event.currentIndex
       );
-      
+
       this.dragDropSvc.onDrop(event);
     }
   }
+
+  onDragMoved(event: CdkDragMove<any>) {
+    this.dragDropSvc.onDragMoved(event, this.nodeSignal);
+  }
+
   forceSelection() {
     this.selectionSvc.selectById(this.id, true);
   }
+  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isDragging() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
 }

@@ -34,6 +34,7 @@ import { Router, RouterLink } from '@angular/router';
 import {
   CdkDrag,
   CdkDragDrop,
+  CdkDragEnter,
   CdkDragStart,
   DragDropModule,
 } from '@angular/cdk/drag-drop';
@@ -72,7 +73,9 @@ export class CanvasComponent {
 
   canvasModel = computed(() => this.modelSvc.canvasModel());
 
-  onlyContainers = computed(() => this.canvasModel().filter((el) => el.data.type === 'container'));
+  onlyContainers = computed(() =>
+    this.canvasModel().filter((el) => el.data.type === 'container')
+  );
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null)
     // () => this.customStringify(this.canvasModel())
@@ -211,4 +214,15 @@ export class CanvasComponent {
   onDrop(event: CdkDragDrop<any>) {
     this.dragDropSvc.onDrop(event);
   }
+
+  onDragEntered(event: CdkDragEnter<any, any>) {
+    const containerId = event.container.element.nativeElement.getAttribute('data-id');
+    const draggedId = event.item.element.nativeElement.getAttribute('data-id');
+    console.log(`Entrou no container ${containerId}, item ${draggedId}`);
+  }
+
+  onEnter(event: any) {
+    console.log('Canvas entered:', event)
+  }
+
 }
