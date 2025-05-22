@@ -123,7 +123,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   }
 
   onDragMoved(event: CdkDragMove<any>) {
-    this.dragDropSvc.onDragMoved(event, this.nodeSignal);
+    this.dragDropSvc.onDragMoved(event);
   }
 
   dropIndicatorStyle = computed(() => (!this.isFocused() && this.isDragging() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');

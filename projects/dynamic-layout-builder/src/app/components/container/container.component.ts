@@ -220,7 +220,7 @@ export class ContainerComponent
   }
 
   onDragMoved(event: CdkDragMove<any>) {
-    this.dragDropSvc.onDragMoved(event, this.nodeSignal);
+    this.dragDropSvc.onDragMoved(event);
   }
 
   forceSelection() {

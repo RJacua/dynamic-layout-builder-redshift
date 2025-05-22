@@ -15,6 +15,8 @@ export class DragDropService {
 
   isDragging = signal(false);
 
+  hoveredNode = this.selectionSvc.hoveredNode;
+
   onDrop(event: CdkDragDrop<any>) {
     const draggedId = event.item.element.nativeElement.getAttribute('data-id');
     // console.log(draggedId);
@@ -78,27 +80,36 @@ export class DragDropService {
     };
   }
 
-onDragMoved(event: CdkDragMove<any>, node: Signal<LayoutElement<ContainerData | AtomicElementData>>) {
-  let containerAlign = this.modelSvc.getNodeById(node().data.parentId)?.data?.style["flex-direction"] ?? 'none';
-
+onDragMoved(event: CdkDragMove<any>) {
   this.lastPointerX = event.pointerPosition.x;
   this.lastPointerY = event.pointerPosition.y;
 
   let el = document.elementFromPoint(this.lastPointerX, this.lastPointerY) as HTMLElement;
-  let dragEl = event.source.element.nativeElement;
 
   while (el && !el.hasAttribute('data-id') && el.parentElement) {
     el = el.parentElement;
   }
 
-  if (el && el.hasAttribute('data-id')) {
+  if (this.hoveredNode().data) {
 
     //PARAR DE ACHAR INDEX COM O DROP LIST; ACHE COM A FONTE DE VERDADE!!!
 
-    const id = el.getAttribute('data-id');
-    const dropListItems = event.source.dropContainer.data;
+    const id = this.hoveredNode().data.id;
+    let dropListItems;
+    let parent = this.modelSvc.getNodeById(this.hoveredNode().data?.parentId);
+    let containerAlign;
 
-    let myIndex = dropListItems.findIndex((item: LayoutElement<any>) => item.data.id === id);
+    if(this.hoveredNode().data?.type !== 'container'){
+      if(parent.data.type === 'container'){
+        dropListItems = parent.data.children;
+        containerAlign = parent.data.style["flex-direction"];
+      }
+      else {
+        containerAlign = 'column';
+        dropListItems = this.modelSvc.canvasModel();
+      }
+    }
+    else dropListItems = this.hoveredNode().data?.children;
 
     this.dropIndex.set(dropListItems.findIndex((item: LayoutElement<any>) => item.data.id === id) + 1);
 
@@ -106,7 +117,8 @@ onDragMoved(event: CdkDragMove<any>, node: Signal<LayoutElement<ContainerData | 
       this.dropIndex.update(() => this.dropIndex() - 1);
     }
 
-    console.log(this.dropIndex())
+    console.log(this.dropIndex());
+    console.log(this.pointerInsideRelativePosition());
   
     const relativePosition = this.getPointerInternalPosition(
       el,

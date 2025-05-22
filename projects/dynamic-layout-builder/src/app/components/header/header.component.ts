@@ -147,7 +147,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
 
   onDragMoved(event: CdkDragMove<any>) {
-    this.dragDropSvc.onDragMoved(event, this.nodeSignal);
+    this.dragDropSvc.onDragMoved(event);
   }
 
   // dropIndicator = computed(() => (this.isDragging() && this.isHovered()) ? this.dropIndicatorMap : '');
