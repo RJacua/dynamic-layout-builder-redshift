@@ -5,6 +5,7 @@ import { BackgroundStylesOptionsComponent } from './background-styles-options/ba
 import { TextStylesOptionsComponent } from './text-styles-options/text-styles-options.component';
 import { BorderStylesOptionsComponent } from './border-styles-options/border-styles-options.component';
 import { CornerStylesOptionsComponent } from './corner-styles-options/corner-styles-options.component';
+import { PaddingStylesOptionsComponent } from './padding-styles-options/padding-styles-options.component';
 
 @Component({
   selector: 'app-right-panel',
@@ -13,7 +14,8 @@ import { CornerStylesOptionsComponent } from './corner-styles-options/corner-sty
     BackgroundStylesOptionsComponent, 
     TextStylesOptionsComponent,
     BorderStylesOptionsComponent,
-    CornerStylesOptionsComponent
+    CornerStylesOptionsComponent,
+    PaddingStylesOptionsComponent,
   ],
   templateUrl: './right-panel.component.html',
   styleUrl: './right-panel.component.scss'

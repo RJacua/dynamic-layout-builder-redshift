@@ -216,15 +216,16 @@ console.log(updatedModel)
     })
   }
   setAllMissingEnablers(defaultEnablers: Enablers, currentEnablers: Enablers) {
-    // console.log("Default Style:", defaultStyles);
-
+    // console.log("Default Enabler:", defaultEnablers);
+    
     Object.entries(defaultEnablers).forEach((attr) => {
       // console.log("update", attr[0], " ->", attr[1]);
       if (!this.generalSvc.isAttributeOf(attr[0], currentEnablers)) {
         this.updateSelectedNodeEnabler(attr[0], attr[1]);
       }
     })
-
+    
+    // console.log("Enabler:", this.selectedNode().data.enabler);
   }
 
   changeToDefaultStyles(nodeStyle: Styles, defaultStyle: Styles) {

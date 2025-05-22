@@ -39,10 +39,7 @@ export class BorderStylesOptionsComponent implements OnInit {
   ];
   strokeStyleOptionsDefault = this.strokeStyleOptions[2].value;
 
-  defaultEnabler: Enablers = {
-    enableStroke: false,
-  }
-
+  defaultEnabler = this.borderStylesSvc.defaultEnabler;
   containerStyles = this.borderStylesSvc.defaultContainerStyles;
   componentStyles = this.borderStylesSvc.defaultComponentStyles;
   enableStrokeCheckbox = new FormControl();

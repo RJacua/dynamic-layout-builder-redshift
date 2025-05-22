@@ -1,15 +1,16 @@
 <ng-container *ngIf="selectedNode() as selected" >
     <ng-container [ngSwitch]="selected.data?.type" >
 
-        <div *ngSwitchCase="'canvas'">
+        <!-- <div *ngSwitchCase="'canvas'">
             <app-background-styles-options></app-background-styles-options>
             <app-corner-styles-options></app-corner-styles-options>
-        </div>
+        </div> -->
 
         <div *ngSwitchCase="'container'" >
             <app-background-styles-options ></app-background-styles-options>
             <app-border-styles-options></app-border-styles-options>
             <app-corner-styles-options></app-corner-styles-options>
+            <app-padding-styles-options></app-padding-styles-options>
         </div>
 
         <div *ngSwitchCase="'header'">
@@ -17,6 +18,7 @@
             <app-text-styles-options></app-text-styles-options>
             <app-border-styles-options></app-border-styles-options>
             <app-corner-styles-options></app-corner-styles-options>
+            <app-padding-styles-options></app-padding-styles-options>
         </div>
 
         <div *ngSwitchCase="'paragraph'">
@@ -24,6 +26,7 @@
             <app-text-styles-options></app-text-styles-options>
             <app-border-styles-options></app-border-styles-options>
             <app-corner-styles-options></app-corner-styles-options>
+            <app-padding-styles-options></app-padding-styles-options>
         </div>
 
         <div *ngSwitchDefault>No element selected!</div>

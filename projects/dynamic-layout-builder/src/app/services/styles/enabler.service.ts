@@ -3,6 +3,7 @@ import { BorderStylesService } from './border-styles.service';
 import { CornerStylesService } from './corner-styles.service';
 import { Enablers, Styles } from '../../interfaces/layout-elements';
 import { GeneralFunctionsService } from '../general-functions.service';
+import { PaddingStyleService } from './padding-style.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,9 @@ export class EnablerService {
   readonly generalSvc = inject(GeneralFunctionsService);
   readonly borderStylesSvc = inject(BorderStylesService);
   readonly cornerStylesSvc = inject(CornerStylesService);
+  readonly paddingStylesSvc = inject(PaddingStyleService);
 
-  overridableAttributes = ['border-radius']
+  overridableAttributes = ['border-radius', 'padding']
 
   applyEnableStroke(nodeStyle: Styles, enabler: boolean, type: string) {
     return this.borderStylesSvc.changeBorderStylesByEnablers(nodeStyle, enabler, type);
@@ -23,6 +25,10 @@ export class EnablerService {
 
   applyEnableIndividualCorner(nodeStyle: Styles, enabler: boolean, type: string) {
     return this.cornerStylesSvc.changeCornerStylesByEnablers(nodeStyle, enabler, type);
+  }
+
+  applyEnableIndividualPadding(nodeStyle: Styles, enabler: boolean, type: string) {
+    return this.paddingStylesSvc.changePaddingStylesByEnablers(nodeStyle, enabler, type);
   }
 
   changeStylesByEnablers(nodeStyle: Styles, enabler: Enablers, type: string) {

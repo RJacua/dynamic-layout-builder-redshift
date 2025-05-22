@@ -29,14 +29,12 @@ export class CornerStylesOptionsComponent implements OnInit {
 
   selectedNode = this.selectionSvc.selectedNode;
 
-  defaultEnabler: Enablers = {
-    enableIndividualCorner: false,
-  }
+  defaultEnabler = this.cornerStylesSvc.defaultEnabler;
   defaultCornerStyles = this.cornerStylesSvc.defaultCornerStyles;
   defaultIndividualCornerStyles = this.cornerStylesSvc.defaultIndividualCornerStyles;
 
-  strokeRadius = new FormControl<number>(0)
   enableIndividualCornerCheckbox = new FormControl()
+  strokeRadius = new FormControl<number>(0)
   cornerOptions = new FormGroup({
     topLeft: new FormControl<number>(0),
     topRight: new FormControl<number>(0),
