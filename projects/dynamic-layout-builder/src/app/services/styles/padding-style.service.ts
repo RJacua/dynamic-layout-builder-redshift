@@ -16,7 +16,7 @@ export class PaddingStyleService {
   readonly unitOptions = ['px', '%'];
   defaultUnit = this.unitOptions[0];
   readonly defaultPaddingStyles: Styles = {
-    padding: '0' + this.defaultUnit,
+    padding: '10' + this.defaultUnit,
   };
   readonly defaultIndividualPaddingStyles: Styles = {
     ['padding-top']: '0px',

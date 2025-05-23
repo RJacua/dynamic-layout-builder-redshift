@@ -1,4 +1,4 @@
-<div class="main" [class.active]="editMode && (isFocused() || isHover())" (mouseover)="onElementHover($event)"
+<div class="main " [class.active]="editMode && (isFocused() || isHover())" (mouseover)="onElementHover($event)"
     (mouseleave)="onElementMouseLeave($event)" cdkDropList (cdkDropListDropped)="onDrop()" [cdkDropListData]="[data]"
     [attr.data-id]="data.id">
     <div [class.border]="editMode" cdkDrag [cdkDragDisabled]="!editMode" [attr.data-id]="data.id">
@@ -27,11 +27,11 @@
             @if (editMode && nodeSignal().data.children.length === 0){
             <p class="default-text">This Container is Empty</p>
             }
-            <br>
+            <!-- <br> -->
             @if(editMode){
+            <!-- <br>
             <br>
-            <br>
-            <br>
+            <br> -->
             }
 
         </div>
