@@ -167,16 +167,20 @@ mat-card {
 }
 
 .topHalf {
-    border-top: 12px solid #2196f3 !important;
+    box-shadow: inset 0px 10px 0px #2196f3 !important;
 }
 .bottomHalf {
-    border-bottom: 12px solid #2196f3 !important;
+    box-shadow: inset 0px -10px 0px #2196f3 !important;
 }
 .rightHalf {
-    border-right: 12px solid #2196f3 !important;
+    box-shadow: inset 10px 0px 0px #2196f3 !important;
 }
 .leftHalf {
-    border-left: 12px solid #2196f3 !important;
+    box-shadow: inset -10px 0px 0px #2196f3 !important;
+}
+
+.insideDrop {
+    box-shadow: inset 10px 10px 0px #2196f3, inset -10px -10px 0px #2196f3 !important;
 }
 
 .custom-placeholder {

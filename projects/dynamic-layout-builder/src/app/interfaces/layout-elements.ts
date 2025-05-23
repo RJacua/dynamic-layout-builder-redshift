@@ -3,7 +3,7 @@ import { BehaviorSubject } from "rxjs";
 
 export type AtomicElementData = HeaderData | ParagraphData;
 
-export interface LayoutElement<T> {
+export interface  LayoutElement<T> {
   data: T;
 
 }
@@ -86,5 +86,6 @@ export interface PointerResult {
   bottom: boolean;
   left: boolean;
   right: boolean;
+  center?: boolean;
 };
 

@@ -326,7 +326,7 @@ export class ModelService {
     this.lastAddedNodeId.set('canvas');
   }
 
-  isChildof(childId: string, node: LayoutElement<ContainerData>): boolean {
+  isChildOf(childId: string, node: LayoutElement<ContainerData>): boolean {
     let found = false;
     if (node && node.data.children && node.data.children.length > 0) {
       node.data.children.forEach(child => {
@@ -335,8 +335,7 @@ export class ModelService {
         }
       });
     }
+    console.log(found)
     return found
   }
-  
-
 }

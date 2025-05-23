@@ -53,7 +53,6 @@ import { DragDropService } from '../../services/dragdrop.service';
     MatIconModule,
     MenuComponent,
     MatTooltipModule,
-    CdkDrag,
     DragDropModule,
   ],
   templateUrl: './canvas.component.html',

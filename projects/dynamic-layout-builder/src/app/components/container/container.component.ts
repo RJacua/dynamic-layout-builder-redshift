@@ -72,8 +72,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
   styleUrl: './container.component.scss',
 })
 export class ContainerComponent
-  implements LayoutElement<ContainerData>, OnInit
-{
+  implements LayoutElement<ContainerData>, OnInit {
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = 'container';
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
@@ -122,7 +121,7 @@ export class ContainerComponent
     if (this.id === this.selectionSvc.hoveredElementId()) return true;
     if (!this.isDragging()) return false;
     return (
-      this.modelSvc.isChildof(
+      this.modelSvc.isChildOf(
         this.selectionSvc.hoveredElementId(),
         this.nodeSignal()
       ) &&
@@ -130,6 +129,8 @@ export class ContainerComponent
         .type !== 'container'
     );
   });
+
+  isChildHovered = computed(() => this.modelSvc.isChildOf(this.selectionSvc.hoveredElementId(), this.nodeSignal()));
 
   isParentHovered = computed(() => {
     if (this.nodeSignal().data.parentId === this.selectionSvc.hoveredElementId()) return true;
@@ -200,31 +201,20 @@ export class ContainerComponent
   }
 
   onDrop(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
       this.dragDropSvc.onDrop(event);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-
-      this.dragDropSvc.onDrop(event);
-    }
   }
 
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);
   }
 
+    onHandleClick() {
+    this.isDragging.set(true);
+    this.selectionSvc.selectById(this.id, true);
+  }
+
   forceSelection() {
     this.selectionSvc.selectById(this.id, true);
   }
-  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isDragging() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
+  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isDragging() && this.isHovered() && !this.isChildHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
 }
