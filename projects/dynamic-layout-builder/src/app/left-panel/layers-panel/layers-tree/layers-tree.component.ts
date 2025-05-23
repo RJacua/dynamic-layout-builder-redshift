@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { ModelService } from '../../../services/model.service';
 import { SelectionService } from '../../../services/selection.service';
-import { CdkDrag, CdkDragDrop, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragMove, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService as DragDropService } from '../../../services/dragdrop.service';
 
 @Component({
@@ -135,14 +135,9 @@ export class LayersTreeComponent {
     this.selectionSvc.unhover();
   }
 
-
-  onDrag(event: CdkDragStart) {
-    this.isDragging.set(true);
-    const element = event.source.element.nativeElement;
-    const id = element.getAttribute('data-id');
-    if (id) {
-      this.selectionSvc.selectById(id, true);
-    }
+  onDragMoved(event: CdkDragMove<any>) {
+    this.selectionSvc.selectById(event.source.element.nativeElement.getAttribute('data-id')!, true);
+    this.dragDropSvc.onDragMoved(event);
   }
 
   onDrop(event: CdkDragDrop<any>) {
