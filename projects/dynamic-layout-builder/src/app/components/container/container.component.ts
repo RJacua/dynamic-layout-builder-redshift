@@ -120,7 +120,7 @@ export class ContainerComponent
   isHovered = computed(() => {
     if (this.id === this.selectionSvc.hoveredElementId()) return true;
     if (!this.isDragging()) return false;
-    if (this.selectionSvc.hoveredNode().data.type === 'container') return false;
+    if (this.selectionSvc.hoveredNode().data && this.selectionSvc.hoveredNode().data.type === 'container') return false;
     return this.modelSvc.isChildOf(this.selectionSvc.hoveredElementId(),this.nodeSignal());
   });
 
@@ -210,5 +210,5 @@ export class ContainerComponent
   forceSelection() {
     this.selectionSvc.selectById(this.id, true);
   }
-  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isDragging() && this.isHovered() && !this.isChildHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
+  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isHovered() && !this.isChildHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
 }

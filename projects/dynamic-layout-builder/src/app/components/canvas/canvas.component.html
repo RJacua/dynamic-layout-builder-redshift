@@ -7,6 +7,7 @@
     [cdkDropListData]="onlyContainers()"
     (cdkDropListEntered)="onEnter($event)"
     [attr.data-id]="data.id"
+    [class.noDropZone]="noDrop()"
   >
     <div class="align-center">
       @for (node of onlyContainers(); track node.data.id) { 

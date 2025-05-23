@@ -4,7 +4,7 @@
   [cdkDragDisabled]="!editMode" [attr.data-id]="data.id" (cdkDragMoved)="onDragMoved($event)"
   (cdkDropListSortingDisabled)="(true)">
   @if(editMode){
-  <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+  <div class="drag-placeholder" *cdkDragPlaceholder></div>
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">
     ⋮⋮
   </div>

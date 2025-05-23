@@ -92,6 +92,10 @@ export class CanvasComponent {
   atob: Signal<string> = computed(() => atob(this.btoa()));
   decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
 
+  isHovered = computed(() => {
+    return this.selectionSvc.hoveredElementId() === 'canvas';
+  });
+
   addContainer() {
     const newLayoutElement = this.modelSvc.writeElementModel(
       'container',
@@ -223,5 +227,7 @@ export class CanvasComponent {
   onEnter(event: any) {
     console.log('Canvas entered:', event)
   }
+
+  noDrop = computed(() => this.isHovered() && this.dragDropSvc.isDragging() && this.selectionSvc.selectedNode().data.type !== 'container')
 
 }

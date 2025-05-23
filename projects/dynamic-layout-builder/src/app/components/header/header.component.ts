@@ -151,6 +151,6 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   }
 
   // dropIndicator = computed(() => (this.isDragging() && this.isHovered()) ? this.dropIndicatorMap : '');
-  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isDragging() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
+  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
 
 }

@@ -51,18 +51,21 @@ export class DragDropService {
     const halfwayY = rect.top + rect.height / 2;
     const halfwayX = rect.left + rect.width / 2;
 
-    const topInnerBoundary = Math.min(rect.top + rect.height / 10, rect.top + 100);
-    const bottomInnerBoundary = Math.max(rect.bottom - rect.height / 10, rect.bottom - 100);
-    const leftInnerBoundary = Math.min(rect.left + rect.width / 10, rect.left + 100);
-    const rightInnerBoundary = Math.max(rect.right - rect.width / 10, rect.right - 100);
+    const topInnerBoundary = rect.top + 20;
+    const bottomInnerBoundary = rect.bottom - 20;
+    const leftInnerBoundary = rect.left + 20;
+    const rightInnerBoundary = rect.right - 20;
 
-    let centerX;
-    let centerY;
+    let centerX = false;
+    let centerY = false;
+
+    console.log(el);
+
     if (parentAlignment == 'column') {
       centerY = (pointerY > topInnerBoundary) && (pointerY < bottomInnerBoundary);
     }
     else if (parentAlignment == 'row') {
-      centerX = (pointerX > leftInnerBoundary) && (pointerX < rightInnerBoundary);
+      centerX = (pointerX < leftInnerBoundary) && (pointerX > rightInnerBoundary);
     }
 
     return {
@@ -75,11 +78,10 @@ export class DragDropService {
   }
 
   onDragMoved(event: CdkDragMove<any>) {
+
     this.lastPointerX = event.pointerPosition.x;
     this.lastPointerY = event.pointerPosition.y;
     this.dropTarget = this.hoveredElementId();
-
-    console.log(this.dropTarget)
 
     let el = document.elementFromPoint(this.lastPointerX, this.lastPointerY) as HTMLElement;
 
@@ -89,7 +91,8 @@ export class DragDropService {
 
     if (this.hoveredNode().data) {
 
-      const id = this.hoveredNode().data?.id ?? 'canvas';
+      const id = el.getAttribute('data-id') ?? 'canvas';
+
 
       let dropListItems;
       let parent = this.modelSvc.getNodeById(this.hoveredNode().data?.parentId);
@@ -98,7 +101,7 @@ export class DragDropService {
       if (this.hoveredNode().data?.type !== 'container') {
         if (parent.data.type === 'container') {
           dropListItems = parent.data.children.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
-          console.log(dropListItems)
+          // console.log(dropListItems)
           parentAlign = parent.data.style["flex-direction"];
         }
         else {
@@ -143,8 +146,8 @@ export class DragDropService {
 
       }
 
-      console.log(this.dropIndex());
-      console.log(this.pointerInsideRelativePosition());
+      // console.log(this.dropIndex());
+      // console.log(this.pointerInsideRelativePosition());
 
       const relativePosition = this.getPointerInternalPosition(
         el,
@@ -178,20 +181,21 @@ export class DragDropService {
 
 
   dropIndicator(nodeToStyle: Signal<LayoutElement<ContainerData | AtomicElementData>>): string {
-    if (!this.isDragging) return '';
+    if (!this.isDragging()) return '';
 
     let containerAlign = this.modelSvc.getNodeById(nodeToStyle().data.parentId)?.data?.style["flex-direction"] ?? 'column';
 
-    if (!('children' in nodeToStyle().data) && this.hoveredElementId() === 'canvas') return ''
+    if (!('children' in nodeToStyle().data) && this.hoveredElementId() === 'canvas') return '';
 
-    if (('children' in this.hoveredNode().data) && this.hoveredNode().data.children.length === 0 && this.pointerInsideRelativePosition().center) {
+    if (('children' in this.hoveredNode().data) && (this.hoveredNode().data.children.length === 0 || (this.hoveredNode().data.children.length === 1) && this.hoveredElementId() === this.selectionSvc.selectedNode().data.parentId) && this.pointerInsideRelativePosition().center) {
       return 'insideDrop';
     }
 
     if (('children' in this.hoveredNode().data) && this.hoveredNode().data.children.length > 0 && this.pointerInsideRelativePosition().center) {
+      containerAlign = this.hoveredNode().data?.style["flex-direction"] ?? containerAlign;
       if (containerAlign === 'column') {
         if (this.pointerInsideRelativePosition().top) {
-          return 'insideTopDrop';
+          'insideTopDrop';
         }
         else if (this.pointerInsideRelativePosition().bottom) {
           return 'insideBottomDrop';
@@ -207,26 +211,34 @@ export class DragDropService {
       }
     }
 
-    if (this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredNode().data.parentId === 'canvas') return '';
+    containerAlign = nodeToStyle().data?.style["flex-direction"] ?? containerAlign;
 
     if (containerAlign === 'column') {
       if (this.pointerInsideRelativePosition().top) {
-        return 'topHalf';
+        let direction = 'topHalf';
+        if (this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredNode().data.parentId === 'canvas') direction += ' noDropZone';
+        return direction;
       }
       else if (this.pointerInsideRelativePosition().bottom) {
-        return 'bottomHalf';
+        let direction = 'bottomHalf';
+        if (this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredNode().data.parentId === 'canvas') direction += ' noDropZone';
+        return direction;
       }
     }
     else if (containerAlign === 'row') {
       if (this.pointerInsideRelativePosition().right) {
-        return 'rightHalf';
+        let direction = 'rightHalf';
+        if (this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredNode().data.parentId === 'canvas') direction += ' noDropZone';
+        return direction;
       }
       else if (this.pointerInsideRelativePosition().left) {
-        return 'leftHalf';
+        let direction = 'leftHalf';
+        if (this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredNode().data.parentId === 'canvas') direction += ' noDropZone';
+        return direction;
       }
     }
 
-    return '';
+    return '';;
   }
 
 
