@@ -120,14 +120,8 @@ export class ContainerComponent
   isHovered = computed(() => {
     if (this.id === this.selectionSvc.hoveredElementId()) return true;
     if (!this.isDragging()) return false;
-    return (
-      this.modelSvc.isChildOf(
-        this.selectionSvc.hoveredElementId(),
-        this.nodeSignal()
-      ) &&
-      this.modelSvc.getNodeById(this.selectionSvc.hoveredElementId()).data
-        .type !== 'container'
-    );
+    if (this.selectionSvc.hoveredNode().data.type === 'container') return false;
+    return this.modelSvc.isChildOf(this.selectionSvc.hoveredElementId(),this.nodeSignal());
   });
 
   isChildHovered = computed(() => this.modelSvc.isChildOf(this.selectionSvc.hoveredElementId(), this.nodeSignal()));
@@ -201,14 +195,14 @@ export class ContainerComponent
   }
 
   onDrop(event: CdkDragDrop<any>) {
-      this.dragDropSvc.onDrop(event);
+    this.dragDropSvc.onDrop(event);
   }
 
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);
   }
 
-    onHandleClick() {
+  onHandleClick() {
     this.isDragging.set(true);
     this.selectionSvc.selectById(this.id, true);
   }

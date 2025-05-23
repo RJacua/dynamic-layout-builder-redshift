@@ -2,9 +2,7 @@
   (mouseover)="onElementHover($event)" (mouseleave)="onElementMouseLeave($event)" cdkDropList
   (cdkDropListDropped)="onDrop($event)" [cdkDropListData]="data.children" [class.border]="editMode" cdkDrag
   [cdkDragDisabled]="!editMode" [attr.data-id]="data.id" (cdkDragMoved)="onDragMoved($event)"
-  (cdkDropListSortingDisabled)="(true)" [class.topHalf]="
-    isDragging() && isParentHovered() && pointerInternalPosition().top
-  ">
+  (cdkDropListSortingDisabled)="(true)">
   @if(editMode){
   <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">

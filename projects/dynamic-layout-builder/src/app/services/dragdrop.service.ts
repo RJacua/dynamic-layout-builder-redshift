@@ -43,7 +43,8 @@ export class DragDropService {
   getPointerInternalPosition(
     el: HTMLElement,
     pointerX: number,
-    pointerY: number
+    pointerY: number,
+    parentAlignment: string,
   ): PointerResult {
     const rect = el.getBoundingClientRect();
 
@@ -55,12 +56,21 @@ export class DragDropService {
     const leftInnerBoundary = Math.min(rect.left + rect.width / 10, rect.left + 100);
     const rightInnerBoundary = Math.max(rect.right - rect.width / 10, rect.right - 100);
 
+    let centerX;
+    let centerY;
+    if (parentAlignment == 'column') {
+      centerY = (pointerY > topInnerBoundary) && (pointerY < bottomInnerBoundary);
+    }
+    else if (parentAlignment == 'row') {
+      centerX = (pointerX > leftInnerBoundary) && (pointerX < rightInnerBoundary);
+    }
+
     return {
       top: pointerY < halfwayY,
       bottom: pointerY >= halfwayY,
       left: pointerX < halfwayX,
       right: pointerX >= halfwayX,
-      center: (pointerY > topInnerBoundary) && (pointerY < bottomInnerBoundary) && (pointerX > leftInnerBoundary) && (pointerX < rightInnerBoundary)
+      center: centerX || centerY
     };
   }
 
@@ -80,10 +90,10 @@ export class DragDropService {
     if (this.hoveredNode().data) {
 
       const id = this.hoveredNode().data?.id ?? 'canvas';
-      
+
       let dropListItems;
       let parent = this.modelSvc.getNodeById(this.hoveredNode().data?.parentId);
-      let parentAlign;
+      let parentAlign = 'column';
 
       if (this.hoveredNode().data?.type !== 'container') {
         if (parent.data.type === 'container') {
@@ -104,7 +114,7 @@ export class DragDropService {
       }
       else {
         if (this.pointerInsideRelativePosition().center) {
-          
+
           dropListItems = this.hoveredNode().data?.children.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
           if ((this.hoveredNode().data.style["flex-direction"] === 'column' && this.pointerInsideRelativePosition().top) || (this.hoveredNode().data.style["flex-direction"] === 'row' && this.pointerInsideRelativePosition().left) && this.dropIndex() > 0) {
             this.dropIndex.set(0);
@@ -112,8 +122,8 @@ export class DragDropService {
           else this.dropIndex.set(-1);
         }
         else {
-          if('data' in parent){
-            
+          if ('data' in parent) {
+
             parentAlign = parent.data.style["flex-direction"];
             this.dropTarget = parent.data.id;
             dropListItems = parent.data.children.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
@@ -139,7 +149,8 @@ export class DragDropService {
       const relativePosition = this.getPointerInternalPosition(
         el,
         this.lastPointerX,
-        this.lastPointerY
+        this.lastPointerY,
+        parentAlign
       );
 
       this.pointerInsideRelativePosition.set(relativePosition);
@@ -147,11 +158,12 @@ export class DragDropService {
   }
 
   onDrop(event: CdkDragDrop<any>) {
+    this.isDragging.set(false);
     const draggedId = event.item.element.nativeElement.getAttribute('data-id');
     const dropTargetId = event.container.element.nativeElement.getAttribute('data-id');
 
     if (!this.dropTarget) return
-    if(!('children' in this.selectionSvc.selectedNode().data) && this.dropTarget === 'canvas') return
+    if (!('children' in this.selectionSvc.selectedNode().data) && this.dropTarget === 'canvas') return
 
     this.modelSvc.moveNodeTo(
       this.selectionSvc.selectedElementId(),
@@ -162,7 +174,6 @@ export class DragDropService {
       // this.modelSvc.moveNodeTo(draggedId, dropTargetId, index);
     }
     // this.modelSvc.moveNodeTo(draggedId!, dropTargetId!, index);
-    this.isDragging.set(false);
   }
 
 
@@ -171,13 +182,32 @@ export class DragDropService {
 
     let containerAlign = this.modelSvc.getNodeById(nodeToStyle().data.parentId)?.data?.style["flex-direction"] ?? 'column';
 
-    if(!('children' in nodeToStyle().data) && this.hoveredElementId() === 'canvas') return ''
+    if (!('children' in nodeToStyle().data) && this.hoveredElementId() === 'canvas') return ''
 
     if (('children' in this.hoveredNode().data) && this.hoveredNode().data.children.length === 0 && this.pointerInsideRelativePosition().center) {
       return 'insideDrop';
     }
-    
-    if(this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredNode().data.parentId === 'canvas') return '';
+
+    if (('children' in this.hoveredNode().data) && this.hoveredNode().data.children.length > 0 && this.pointerInsideRelativePosition().center) {
+      if (containerAlign === 'column') {
+        if (this.pointerInsideRelativePosition().top) {
+          return 'insideTopDrop';
+        }
+        else if (this.pointerInsideRelativePosition().bottom) {
+          return 'insideBottomDrop';
+        }
+      }
+      else if (containerAlign === 'row') {
+        if (this.pointerInsideRelativePosition().right) {
+          return 'insideRightDrop';
+        }
+        else if (this.pointerInsideRelativePosition().left) {
+          return 'insideLeftDrop';
+        }
+      }
+    }
+
+    if (this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredNode().data.parentId === 'canvas') return '';
 
     if (containerAlign === 'column') {
       if (this.pointerInsideRelativePosition().top) {
