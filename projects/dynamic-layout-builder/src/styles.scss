@@ -172,39 +172,39 @@ mat-card {
 }
 
 .topHalf {
-    box-shadow: 0px -20px 0px #2196f377 !important;
+    box-shadow: 0px -10px 0px #2196f377 !important;
 }
 .bottomHalf {
-    box-shadow: 0px 20px 0px #2196f377 !important;
+    box-shadow: 0px 10px 0px #2196f377 !important;
 }
 .rightHalf {
-    box-shadow: 20px 0px 0px #2196f377 !important;
+    box-shadow: 10px 0px 0px #2196f377 !important;
 }
 .leftHalf {
-    box-shadow: -20px 0px 0px #2196f377 !important;
+    box-shadow: -10px 0px 0px #2196f377 !important;
 }
 
 .insideTopDrop {
-    box-shadow: inset 0px 20px 0px #2196f3, inset 0px 50px 0px #2196f377 !important;
+    box-shadow: inset 0px 10px 0px #2196f3, inset 0px 25px 0px #2196f377 !important;
 }
 .insideBottomDrop {
-    box-shadow: inset 0px -20px 0px #2196f3, inset 0px -50px 0px #2196f377 !important;
+    box-shadow: inset 0px -10px 0px #2196f3, inset 0px -25px 0px #2196f377 !important;
 
 }
 .insideLeftDrop {
-    box-shadow: inset 20px 0px 0px #2196f3, inset 50px 0px 0px #2196f377 !important;
+    box-shadow: inset 10px 0px 0px #2196f3, inset 25px 0px 0px #2196f377 !important;
 }
 .insideRightDrop {
-    box-shadow: inset -20px 0px 0px #2196f3, inset -50px 0px 0px #2196f377 !important;
+    box-shadow: inset -10px 0px 0px #2196f3, inset -25px 0px 0px #2196f377 !important;
 }
 
 .insideDrop {
-    box-shadow: inset 20px 20px 0px #2196f3, inset -20px -20px 0px #2196f3 !important;
+    box-shadow: inset 10px 10px 0px #2196f3, inset -10px -10px 0px #2196f3 !important;
 }
 
 .noDropZone {
     cursor: not-allowed;
-    box-shadow: -20px -20px 0px #F1968377, 20px 20px 0px #F1968377 !important;
+    box-shadow: -10px -10px 0px #F1968377, 10px 10px 0px #F1968377 !important;
 }
 
 .custom-placeholder {
