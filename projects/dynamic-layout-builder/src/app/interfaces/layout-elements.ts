@@ -3,7 +3,7 @@ import { BehaviorSubject } from "rxjs";
 
 export type AtomicElementData = HeaderData | ParagraphData;
 
-export interface  LayoutElement<T> {
+export interface LayoutElement<T> {
   data: T;
 
 }
@@ -38,12 +38,19 @@ export interface ContainerData extends LayoutData {
 }
 
 
-export interface Canvas {
+export interface Canvas<T> {
+  data: T;
+
+}
+
+export interface CanvasData {
   id: string;
 
   type: string;
 
   children: LayoutElement<any>[];
+
+  style: Styles;
 
 }
 
@@ -79,7 +86,7 @@ export interface Styles { //vai crescer
   ['padding-right']?: string;
   ['padding-bottom']?: string;
   ['padding-left']?: string;
-  
+
   // Padding Styles
   margin?: string;
   ['margin-top']?: string;

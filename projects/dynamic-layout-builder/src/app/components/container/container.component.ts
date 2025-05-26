@@ -141,12 +141,6 @@ export class ContainerComponent
   internalStyle: WritableSignal<any> = signal(null);
   externalStyle: WritableSignal<any> = signal(null);
 
-  //PASSAR PARA DRAG AND DROP SVC
-  lastPointerX = this.dragDropSvc.lastPointerX;
-  lastPointerY = this.dragDropSvc.lastPointerY;
-  pointerInternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
-  pointerExternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
-
   ngOnInit() {
     this.id = this.data.id;
     this.parentId.set(this.data.parentId);
@@ -169,10 +163,6 @@ export class ContainerComponent
     const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
     this.internalStyle.set(inner);
     this.externalStyle.set(outer);
-    
-    console.log("inner", inner);
-    console.log("outer", outer);
-
   }
 
   onElementHover(event: MouseEvent) {

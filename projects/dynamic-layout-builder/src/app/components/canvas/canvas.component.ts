@@ -26,6 +26,7 @@ import { ModelService } from '../../services/model.service';
 import { HeaderComponent } from '../header/header.component';
 import {
   Canvas,
+  CanvasData,
   ContainerData,
   LayoutElement,
 } from '../../interfaces/layout-elements';
@@ -62,7 +63,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 })
 export class CanvasComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
+  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], style: {}};
   @Input() editMode: boolean = true;
 
   readonly generalSvc = inject(GeneralFunctionsService);
