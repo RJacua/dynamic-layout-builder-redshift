@@ -52,28 +52,29 @@ export class PaddingStylesOptionsComponent {
   constructor() {
 
     effect(() => {
+      const node = this.selectedNode();
       if (!this.node) return;
 
       // let componentType = node.data.type;
 
       untracked(() => {
-        this.paddingStylesSvc.setAllMissingStyles(this.defaultPaddingStyles, this.node.data.style);
-        this.paddingStylesSvc.setAllMissingStyles(this.defaultIndividualPaddingStyles, this.node.data.style);
-        this.paddingStylesSvc.setAllMissingEnablers(this.defaultEnabler, this.node.data.enabler);
+        this.paddingStylesSvc.setAllMissingStyles(this.defaultPaddingStyles, node.data.style);
+        this.paddingStylesSvc.setAllMissingStyles(this.defaultIndividualPaddingStyles, node.data.style);
+        this.paddingStylesSvc.setAllMissingEnablers(this.defaultEnabler, node.data.enabler);
       })
-      console.log(this.node.data.enabler)
+      console.log(node.data.enabler)
 
-      this.paddingOptions.controls.unit.setValue(this.node.data.style.padding.replace(/[0-9.-]/g, '') ?? this.defaultUnit, { emitEvent: false });
-      this.paddingOptions.controls.padding.setValue(parseInt(this.node.data.style.padding) ?? parseInt(this.defaultPaddingStyles.padding!), { emitEvent: false });
+      this.paddingOptions.controls.unit.setValue(node.data.style.padding.replace(/[0-9.-]/g, '') ?? this.defaultUnit, { emitEvent: false });
+      this.paddingOptions.controls.padding.setValue(parseInt(node.data.style.padding) ?? parseInt(this.defaultPaddingStyles.padding!), { emitEvent: false });
 
       this.individualPaddingOptions.setValue({
-        top: parseInt(this.node.data.style["padding-top"] ?? this.paddingOptions.controls.padding.value),
-        right: parseInt(this.node.data.style["padding-right"] ?? this.paddingOptions.controls.padding.value),
-        bottom: parseInt(this.node.data.style["padding-bottom"] ?? this.paddingOptions.controls.padding.value),
-        left: parseInt(this.node.data.style["padding-left"] ?? this.paddingOptions.controls.padding.value),
+        top: parseInt(node.data.style["padding-top"] ?? this.paddingOptions.controls.padding.value),
+        right: parseInt(node.data.style["padding-right"] ?? this.paddingOptions.controls.padding.value),
+        bottom: parseInt(node.data.style["padding-bottom"] ?? this.paddingOptions.controls.padding.value),
+        left: parseInt(node.data.style["padding-left"] ?? this.paddingOptions.controls.padding.value),
       }, { emitEvent: false });
 
-      this.enableIndividualPaddingCheckbox.setValue(this.node.data.enabler.enableIndividualPadding || this.defaultEnabler.enableIndividualPadding, { emitEvent: false });
+      this.enableIndividualPaddingCheckbox.setValue(node.data.enabler.enableIndividualPadding || this.defaultEnabler.enableIndividualPadding, { emitEvent: false });
     });
   }
 
