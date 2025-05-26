@@ -1,8 +1,8 @@
-<div class="main " [class.active]="editMode && (isFocused() || isHover())" (mouseover)="onElementHover($event)"
+<div class="main" [style]="externalStyle()" [class.active]="editMode && (isFocused() || isHover())" (mouseover)="onElementHover($event)"
     (mouseleave)="onElementMouseLeave($event)" cdkDropList (cdkDropListDropped)="onDrop()" [cdkDropListData]="[data]"
     [attr.data-id]="data.id">
     <div [class.border]="editMode" cdkDrag [cdkDragDisabled]="!editMode" [attr.data-id]="data.id">
-        <div [class]="'container-flex'" [style]="dynamicStyle()" [attr.data-id]="data.id">
+        <div [class]="'container-flex'" [style]="internalStyle()" [attr.data-id]="data.id">
 
             @if(editMode){
             <div cdkDragHandle class="drag-handle" (pointerdown)="forceSelection()">⋮⋮</div>

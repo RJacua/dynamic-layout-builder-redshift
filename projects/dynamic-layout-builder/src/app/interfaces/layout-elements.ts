@@ -79,6 +79,14 @@ export interface Styles { //vai crescer
   ['padding-right']?: string;
   ['padding-bottom']?: string;
   ['padding-left']?: string;
+  
+  // Padding Styles
+  margin?: string;
+  ['margin-top']?: string;
+  ['margin-right']?: string;
+  ['margin-bottom']?: string;
+  ['margin-left']?: string;
+
 
 }
 
@@ -86,6 +94,7 @@ export interface Enablers { //vai crescer
   enableStroke?: boolean;
   enableIndividualCorner?: boolean;
   enableIndividualPadding?: boolean;
+  enableIndividualMargin?: boolean;
 
 }
 

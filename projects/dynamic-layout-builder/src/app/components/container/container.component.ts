@@ -46,17 +46,17 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = "container";
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas',  type: 'container', style: {}, enabler: {}, children: [] };
+  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', type: 'container', style: {}, enabler: {}, children: [] };
   @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
-      
+
       untracked(() => {
         if (node) {
-        this.processContainerStyle(node);
+          this.processContainerStyle(node);
         }
       })
     });
@@ -83,7 +83,7 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   isHover = computed(() => {
     if (this.id === this.selectionSvc.hoveredElementId()) return true;
-    if(!this.isDragging()) return false;
+    if (!this.isDragging()) return false;
     return (this.modelSvc.isChildof(this.selectionSvc.hoveredElementId(), this.nodeSignal()) && this.modelSvc.getNodeById(this.selectionSvc.hoveredElementId()).data.type !== 'container');
   });
 
@@ -95,6 +95,8 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
   nodeSignal: any;
 
   dynamicStyle: WritableSignal<any> = signal(null);
+  internalStyle: WritableSignal<any> = signal(null);
+  externalStyle: WritableSignal<any> = signal(null);
 
 
   ngOnInit() {
@@ -120,12 +122,16 @@ export class ContainerComponent implements LayoutElement<ContainerData>, OnInit,
 
   processContainerStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
-    this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
-    // console.log(this.dynamicStyle());
-    // this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
-    // this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
-    // this.dynamicStyle.update(() => this.enablerSvc.applyEnableStroke(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
-    // this.dynamicStyle.update(() => this.enablerSvc.applyEnableIndividualCorner(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
+    const finalStyle = this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)()
+    this.dynamicStyle.set(finalStyle);
+
+    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
+    this.internalStyle.set(inner);
+    this.externalStyle.set(outer);
+    
+    console.log("inner", inner);
+    console.log("outer", outer);
+
   }
 
   onElementHover(event: MouseEvent) {

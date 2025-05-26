@@ -5,7 +5,7 @@ import { StylesService } from './styles.service';
 @Injectable({
   providedIn: 'root'
 })
-export class PaddingStyleService {
+export class PaddingStylesService {
 
   readonly stylesSvc = inject(StylesService);
 

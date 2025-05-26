@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector, HostListener } from '@angular/core';
+import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector, HostListener, WritableSignal } from '@angular/core';
 import { LayoutElement, ParagraphData } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../../services/components.service';
@@ -8,6 +8,7 @@ import { BorderStylesService } from '../../services/styles/border-styles.service
 import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
+import { GeneralFunctionsService } from '../../services/general-functions.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -67,6 +68,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   // readonly borderStylesSvc = inject(BorderStylesService);
   readonly enablerSvc = inject(EnablerService);
   readonly dragDropSvc = inject(DragDropService);
+  readonly generalSvc = inject(GeneralFunctionsService);
 
   id = '0';
   parentId = signal('-1');
@@ -79,6 +81,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
   // dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
   dynamicStyle = signal({});
+  internalStyle: WritableSignal<any> = signal(null);
+  externalStyle: WritableSignal<any> = signal(null);
+  
   ngOnInit(): void {
     this.id = this.data.id;
     this.parentId.set(this.data.parentId);
@@ -93,6 +98,10 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   processContainerStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
     this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
+  
+    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
+    this.internalStyle.set(inner);
+    this.externalStyle.set(outer);
   }
 
   isFocused = computed(() => {

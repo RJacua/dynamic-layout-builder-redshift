@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Styles } from '../interfaces/layout-elements';
 
 @Injectable({
   providedIn: 'root'
@@ -38,10 +39,37 @@ export class GeneralFunctionsService {
     };
   }
 
+
+  getSplitStyles(styles: Styles): { outer: Styles; inner: Styles } {
+    const outer: Styles = {};
+    const inner: Styles = {};
+
+    Object.entries(styles).forEach((attr) => {
+      if (attr[0].startsWith('margin')) {
+        this.updateLayerStyle(outer, attr[0], attr[1]);
+      }
+      else {
+        this.updateLayerStyle(inner, attr[0], attr[1]);
+      }
+    })
+
+    return { outer, inner };
+  }
+
+  updateLayerStyle(layer: Styles, styleType: string, value: string) {
+    // return {
+    //   ...layer,
+    //   [styleType]: value
+    // };
+    layer[styleType as keyof Styles] = value;
+  }
+
+
   customStringify(obj: any, indent = 2): string {
     const noQuoteKeys = new Set([
       "id", "parentId", "type", "data", "style", "children",
-      "text", "headerSize", "enabler", "enableStroke", "enableIndividualCorner","enableIndividualPadding"
+      "text", "headerSize", "enabler", "enableStroke",
+      "enableIndividualCorner", "enableIndividualPadding", "enableIndividualMargin"
     ]);
 
     function format(value: any, level: number): string {

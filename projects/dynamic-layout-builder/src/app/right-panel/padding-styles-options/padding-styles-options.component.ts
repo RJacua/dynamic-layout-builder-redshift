@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { SelectionService } from '../../services/selection.service';
-import { PaddingStyleService } from '../../services/styles/padding-style.service';
+import { PaddingStylesService } from '../../services/styles/padding-styles.service';
 import { combineLatest, distinctUntilChanged, startWith, tap } from 'rxjs';
 
 @Component({
@@ -23,7 +23,7 @@ import { combineLatest, distinctUntilChanged, startWith, tap } from 'rxjs';
 })
 export class PaddingStylesOptionsComponent {
 
-  private paddingStylesSvc = inject(PaddingStyleService)
+  private paddingStylesSvc = inject(PaddingStylesService)
   readonly selectionSvc = inject(SelectionService);
   readonly generalSvc = inject(GeneralFunctionsService);
 
