@@ -170,8 +170,8 @@ export class ContainerComponent
     this.internalStyle.set(inner);
     this.externalStyle.set(outer);
     
-    console.log("inner", inner);
-    console.log("outer", outer);
+    // console.log("inner", inner);
+    // console.log("outer", outer);
 
   }
 
