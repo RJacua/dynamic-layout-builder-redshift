@@ -128,9 +128,6 @@ export class ContainerComponent
 
   isDragging = this.dragDropSvc.isDragging;
 
-  canvasModel = computed(() => {
-    this.modelSvc.canvasModel();
-  });
   children = signal(
     [] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
   );

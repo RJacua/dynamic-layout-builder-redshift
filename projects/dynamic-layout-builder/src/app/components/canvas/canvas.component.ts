@@ -73,19 +73,19 @@ export class CanvasComponent {
 
   readonly dragDropSvc = inject(DragDropService);
 
-  canvasModel = computed(() => this.modelSvc.canvasModel());
+  canvas = computed(() => this.modelSvc.canvas());
 
   onlyContainers = computed(() =>
-    this.canvasModel().filter((el) => el.data.type === 'container')
+    this.canvas().data.children.filter((el) => el.data.type === 'container')
   );
   canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null)
+    () => JSON.stringify(this.canvas().data.children, null)
     // () => this.customStringify(this.canvasModel())
   );
 
   canvasCustomString: Signal<string> = computed(
     // () => JSON.stringify(this.canvasModel(), null)
-    () => this.generalSvc.customStringify(this.canvasModel())
+    () => this.generalSvc.customStringify(this.canvas().data.children)
   )
 
   utf8Str: Signal<string> = computed(() =>
