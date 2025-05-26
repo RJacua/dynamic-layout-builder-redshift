@@ -8,6 +8,7 @@ import { BorderStylesService } from '../../services/styles/border-styles.service
 import { CdkDrag, CdkDragEnter, CdkDragMove, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
+import { GeneralFunctionsService } from '../../services/general-functions.service';
 
 @Component({
   selector: 'app-header',
@@ -80,6 +81,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   // readonly borderStylesSvc = inject(BorderStylesService);
   readonly enablerSvc = inject(EnablerService);
   readonly dragDropSvc = inject(DragDropService);
+  readonly generalSvc = inject(GeneralFunctionsService);
 
 
   // readonly cornerStylesSvc = inject(CornerStylesService);
@@ -93,11 +95,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   nodeSignal: Signal<any> = signal(null);
   dynamicStyle: WritableSignal<any> = signal(null);
   dynamicHeader: WritableSignal<any> = signal(null);
-
-  //PASSAR PARA DRAG AND DROP SVC
-  lastPointerX = this.dragDropSvc.lastPointerX;
-  lastPointerY = this.dragDropSvc.lastPointerY;
-  pointerRelativePosition = this.dragDropSvc.pointerInsideRelativePosition;
+  internalStyle: WritableSignal<any> = signal(null);
+  externalStyle: WritableSignal<any> = signal(null);
+  
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');
     // this.size.set(this.data.style.size ?? 1);
@@ -116,6 +116,10 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   processContainerStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
     this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
+  
+    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
+    this.internalStyle.set(inner);
+    this.externalStyle.set(outer);
   }
 
 

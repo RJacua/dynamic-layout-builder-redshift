@@ -12,6 +12,10 @@ export class BorderStylesService {
   constructor() { }
   readonly stylesSvc = inject(StylesService);
 
+  readonly defaultEnabler: Enablers = {
+    enableStroke: false,
+  }
+
   readonly defaultContainerStyles: Styles = {
     ['border-color']: '#81828555',
     ['border-style']: 'solid',

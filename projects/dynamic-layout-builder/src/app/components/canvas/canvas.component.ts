@@ -39,6 +39,7 @@ import {
   DragDropModule,
 } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
+import { GeneralFunctionsService } from '../../services/general-functions.service';
 
 @Component({
   selector: 'app-canvas',
@@ -64,6 +65,7 @@ export class CanvasComponent {
   @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
   @Input() editMode: boolean = true;
 
+  readonly generalSvc = inject(GeneralFunctionsService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly router = inject(Router);
@@ -82,8 +84,8 @@ export class CanvasComponent {
 
   canvasCustomString: Signal<string> = computed(
     // () => JSON.stringify(this.canvasModel(), null)
-    () => this.customStringify(this.canvasModel())
-  );
+    () => this.generalSvc.customStringify(this.canvasModel())
+  )
 
   utf8Str: Signal<string> = computed(() =>
     encodeURIComponent(this.canvasModelsString())
@@ -153,55 +155,6 @@ export class CanvasComponent {
         console.warn('ng.getComponent não disponível (modo produção?).');
       }
     }
-  }
-
-  customStringify(obj: any, indent = 2): string {
-    const noQuoteKeys = new Set([
-      'id',
-      'parentId',
-      'type',
-      'data',
-      'style',
-      'children',
-      'text',
-      'headerSize',
-      'enabler',
-      'enableStroke',
-      'enableIndividualCorner',
-    ]);
-
-    function format(value: any, level: number): string {
-      const space = ' '.repeat(level * indent);
-
-      if (Array.isArray(value)) {
-        if (value.length === 0) return '[]';
-        return `[\n${value
-          .map((item) => space + ' '.repeat(indent) + format(item, level + 1))
-          .join(',\n')}\n${space}]`;
-      }
-
-      if (typeof value === 'object' && value !== null) {
-        const entries = Object.entries(value);
-        if (entries.length === 0) return '{}';
-
-        const formatted = entries.map(([key, val]) => {
-          const displayKey = noQuoteKeys.has(key) ? key : `"${key}"`;
-          return `${' '.repeat((level + 1) * indent)}${displayKey}: ${format(
-            val,
-            level + 1
-          )}`;
-        });
-
-        return `{\n${formatted.join(',\n')}\n${space}}`;
-      }
-
-      if (typeof value === 'string') {
-        return `"${value}"`;
-      }
-      return String(value);
-    }
-
-    return format(obj, 0);
   }
 
   onPlusClick() {

@@ -1,0 +1,69 @@
+<mat-card>
+    <mat-list>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+            <h3 class="center">Margin Options</h3>
+        </mat-list-item>
+        <div>
+            <span>
+                <label for="individualMargin">Individual Margins</label>
+                <input type="checkbox" id="individualMargin" name="individualMargin"
+                    [formControl]="enableIndividualMarginCheckbox">
+            </span>
+        </div><br>
+
+        <div *ngIf="!enableIndividualMarginCheckbox.value">
+            <form [formGroup]="marginOptions">
+                <label for="margin">margin:</label><br>
+                <input type="number" id="margin" name="margin" min="0" formControlName="margin" style="width: 50%">
+                <span>
+                    <select name="unit" id="unit" formControlName="unit" style="width: 50px;">
+                        <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption }}
+                        </option>
+                    </select>
+                </span>
+            </form>
+        </div>
+
+
+        <div *ngIf="enableIndividualMarginCheckbox.value"
+            style="display: flex; flex-direction: column; align-items: center; max-width: 400px; margin: 0 auto;">
+
+            <form [formGroup]="marginOptions">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                    <label for="unit" style="white-space: nowrap;">Unit:</label>
+                    <select name="unit" id="unit" formControlName="unit" style="flex: 1; min-width: 50px;">
+                        <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption }}</option>
+                    </select>
+                </div>
+            </form>
+
+            <form [formGroup]="individualMarginOptions">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; width: 100%;">
+                    <div>
+                        <label for="top">Top</label><br>
+                        <input type="number" id="top" name="top" min="0" formControlName="top" style="width: 70%;">
+                    </div>
+                    <div>
+                        <label for="right">Right</label><br>
+                        <input type="number" id="right" name="right" min="0" formControlName="right"
+                            style="width: 70%;">
+                    </div>
+                    <div>
+                        <label for="bottom">Bottom</label><br>
+                        <input type="number" id="bottom" name="bottom" min="0" formControlName="bottom"
+                            style="width: 70%;">
+                    </div>
+                    <div>
+                        <label for="left">Left</label><br>
+                        <input type="number" id="left" name="left" min="0" formControlName="left" style="width: 70%;">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </mat-list>
+</mat-card>
+<br>
+<br>
+<br>
+<br>

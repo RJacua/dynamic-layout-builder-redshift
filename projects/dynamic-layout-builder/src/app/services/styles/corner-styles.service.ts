@@ -13,6 +13,10 @@ export class CornerStylesService {
 
   readonly stylesSvc = inject(StylesService);
 
+  readonly defaultEnabler: Enablers = {
+    enableIndividualCorner: false,
+  }
+
   readonly defaultCornerStyles: Styles = {
     ['border-radius']: '0px',
   };
@@ -32,7 +36,7 @@ export class CornerStylesService {
     console.log("AQUI", generalRadius)
     if(!enableIndividualCorner) return  
     if (cornerOptions.topLeft.value === cornerOptions.topRight.value && cornerOptions.topRight.value === cornerOptions.bottomLeft.value && cornerOptions.bottomLeft.value === cornerOptions.bottomRight.value && cornerOptions.topLeft.value === 0) {
-      console.log("tudo zero");
+      console.log("tudo zero", cornerOptions.topLeft.value);
 
       this.stylesSvc.updateSelectedNodeStyle('border-top-left-radius', (generalRadius ?? 0) + 'px');
       cornerOptions.topLeft.value = (generalRadius ?? 0);
@@ -51,17 +55,6 @@ export class CornerStylesService {
   setStrokeRadius(strokeRadius: number) {
     // this.strokeRadiusSubject.next(strokeRadius);
     this.stylesSvc.updateSelectedNodeStyle('border-radius', strokeRadius.toString() + 'px');
-
-    // Atualiza os valores individuais com base no geral
-    // this.setTopLeft(strokeRadius);
-    // this.setTopRight(strokeRadius);
-    // this.setBottomLeft(strokeRadius);
-    // this.setBottomRight(strokeRadius);
-
-    // this.topLeftSubject.next(strokeRadius);
-    // this.topRightSubject.next(strokeRadius);
-    // this.bottomLeftSubject.next(strokeRadius);
-    // this.bottomRightSubject.next(strokeRadius);
   }
   setTopLeft(topLeft: number) {
     // this.topLeftSubject.next(topLeft);

@@ -76,14 +76,7 @@ export class ContainerComponent
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = 'container';
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: ContainerData = {
-    id: crypto.randomUUID().split('-')[0],
-    parentId: 'canvas',
-    type: 'container',
-    style: {},
-    enabler: {},
-    children: [],
-  };
+  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', type: 'container', style: {}, enabler: {}, children: [] };
   @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
@@ -91,8 +84,10 @@ export class ContainerComponent
       const node = this.nodeSignal();
       const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
+
       untracked(() => {
         if (node) {
+          this.processContainerStyle(node);
           this.processContainerStyle(node);
         }
       });
@@ -143,6 +138,8 @@ export class ContainerComponent
   nodeSignal: any;
 
   dynamicStyle: WritableSignal<any> = signal(null);
+  internalStyle: WritableSignal<any> = signal(null);
+  externalStyle: WritableSignal<any> = signal(null);
 
   //PASSAR PARA DRAG AND DROP SVC
   lastPointerX = this.dragDropSvc.lastPointerX;
@@ -166,13 +163,16 @@ export class ContainerComponent
 
   processContainerStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
-    this.dynamicStyle.update(() =>
-      this.enablerSvc.changeStylesByEnablers(
-        this.dynamicStyle(),
-        node.data.enabler,
-        node.data.type
-      )()
-    );
+    const finalStyle = this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)()
+    this.dynamicStyle.set(finalStyle);
+
+    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
+    this.internalStyle.set(inner);
+    this.externalStyle.set(outer);
+    
+    console.log("inner", inner);
+    console.log("outer", outer);
+
   }
 
   onElementHover(event: MouseEvent) {

@@ -5,16 +5,20 @@ import { BackgroundStylesOptionsComponent } from './background-styles-options/ba
 import { TextStylesOptionsComponent } from './text-styles-options/text-styles-options.component';
 import { BorderStylesOptionsComponent } from './border-styles-options/border-styles-options.component';
 import { CornerStylesOptionsComponent } from './corner-styles-options/corner-styles-options.component';
+import { PaddingStylesOptionsComponent } from './padding-styles-options/padding-styles-options.component';
+import { MarginStylesOptionsComponent } from "./margin-styles-options/margin-styles-options.component";
 
 @Component({
   selector: 'app-right-panel',
   imports: [
-    CommonModule, 
-    BackgroundStylesOptionsComponent, 
+    CommonModule,
+    BackgroundStylesOptionsComponent,
     TextStylesOptionsComponent,
     BorderStylesOptionsComponent,
-    CornerStylesOptionsComponent
-  ],
+    CornerStylesOptionsComponent,
+    PaddingStylesOptionsComponent,
+    MarginStylesOptionsComponent
+],
   templateUrl: './right-panel.component.html',
   styleUrl: './right-panel.component.scss'
 })
