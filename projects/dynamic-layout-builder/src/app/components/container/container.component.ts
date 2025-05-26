@@ -82,8 +82,7 @@ export class ContainerComponent
   constructor() {
     effect(() => {
       const node = this.nodeSignal();
-      const canvasModel = this.modelSvc.hasCanvasModelChanged();
-
+      const canvasChanged = this.modelSvc.hasCanvasModelChanged();
 
       untracked(() => {
         if (node) {
@@ -128,9 +127,6 @@ export class ContainerComponent
 
   isDragging = this.dragDropSvc.isDragging;
 
-  canvasModel = computed(() => {
-    this.modelSvc.canvasModel();
-  });
   children = signal(
     [] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
   );
@@ -140,12 +136,6 @@ export class ContainerComponent
   dynamicStyle: WritableSignal<any> = signal(null);
   internalStyle: WritableSignal<any> = signal(null);
   externalStyle: WritableSignal<any> = signal(null);
-
-  //PASSAR PARA DRAG AND DROP SVC
-  lastPointerX = this.dragDropSvc.lastPointerX;
-  lastPointerY = this.dragDropSvc.lastPointerY;
-  pointerInternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
-  pointerExternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
 
   ngOnInit() {
     this.id = this.data.id;
@@ -169,10 +159,6 @@ export class ContainerComponent
     const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
     this.internalStyle.set(inner);
     this.externalStyle.set(outer);
-    
-    console.log("inner", inner);
-    console.log("outer", outer);
-
   }
 
   onElementHover(event: MouseEvent) {

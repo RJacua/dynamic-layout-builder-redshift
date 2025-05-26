@@ -32,7 +32,7 @@ export class MarginStyleService {
       // console.log("AQUI", generalmargin)
       if (!enableIndividualMargin) return
       if (individualMarginOptions.top.value === individualMarginOptions.right.value && individualMarginOptions.right.value === individualMarginOptions.bottom.value && individualMarginOptions.bottom.value === individualMarginOptions.left.value && individualMarginOptions.top.value === 0 ) {
-        console.log("tudo zero", individualMarginOptions.top.value);
+        // console.log("tudo zero", individualMarginOptions.top.value);
   
         this.stylesSvc.updateSelectedNodeStyle('margin-top', (generalMargin ?? 0) + (unit ?? this.defaultUnit));
         individualMarginOptions.top.value = (generalMargin ?? 0);

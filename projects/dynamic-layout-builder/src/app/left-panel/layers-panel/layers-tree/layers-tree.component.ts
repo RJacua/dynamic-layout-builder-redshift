@@ -32,8 +32,10 @@ export class LayersTreeComponent {
       const data = this.data;
       const lastAddedId = this.modelSvc.lastAddedNodeId();
 
-      untracked(() =>
-        this.expandNewNodeParents(lastAddedId)
+      untracked(() => {
+        this.expandNewNodeParents(lastAddedId);
+        this.expandNewNodeParents(this.selectionSvc.selectedElementId());
+      }
       )
       // this.modelSvc.unsetLastAddedId()
     }
@@ -54,8 +56,7 @@ export class LayersTreeComponent {
 
   childrenAccessor = (node: any) => node?.data.children || [];
 
-  isExpanded = signal(new Set<string>());
-
+  isExpanded = this.modelSvc.expandedNodes;
   toggleNode(nodeId: string) {
     const expanded = this.isExpanded();
     if (expanded.has(nodeId)) {
@@ -117,8 +118,12 @@ export class LayersTreeComponent {
         this.selectionSvc.hoverById(id);
       }
     }
-    // console.log("selected: ", this.selectionSvc.selectedElementId());
-    // console.log("hovered: ", this.selectionSvc.hoveredElementId());
+    console.log("hovered: ", this.selectionSvc.hoveredElementId());
+
+    const dataId = el.getAttribute('data-id');
+    if (this.isDragging() && dataId) {
+      this.expandNewNodeParents(dataId)
+    }
   }
 
   onElementMouseLeave(event: MouseEvent) {

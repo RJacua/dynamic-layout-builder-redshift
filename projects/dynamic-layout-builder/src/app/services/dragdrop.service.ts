@@ -2,7 +2,7 @@ import { inject, Injectable, Signal, signal, WritableSignal } from '@angular/cor
 import { ModelService } from './model.service';
 import { SelectionService } from './selection.service';
 import { CdkDragDrop, CdkDragMove } from '@angular/cdk/drag-drop';
-import { AtomicElementData, Canvas, ContainerData, LayoutElement, PointerResult } from '../interfaces/layout-elements';
+import { AtomicElementData, ContainerData, LayoutElement, PointerResult } from '../interfaces/layout-elements';
 
 @Injectable({
   providedIn: 'root',
@@ -76,7 +76,6 @@ export class DragDropService {
   }
 
   onDragMoved(event: CdkDragMove<any>) {
-
     this.lastPointerX = event.pointerPosition.x;
     this.lastPointerY = event.pointerPosition.y;
     this.dropTarget = this.hoveredElementId();
@@ -91,21 +90,13 @@ export class DragDropService {
 
       const id = el.getAttribute('data-id') ?? 'canvas';
 
-
       let dropListItems;
-      let parent = this.modelSvc.getNodeById(this.hoveredNode().data?.parentId);
+      let parent = this.modelSvc.getNodeById(this.hoveredNode().data.parentId) ?? this.modelSvc.canvas();
       let parentAlign = 'column';
 
-      if (this.hoveredNode().data?.type !== 'container') {
-        if (parent.data.type === 'container') {
+      if (this.hoveredNode().data.type !== 'container') {
           dropListItems = parent.data.children.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
-          // console.log(dropListItems)
           parentAlign = parent.data.style["flex-direction"];
-        }
-        else {
-          parentAlign = 'column';
-          dropListItems = this.modelSvc.canvasModel().filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
-        }
 
         this.dropIndex.set(dropListItems.findIndex((item: LayoutElement<any>) => item.data.id === id) + 1);
 
@@ -116,15 +107,13 @@ export class DragDropService {
       else {
         if (this.pointerInsideRelativePosition().center) {
 
-          dropListItems = this.hoveredNode().data?.children.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
+          dropListItems = this.hoveredNode().data.children.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
           if ((this.hoveredNode().data.style["flex-direction"] === 'column' && this.pointerInsideRelativePosition().top) || (this.hoveredNode().data.style["flex-direction"] === 'row' && this.pointerInsideRelativePosition().left) && this.dropIndex() > 0) {
             this.dropIndex.set(0);
           }
           else this.dropIndex.set(-1);
         }
         else {
-          if ('data' in parent) {
-
             parentAlign = parent.data.style["flex-direction"];
             this.dropTarget = parent.data.id;
             dropListItems = parent.data.children.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId());
@@ -132,20 +121,8 @@ export class DragDropService {
             if ((parentAlign === 'column' && this.pointerInsideRelativePosition().top) || (parentAlign === 'row' && this.pointerInsideRelativePosition().left) && this.dropIndex() > 0) {
               this.dropIndex.update(() => this.dropIndex() - 1);
             }
-          }
-          else {
-            this.dropTarget = 'canvas';
-            parentAlign = 'column';
-            dropListItems = parent.filter((el: LayoutElement<any>) => el.data.id !== this.selectionSvc.selectedElementId);
-            this.dropIndex.set(-1);
-          }
         }
-
-
       }
-
-      // console.log(this.dropIndex());
-      // console.log(this.pointerInsideRelativePosition());
 
       const relativePosition = this.getPointerInternalPosition(
         el,
@@ -161,38 +138,35 @@ export class DragDropService {
   onDrop(event: CdkDragDrop<any>) {
     this.isDragging.set(false);
     const draggedId = event.item.element.nativeElement.getAttribute('data-id');
-    const dropTargetId = event.container.element.nativeElement.getAttribute('data-id');
+    // const dropTargetId = event.container.element.nativeElement.getAttribute('data-id');
+    this.dropTarget = this.hoveredElementId();
     console.log(this.dropTarget);
+    console.log(this.hoveredElementId());
 
     if (!this.dropTarget) return
     if (!('children' in this.selectionSvc.selectedNode().data) && this.dropTarget === 'canvas') return
-
 
     this.modelSvc.moveNodeTo(
       this.selectionSvc.selectedElementId(),
       this.dropTarget,
       this.dropIndex()
     );
-    if (draggedId && dropTargetId) {
-      // this.modelSvc.moveNodeTo(draggedId, dropTargetId, index);
-    }
-    // this.modelSvc.moveNodeTo(draggedId!, dropTargetId!, index);
   }
 
 
   dropIndicator(nodeToStyle: Signal<LayoutElement<ContainerData | AtomicElementData>>): string {
     if (!this.isDragging()) return '';
+    
+    let containerAlign = this.modelSvc.getNodeById(nodeToStyle().data.parentId).data?.style["flex-direction"] ?? 'column';
 
-    let containerAlign = this.modelSvc.getNodeById(nodeToStyle().data.parentId)?.data?.style["flex-direction"] ?? 'column';
-
-    if (!('children' in nodeToStyle().data) && this.hoveredElementId() === 'canvas') return '';
+    if (this.selectionSvc.selectedNode().data.type !== 'container' && this.hoveredElementId() === 'canvas') return '';
 
     if (('children' in this.hoveredNode().data) && (this.hoveredNode().data.children.length === 0 || (this.hoveredNode().data.children.length === 1) && this.hoveredElementId() === this.selectionSvc.selectedNode().data.parentId) && this.pointerInsideRelativePosition().center) {
       return 'insideDrop';
     }
 
-    if (('children' in this.hoveredNode().data) && this.hoveredNode().data.children.length > 0 && this.pointerInsideRelativePosition().center) {
-      containerAlign = this.hoveredNode().data?.style["flex-direction"] ?? containerAlign;
+    if ((this.hoveredNode().data.type === 'container') && this.hoveredNode().data.children.length > 0 && this.pointerInsideRelativePosition().center) {
+      containerAlign = this.hoveredNode().data.style["flex-direction"] ?? containerAlign;
       if (containerAlign === 'column') {
         if (this.pointerInsideRelativePosition().top) {
           'insideTopDrop';
@@ -211,7 +185,7 @@ export class DragDropService {
       }
     }
 
-    containerAlign = nodeToStyle().data?.style["flex-direction"] ?? containerAlign;
+    containerAlign = nodeToStyle().data.style["flex-direction"] ?? containerAlign;
 
     if (containerAlign === 'column') {
       if (this.pointerInsideRelativePosition().top) {
@@ -238,7 +212,7 @@ export class DragDropService {
       }
     }
 
-    return '';;
+    return '';
   }
 
 
