@@ -62,7 +62,7 @@ export class PaddingStylesOptionsComponent {
         this.paddingStylesSvc.setAllMissingStyles(this.defaultIndividualPaddingStyles, node.data.style);
         this.paddingStylesSvc.setAllMissingEnablers(this.defaultEnabler, node.data.enabler);
       })
-      console.log(node.data.enabler)
+      // console.log(node.data.enabler)
 
       this.paddingOptions.controls.unit.setValue(node.data.style.padding.replace(/[0-9.-]/g, '') ?? this.defaultUnit, { emitEvent: false });
       this.paddingOptions.controls.padding.setValue(parseInt(node.data.style.padding) ?? parseInt(this.defaultPaddingStyles.padding!), { emitEvent: false });
@@ -117,7 +117,7 @@ export class PaddingStylesOptionsComponent {
       .pipe(distinctUntilChanged())
       .subscribe(([paddings, unit]) => {
         // Verifica se todos os valores estão definidos
-        console.log(this.paddingOptions.controls.padding.value)
+        // console.log(this.paddingOptions.controls.padding.value)
         if (paddings && unit && Object.values(paddings).every(v => v !== null)) {
           this.paddingStylesSvc.setIndividualPaddings(paddings, unit);
         }

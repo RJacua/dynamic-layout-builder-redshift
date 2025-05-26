@@ -20,11 +20,14 @@ export class ModelService {
 
   canvasStyle = signal<(Styles)>({['flex-direction']: 'column'});
 
+  expandedNodes = signal<Set<String>>(new Set());
+
   canvas:Signal<Canvas<CanvasData>> = computed(() => {
     return {data: {
       id: 'canvas',
       type: 'canvas',
       children: this.canvasModel(),
+      expandedNodes: this.expandedNodes(),
       style: this.canvasStyle(),
     }};
   });

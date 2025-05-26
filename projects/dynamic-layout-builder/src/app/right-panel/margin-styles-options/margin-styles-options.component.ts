@@ -63,7 +63,7 @@ export class MarginStylesOptionsComponent {
         this.marginStylesSvc.setAllMissingStyles(this.defaultIndividualMarginStyles, node.data.style);
         this.marginStylesSvc.setAllMissingEnablers(this.defaultEnabler, node.data.enabler);
       })
-      console.log(node.data.enabler)
+      // console.log(node.data.enabler)
 
       this.marginOptions.controls.unit.setValue(node.data.style.margin.replace(/[0-9.-]/g, '') ?? this.defaultUnit, { emitEvent: false });
       this.marginOptions.controls.margin.setValue(parseInt(node.data.style.margin) ?? parseInt(this.defaultMarginStyles.margin!), { emitEvent: false });
@@ -118,7 +118,7 @@ ngAfterViewInit() {
       .pipe(distinctUntilChanged())
       .subscribe(([margins, unit]) => {
         // Verifica se todos os valores estão definidos
-        console.log(this.marginOptions.controls.margin.value)
+        // console.log(this.marginOptions.controls.margin.value)
         if (margins && unit && Object.values(margins).every(v => v !== null)) {
           this.marginStylesSvc.setIndividualMargins(margins, unit);
         }

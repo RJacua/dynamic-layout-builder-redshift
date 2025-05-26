@@ -138,8 +138,10 @@ export class DragDropService {
   onDrop(event: CdkDragDrop<any>) {
     this.isDragging.set(false);
     const draggedId = event.item.element.nativeElement.getAttribute('data-id');
-    const dropTargetId = event.container.element.nativeElement.getAttribute('data-id');
+    // const dropTargetId = event.container.element.nativeElement.getAttribute('data-id');
+    this.dropTarget = this.hoveredElementId();
     console.log(this.dropTarget);
+    console.log(this.hoveredElementId());
 
     if (!this.dropTarget) return
     if (!('children' in this.selectionSvc.selectedNode().data) && this.dropTarget === 'canvas') return
@@ -149,8 +151,6 @@ export class DragDropService {
       this.dropTarget,
       this.dropIndex()
     );
-    if (draggedId && dropTargetId) {
-    }
   }
 
 

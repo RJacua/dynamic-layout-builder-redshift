@@ -63,7 +63,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 })
 export class CanvasComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], style: {}};
+  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {}};
   @Input() editMode: boolean = true;
 
   readonly generalSvc = inject(GeneralFunctionsService);

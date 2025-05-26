@@ -49,6 +49,8 @@ export interface CanvasData {
 
   children: LayoutElement<any>[];
 
+  expandedNodes:Set<String>;
+
   style: Styles;
 
 }
