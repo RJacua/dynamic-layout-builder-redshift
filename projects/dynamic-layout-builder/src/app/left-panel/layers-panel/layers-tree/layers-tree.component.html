@@ -9,7 +9,7 @@
   <mat-nested-tree-node 
     *matTreeNodeDef="let node"
     cdkDropList
-    (cdkDropListDropped)="onDrop()"
+    (cdkDropListDropped)="onDrop($event)"
     [cdkDropListData]="[data]"
     [attr.data-id]="node.data.id"
   >
@@ -17,7 +17,7 @@
     class="node-line" 
     [class.selected]="isSelected()"
       cdkDrag
-      (cdkDragStarted)="onDrag($event)"
+      (cdkDragMoved)="onDragMoved($event)"
       [attr.data-id]="node.data.id"
       [class.tree-node]="node.data.type == 'container'"
       [class.node-item]="node.data.type !== 'container' || !node.data.children.length"
