@@ -1,30 +1,41 @@
 <!-- <div class="canvas" [ngStyle]="dynamicStyles$ | async"  -->
-<div [class.canvas-edit]="editMode" [ngStyle]="" (click)="onElementClick($event)">
+  <div
+    [class.canvas-edit]="editMode"
+    (click)="onElementClick($event)"
+    cdkDropList
+    (cdkDropListDropped)="onDrop($event)"
+    [cdkDropListData]="onlyContainers()"
+    (cdkDropListEntered)="onEnter($event)"
+    [attr.data-id]="data.id"
+    [class.noDropZone]="noDrop()"
+  >
     <div class="align-center">
+      @for (node of onlyContainers(); track node.data.id) { 
+        <!-- @switch
+      (node.data.type) { @case ('container') {
+      <app-container [data]="node.data" [editMode]="editMode" />
+      } @default { } }  -->
+      <app-container [data]="node.data" [editMode]="editMode" />
+    }
 
-        @for (node of canvasModel(); track node.data.id) {
-        @switch (node.data.type) {
-        @case ('container') {
-        <app-container [data]="node.data" [editMode]="editMode" />
-        }
-        @default {
-        }
-        }
-        }
-
-        <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
+      <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
     </div>
 
     @if (editMode) {
     <div class="align-center">
-        <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="New Container"
-            (click)="onPlusClick()"></app-menu>
-        <!-- <button class="round-button" (click)="addContainer()">A</button>-->
-        <button class="round-button" (click)="renderFromModel()">M</button>
-        <button class="round-button" (click)="goToRender()">Preview</button>
+      <app-menu
+        [trigger]="'+'"
+        [data]="initialData"
+        [isRootNode]="true"
+        matTooltip="New Container"
+        (click)="onPlusClick()"
+      ></app-menu>
+      <!-- <button class="round-button" (click)="addContainer()">A</button>-->
+      <button class="round-button" (click)="renderFromModel()">M</button>
+      <button class="round-button" (click)="goToRender()">Preview</button>
     </div>
     }
-</div>
+  </div>
 <!-- <pre>{{btoa()}}</pre> -->
 <!-- <pre>--------------------</pre> -->
 <!-- <pre>{{decoded()}}</pre> -->

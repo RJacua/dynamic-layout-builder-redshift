@@ -5,7 +5,7 @@ import { ComponentsService } from '../../services/components.service';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
 import { BorderStylesService } from '../../services/styles/border-styles.service';
-import { CdkDrag, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragEnter, CdkDragMove, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
@@ -129,5 +129,11 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     // console.log("handle click: ",this.selectionSvc.isDragging());
     this.selectionSvc.selectById(this.id, true);
   }
+
+  onDragMoved(event: CdkDragMove<any>) {
+    this.dragDropSvc.onDragMoved(event);
+  }
+
+  dropIndicatorStyle = computed(() => (!this.isFocused() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
 
 }

@@ -200,7 +200,6 @@ export class StylesService {
           headerSize: value,
         }
       };
-console.log(updatedModel)
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
     }
   }

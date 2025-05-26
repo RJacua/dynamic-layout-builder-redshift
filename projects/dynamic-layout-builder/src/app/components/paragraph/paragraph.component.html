@@ -1,7 +1,11 @@
-<div class="main paragraph" [style]="externalStyle()" tabindex="0" [class.border]="editMode"
-    [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" cdkDrag [cdkDragDisabled]="!editMode">
+<div [class]="'main paragraph ' + dropIndicatorStyle()" [style]="externalStyle()" tabindex="0" [class.border]="editMode"
+    [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" [cdkDragDisabled]="!editMode"
+    [attr.data-id]="data.id" cdkDrag
+    (cdkDragMoved)="onDragMoved($event)"
+    >
     <!-- <br> -->
     @if(editMode){
+    <div class="drag-placeholder" *cdkDragPlaceholder></div>
     <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
     }
     <div [style]="internalStyle()">
