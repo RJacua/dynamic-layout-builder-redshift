@@ -172,39 +172,39 @@ mat-card {
 }
 
 .topHalf {
-    box-shadow: 0px -10px 0px #2196f377 !important;
+    box-shadow: 0px -10px 0px #2196f3 !important;
 }
 .bottomHalf {
-    box-shadow: 0px 10px 0px #2196f377 !important;
+    box-shadow: 0px 10px 0px #2196f3 !important;
 }
 .rightHalf {
-    box-shadow: 10px 0px 0px #2196f377 !important;
+    box-shadow: 10px 0px 0px #2196f3 !important;
 }
 .leftHalf {
-    box-shadow: -10px 0px 0px #2196f377 !important;
+    box-shadow: -10px 0px 0px #2196f3 !important;
 }
 
 .insideTopDrop {
-    box-shadow: inset 0px 10px 0px #2196f3, inset 0px 25px 0px #2196f377 !important;
+    box-shadow: inset 0px 5px 0px #2196f3, inset 0px 15px 0px #2196f377 !important;
 }
 .insideBottomDrop {
-    box-shadow: inset 0px -10px 0px #2196f3, inset 0px -25px 0px #2196f377 !important;
+    box-shadow: inset 0px -5px 0px #2196f3, inset 0px -15px 0px #2196f377 !important;
 
 }
 .insideLeftDrop {
-    box-shadow: inset 10px 0px 0px #2196f3, inset 25px 0px 0px #2196f377 !important;
+    box-shadow: inset 5px 0px 0px #2196f3, inset 15px 0px 0px #2196f377 !important;
 }
 .insideRightDrop {
-    box-shadow: inset -10px 0px 0px #2196f3, inset -25px 0px 0px #2196f377 !important;
+    box-shadow: inset -5px 0px 0px #2196f3, inset -15px 0px 0px #2196f377 !important;
 }
 
 .insideDrop {
-    box-shadow: inset 10px 10px 0px #2196f3, inset -10px -10px 0px #2196f3 !important;
+    box-shadow: inset 5px 5px 0px #2196f3, inset -5px -5px 0px #2196f3 !important;
 }
 
 .noDropZone {
     cursor: not-allowed;
-    box-shadow: -10px -10px 0px #F1968377, 10px 10px 0px #F1968377 !important;
+    box-shadow: -5px -5px 0px #ff4929, 5px 5px 0px #ff4929 !important;
 }
 
 .custom-placeholder {

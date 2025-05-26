@@ -48,8 +48,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     });
     effect(() => {
       const node = this.nodeSignal();
-      // const canvasModel = this.modelSvc.canvasModel();
-      const canvasModel = this.modelSvc.hasCanvasModelChanged();
+      const canvasChanged = this.modelSvc.hasCanvasModelChanged();
 
       untracked(() => {
         if (node) {

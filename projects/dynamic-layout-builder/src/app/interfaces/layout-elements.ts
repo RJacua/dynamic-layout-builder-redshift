@@ -13,9 +13,8 @@ export interface LayoutData {
   id: string;
   parentId: string;
   type: string;
-  style: Styles; //por enquanto, depois vamos usar a interface Styles
-  enabler: Enablers; //por enquanto, depois vamos usar a interface Enablers
-
+  style: Styles;
+  enabler: Enablers;
 }
 
 
