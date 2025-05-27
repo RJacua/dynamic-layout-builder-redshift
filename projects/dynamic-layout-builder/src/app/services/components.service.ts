@@ -1,8 +1,10 @@
 import { ComponentRef, inject, Injectable, Signal, ViewContainerRef, WritableSignal } from '@angular/core';
 import { ComponentRegistryService } from './component-registry.service';
-import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
+import { AtomicElementData, ContainerData, LayoutElement, Styles } from '../interfaces/layout-elements';
 import { LayoutData } from '../interfaces/layout-elements'
 import { ModelService } from './model.service';
+import { EnablerService } from './styles/enabler.service';
+import { GeneralFunctionsService } from './general-functions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,8 @@ import { ModelService } from './model.service';
 export class ComponentsService {
   readonly registry = inject(ComponentRegistryService);
   readonly modelSvc = inject(ModelService);
+  readonly enablerSvc = inject(EnablerService);
+  readonly generalSvc = inject(GeneralFunctionsService);
   private components: ComponentRef<any>[] = [];
 
   // addLayoutElement(componentType: string, containerDiv: ViewContainerRef, parentId: string, componentData?: LayoutData): LayoutElement<any> {
@@ -42,8 +46,22 @@ export class ComponentsService {
 
   // }
 
+  processComponentStyle(node: any, dynamicStyle: WritableSignal<Styles>, internalStyle: WritableSignal<any>, externalStyle: WritableSignal<any>) {
+    dynamicStyle.set(node.data.style);
+    const finalStyle = this.enablerSvc.changeStylesByEnablers(dynamicStyle(), (node.data.enabler), node.data.type)()
+    dynamicStyle.set(finalStyle);
+
+    const filteredStyles = this.generalSvc.filterStyles(dynamicStyle());
+    // console.log("filtered: ", filteredStyles())
+
+    const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
+    internalStyle.set(inner);
+    externalStyle.set(outer);
+  }
+
+
   renderCanvasFromModel(canvasModel: LayoutElement<ContainerData>[], containerDiv: ViewContainerRef): void {
-    canvasModel.map((cc) => 
+    canvasModel.map((cc) =>
       this.addComponent('container', containerDiv, cc.data.id, 'canvas', cc.data)
     )
   }

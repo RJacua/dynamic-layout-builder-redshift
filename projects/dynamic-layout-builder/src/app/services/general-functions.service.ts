@@ -45,7 +45,7 @@ export class GeneralFunctionsService {
     const filtererStyles: Styles = {};
 
     Object.entries(styles).forEach((attr) => {
-      console.log(attr[0], attributesToFilter[0])
+      // console.log(attr[0], attributesToFilter[0])
       if (attributesToFilter.includes(attr[0])) {
         if (parseInt(attr[1]) !== 0)
           this.updateLayerStyle(filtererStyles, attr[0], attr[1])

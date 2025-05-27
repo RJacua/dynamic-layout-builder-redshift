@@ -149,13 +149,13 @@ export class DimensionStylesOptionsComponent {
       this.dimensionOptions.controls.hUnit.valueChanges.pipe(startWith(this.node.data.style.height === 'auto' ? this.defaultUnit : (this.node.data.style.height?.replace(/[0-9.-]/g, '') ?? this.defaultUnit))),
     ])
       .pipe(
-        tap(([height, unit]) => console.log("tap", height, unit)),
+        // tap(([height, unit]) => console.log("tap", height, unit)),
         distinctUntilChanged()
       )
       .subscribe(([height, unit]) => {
         if ((height || height == 0) && unit && Object.values(height).every(v => v !== null)) {
-          console.log(height)
-          console.log(unit)
+          // console.log(height)
+          // console.log(unit)
           if (!this.dimensionOptions.controls.heightAuto.value) {
             this.dimensionStylesSvc.setHeight(height, unit);
           }
@@ -167,13 +167,13 @@ export class DimensionStylesOptionsComponent {
       this.dimensionOptions.controls.hUnit.valueChanges.pipe(startWith(this.node.data.style.width === 'auto' ? this.defaultUnit : (this.node.data.style.width?.replace(/[0-9.-]/g, '') ?? this.defaultUnit))),
     ])
       .pipe(
-        tap(([width, unit]) => console.log("tap", width, unit)),
+        // tap(([width, unit]) => console.log("tap", width, unit)),
         distinctUntilChanged()
       )
       .subscribe(([width, unit]) => {
         if ((width || width == 0) && unit && Object.values(width).every(v => v !== null)) {
-          console.log(width)
-          console.log(unit)
+          // console.log(width)
+          // console.log(unit)
           if (!this.dimensionOptions.controls.widthAuto.value) {
             this.dimensionStylesSvc.setWidth(width, unit);
           }

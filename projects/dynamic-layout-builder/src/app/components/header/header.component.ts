@@ -67,7 +67,8 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       untracked(() => {
         if (node) {
           this.dynamicHeader.set(node.data.headerSize);
-          this.processContainerStyle(node);
+          // this.processContainerStyle(node);
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
         }
       })
 
@@ -113,17 +114,17 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   }
 
-  processContainerStyle(node: any) {
-    this.dynamicStyle.set(node.data.style);
-    this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
+  // processContainerStyle(node: any) {
+  //   this.dynamicStyle.set(node.data.style);
+  //   this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
   
-    const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
-    console.log("filtered: ", filteredStyles())
+  //   const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
+  //   console.log("filtered: ", filteredStyles())
 
-    const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
-    this.internalStyle.set(inner);
-    this.externalStyle.set(outer);
-  }
+  //   const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
+  //   this.internalStyle.set(inner);
+  //   this.externalStyle.set(outer);
+  // }
 
 
   ngAfterViewInit(): void {

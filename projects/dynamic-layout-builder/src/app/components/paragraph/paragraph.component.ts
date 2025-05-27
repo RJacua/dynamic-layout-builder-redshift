@@ -53,7 +53,8 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
       untracked(() => {
         if (node) {
-          this.processContainerStyle(node);
+          // this.processContainerStyle(node);
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
         }
       })
 
@@ -95,17 +96,17 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
   }
 
-  processContainerStyle(node: any) {
-    this.dynamicStyle.set(node.data.style);
-    this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
+  // processContainerStyle(node: any) {
+  //   this.dynamicStyle.set(node.data.style);
+  //   this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
   
-    const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
-    console.log("filtered: ", filteredStyles())
+  //   const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
+  //   console.log("filtered: ", filteredStyles())
 
-    const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
-    this.internalStyle.set(inner);
-    this.externalStyle.set(outer);
-  }
+  //   const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
+  //   this.internalStyle.set(inner);
+  //   this.externalStyle.set(outer);
+  // }
 
   isFocused = computed(() => {
     return this.id === this.selectionSvc.selectedElementId();

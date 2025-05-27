@@ -87,8 +87,9 @@ export class ContainerComponent
 
       untracked(() => {
         if (node) {
-          this.processContainerStyle(node);
-          this.processContainerStyle(node);
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
+          // this.processContainerStyle(node);
+          // this.processContainerStyle(node);
         }
       });
     });
@@ -158,25 +159,26 @@ export class ContainerComponent
 
     this.initialData = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
 
-    this.processContainerStyle(this.nodeSignal());
+    // this.processContainerStyle(this.nodeSignal());
+    // this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
   }
 
-  processContainerStyle(node: any) {
-    this.dynamicStyle.set(node.data.style);
-    const finalStyle = this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)()
-    this.dynamicStyle.set(finalStyle);
+  // processContainerStyle(node: any) {
+  //   this.dynamicStyle.set(node.data.style);
+  //   const finalStyle = this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)()
+  //   this.dynamicStyle.set(finalStyle);
 
-    const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
-    console.log("filtered: ", filteredStyles())
+  //   const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
+  //   console.log("filtered: ", filteredStyles())
 
-    const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
-    this.internalStyle.set(inner);
-    this.externalStyle.set(outer);
+  //   const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
+  //   this.internalStyle.set(inner);
+  //   this.externalStyle.set(outer);
     
-    // console.log("inner", inner);
-    // console.log("outer", outer);
+  //   // console.log("inner", inner);
+  //   // console.log("outer", outer);
 
-  }
+  // }
 
   onElementHover(event: MouseEvent) {
     let el = event.target as HTMLElement;
