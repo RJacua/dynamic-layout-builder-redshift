@@ -1,1 +1,15 @@
-<p>iframe works!</p>
+<div [class]="'main paragraph ' + dropIndicatorStyle()" [style]="externalStyle()" tabindex="0" [class.border]="editMode"
+    [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" [cdkDragDisabled]="!editMode"
+    [attr.data-id]="data.id" cdkDrag
+    (cdkDragMoved)="onDragMoved($event)"
+    >
+    <!-- <br> -->
+    @if(editMode){
+    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
+    }
+    <div [style]="internalStyle()">
+        <iframe width="420" height="345" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+    </div>
+    <!-- <br> -->
+</div>

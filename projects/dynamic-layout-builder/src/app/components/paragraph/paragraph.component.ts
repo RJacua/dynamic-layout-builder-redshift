@@ -52,7 +52,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
       untracked(() => {
         if (node) {
-          this.processContainerStyle(node);
+          this.processStyle(node);
         }
       })
 
@@ -74,8 +74,6 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   alignment = signal('align-center ');
   text = signal<string>('');
   size = signal<number>(1);
-  menuIsOn = signal(false);
-  data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
   // dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
@@ -94,7 +92,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
 
   }
 
-  processContainerStyle(node: any) {
+  processStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
     this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
   
@@ -121,7 +119,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.modelSvc.removeNodeById(this.id);
   }
 
-  @Output() editingChanged = new EventEmitter<boolean>();
+  // @Output() editingChanged = new EventEmitter<boolean>();
 
   onHandleClick() {
     this.isDragging.set(true);

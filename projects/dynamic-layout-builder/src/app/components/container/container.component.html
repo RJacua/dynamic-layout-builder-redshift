@@ -19,6 +19,8 @@
     <app-header [data]="node.data" [editMode]="editMode" [attr.data-id]="node.data.id" />
     } @case ('paragraph') {
     <app-paragraph [data]="node.data" [editMode]="editMode" [attr.data-id]="node.data.id" />
+    } @case ('iframe') {
+    <app-iframe [data]="node.data" [editMode]="editMode" [attr.data-id]="node.data.id" />
     } @default { } } } @if (editMode && nodeSignal().data.children.length ===
     0){
     <p class="default-text">This Container is Empty</p>

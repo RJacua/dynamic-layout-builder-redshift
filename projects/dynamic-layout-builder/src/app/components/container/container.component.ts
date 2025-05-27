@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { ParagraphComponent } from '../paragraph/paragraph.component';
+import { IframeComponent } from '../iframe/iframe.component';
 import { ComponentsService } from '../../services/components.service';
 import {
   ContainerData,
@@ -41,12 +42,8 @@ import { NewAreaMenuService } from '../../services/new-area-menu.service';
 import {
   CdkDrag,
   CdkDragDrop,
-  CdkDragEnter,
   CdkDragMove,
-  CdkDragStart,
   DragDropModule,
-  moveItemInArray,
-  transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
@@ -58,6 +55,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
   imports: [
     HeaderComponent,
     ParagraphComponent,
+    IframeComponent,
     CommonModule,
     MatFormFieldModule,
     MatButtonModule,
