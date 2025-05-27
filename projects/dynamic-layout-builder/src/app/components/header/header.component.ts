@@ -145,6 +145,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.selectionSvc.selectById(this.id, true);
   }
 
+  onMouseUp() {
+    this.isDragging.set(false);
+  }
 
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);

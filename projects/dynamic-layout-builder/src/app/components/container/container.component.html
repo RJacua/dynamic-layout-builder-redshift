@@ -5,7 +5,7 @@
   (cdkDropListSortingDisabled)="(true)">
   @if(editMode){
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">
+  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">
     ⋮⋮
   </div>
   }

@@ -127,6 +127,10 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.selectionSvc.selectById(this.id, true);
   }
 
+  onMouseUp() {
+    this.isDragging.set(false);
+  }
+
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);
   }
