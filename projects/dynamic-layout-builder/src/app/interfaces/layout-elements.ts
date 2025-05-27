@@ -90,6 +90,10 @@ export interface Styles { //vai crescer
   // Dimension Styles
   height?: string;
   width?: string;
+  ['max-height']?: string;
+  ['max-width']?: string;
+  ['min-height']?: string;
+  ['min-width']?: string;
 
 
 

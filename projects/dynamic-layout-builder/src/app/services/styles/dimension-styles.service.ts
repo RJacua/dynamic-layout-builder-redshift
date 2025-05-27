@@ -21,9 +21,19 @@ export class DimensionStylesService {
     width: 'auto',
   };
   readonly defaultDimensionsStyles: Styles = {
-    height: '100'+ this.defaultUnit,
+    height: '100' + this.defaultUnit,
     width: '100' + this.defaultUnit,
   };
+
+  readonly defaultMaxDimensionsStyles: Styles = {
+    ['max-height']: '0' + this.defaultUnit,
+    ['max-width']: '0' + this.defaultUnit,
+  }
+
+  readonly defaultMinDimensionsStyles: Styles = {
+    ['min-height']: '0' + this.defaultUnit,
+    ['min-width']: '0' + this.defaultUnit,
+  }
 
   setAllMissingStyles(defaultStyles: Styles, currentStyles: Styles) {
     this.stylesSvc.setAllMissingStyles(defaultStyles, currentStyles)
@@ -40,9 +50,29 @@ export class DimensionStylesService {
     const value = `${height}${unit}`;
     this.stylesSvc.updateSelectedNodeStyle('height', value);
   }
-  
+
   setWidth(width: number | undefined, unit: string) {
     const value = `${width}${unit}`;
     this.stylesSvc.updateSelectedNodeStyle('width', value);
+  }
+
+  setMaxHeight(maxHeight: number | undefined, unit: string) {
+    const value = `${maxHeight}${unit}`;
+    this.stylesSvc.updateSelectedNodeStyle('max-height', value);
+  }
+
+  setMaxWidth(maxWidth: number | undefined, unit: string) {
+    const value = `${maxWidth}${unit}`;
+    this.stylesSvc.updateSelectedNodeStyle('max-width', value);
+  }
+
+  setMinHeight(minHeight: number | undefined, unit: string) {
+    const value = `${minHeight}${unit}`;
+    this.stylesSvc.updateSelectedNodeStyle('min-height', value);
+  }
+
+  setMinWidth(minWidth: number | undefined, unit: string) {
+    const value = `${minWidth}${unit}`;
+    this.stylesSvc.updateSelectedNodeStyle('min-width', value);
   }
 }

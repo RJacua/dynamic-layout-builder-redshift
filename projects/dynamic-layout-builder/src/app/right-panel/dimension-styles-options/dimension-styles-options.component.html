@@ -42,42 +42,80 @@
                 </div>
             </form>
         </div>
+        <br>
+        <div>
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Maximum</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <form [formGroup]="maxDimensionOptions">
+                        <label for="maxHeight">Max Height:</label><br>
+                        <div>
+                            <input type="number" id="maxHeight" name="maxHeight" min="0" formControlName="maxHeight"
+                                style="width: 50%">
+                            <span>
+                                <select name="maxHUnit" id="maxHUnit" formControlName="maxHUnit" style="width: 50px;">
+                                    <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                        }}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
 
+                        <label for="width">Max Width:</label><br>
+                        <div>
+                            <input type="number" id="maxWidth" name="maxWidth" min="0" formControlName="maxWidth"
+                                style="width: 50%">
+                            <span>
+                                <select name="maxWUnit" id="maxWUnit" formControlName="maxWUnit" style="width: 50px;">
+                                    <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                        }}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
+                    </form>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        <br>
+        <div>
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>Minimum</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <form [formGroup]="minDimensionOptions">
+                        <label for="minHeight">Min Height:</label><br>
+                        <div>
+                            <input type="number" id="minHeight" name="minHeight" min="0" formControlName="minHeight"
+                                style="width: 50%">
+                            <span>
+                                <select name="minHUnit" id="minHUnit" formControlName="minHUnit" style="width: 50px;">
+                                    <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                        }}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
 
-        <!-- <div *ngIf="enableIndividualPaddingCheckbox.value"
-            style="display: flex; flex-direction: column; align-items: center; max-width: 400px; margin: 0 auto;">
+                        <label for="width">Min Width:</label><br>
+                        <div>
+                            <input type="number" id="minWidth" name="minWidth" min="0" formControlName="minWidth"
+                                style="width: 50%">
+                            <span>
+                                <select name="minWUnit" id="minWUnit" formControlName="minWUnit" style="width: 50px;">
+                                    <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                        }}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
+                    </form>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
 
-            <form [formGroup]="paddingOptions">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                    <label for="unit" style="white-space: nowrap;">Unit:</label>
-                    <select name="unit" id="unit" formControlName="unit" style="flex: 1; min-width: 50px;">
-                        <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption }}</option>
-                    </select>
-                </div>
-            </form>
-
-            <form [formGroup]="individualPaddingOptions">
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; width: 100%;">
-                    <div>
-                        <label for="top">Top</label><br>
-                        <input type="number" id="top" name="top" min="0" formControlName="top" style="width: 70%;">
-                    </div>
-                    <div>
-                        <label for="right">Right</label><br>
-                        <input type="number" id="right" name="right" min="0" formControlName="right"
-                            style="width: 70%;">
-                    </div>
-                    <div>
-                        <label for="bottom">Bottom</label><br>
-                        <input type="number" id="bottom" name="bottom" min="0" formControlName="bottom"
-                            style="width: 70%;">
-                    </div>
-                    <div>
-                        <label for="left">Left</label><br>
-                        <input type="number" id="left" name="left" min="0" formControlName="left" style="width: 70%;">
-                    </div>
-                </div>
-            </form>
-        </div> -->
     </mat-list>
 </mat-card>

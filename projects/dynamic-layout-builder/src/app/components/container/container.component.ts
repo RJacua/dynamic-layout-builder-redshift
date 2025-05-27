@@ -166,7 +166,10 @@ export class ContainerComponent
     const finalStyle = this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)()
     this.dynamicStyle.set(finalStyle);
 
-    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
+    const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
+    console.log("filtered: ", filteredStyles())
+
+    const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
     this.internalStyle.set(inner);
     this.externalStyle.set(outer);
     

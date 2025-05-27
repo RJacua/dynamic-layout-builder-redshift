@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Styles } from '../interfaces/layout-elements';
 
 @Injectable({
@@ -39,6 +39,22 @@ export class GeneralFunctionsService {
     };
   }
 
+
+  filterStyles(styles: Styles) {
+    const attributesToFilter = ['max-height', 'max-width', 'min-height', 'min-width'];
+    const filtererStyles: Styles = {};
+
+    Object.entries(styles).forEach((attr) => {
+      console.log(attr[0], attributesToFilter[0])
+      if (attributesToFilter.includes(attr[0])) {
+        if (parseInt(attr[1]) !== 0)
+          this.updateLayerStyle(filtererStyles, attr[0], attr[1])
+      }
+      else
+        this.updateLayerStyle(filtererStyles, attr[0], attr[1])
+    })
+    return signal(filtererStyles);
+  }
 
   getSplitStyles(styles: Styles): { outer: Styles; inner: Styles } {
     const outer: Styles = {};

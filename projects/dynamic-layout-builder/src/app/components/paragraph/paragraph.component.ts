@@ -99,7 +99,10 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
     this.dynamicStyle.set(node.data.style);
     this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
   
-    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
+    const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
+    console.log("filtered: ", filteredStyles())
+
+    const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
     this.internalStyle.set(inner);
     this.externalStyle.set(outer);
   }
