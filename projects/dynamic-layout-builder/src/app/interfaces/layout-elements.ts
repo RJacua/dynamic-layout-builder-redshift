@@ -20,9 +20,6 @@ export interface LayoutData {
 
 export interface ParagraphData extends LayoutData {
   text?: string;
-
-  isEditing?: boolean;
-
 }
 
 export interface HeaderData extends LayoutData {
@@ -36,6 +33,11 @@ export interface ContainerData extends LayoutData {
   children?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[];
 }
 
+export interface IframeData extends LayoutData {
+
+  
+
+}
 
 export interface Canvas<T> {
   data: T;
