@@ -54,7 +54,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       untracked(() => {
         if (node) {
           // this.processContainerStyle(node);
-          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
         }
       })
 
@@ -71,6 +71,8 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly dragDropSvc = inject(DragDropService);
   readonly generalSvc = inject(GeneralFunctionsService);
 
+  private _elementRef = inject(ElementRef);
+
   id = '0';
   parentId = signal('-1');
   alignment = signal('align-center ');
@@ -84,6 +86,9 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   dynamicStyle = signal({});
   internalStyle: WritableSignal<any> = signal(null);
   externalStyle: WritableSignal<any> = signal(null);
+
+  width = signal(this._elementRef.nativeElement.getBoundingClientRect.width);
+  height = signal(this._elementRef.nativeElement.getBoundingClientRect.height);
   
   ngOnInit(): void {
     this.id = this.data.id;

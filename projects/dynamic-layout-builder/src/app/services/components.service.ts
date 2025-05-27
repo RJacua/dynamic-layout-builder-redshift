@@ -45,13 +45,13 @@ export class ComponentsService {
   //   }
 
   // }
-
-  processComponentStyle(node: any, dynamicStyle: WritableSignal<Styles>, internalStyle: WritableSignal<any>, externalStyle: WritableSignal<any>) {
+  
+  processComponentStyle(node: any, dynamicStyle: WritableSignal<Styles>, internalStyle: WritableSignal<any>, externalStyle: WritableSignal<any>, w: number, h: number) {
     dynamicStyle.set(node.data.style);
     const finalStyle = this.enablerSvc.changeStylesByEnablers(dynamicStyle(), (node.data.enabler), node.data.type)()
     dynamicStyle.set(finalStyle);
-    console.log(dynamicStyle())
-    const convertedBorderStyles = this.generalSvc.ConvertBorderRadiusStyle(dynamicStyle());
+    const convertedBorderStyles = this.generalSvc.ConvertBorderRadiusStyle(dynamicStyle(), w, h);
+    // console.log(convertedBorderStyles());
 
     const filteredStyles = this.generalSvc.filterStyles(convertedBorderStyles());
     // console.log("filtered: ", filteredStyles())
@@ -59,7 +59,7 @@ export class ComponentsService {
     const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
     internalStyle.set(inner);
     externalStyle.set(outer);
-    console.log(internalStyle())
+    // console.log(internalStyle())
   }
 
 

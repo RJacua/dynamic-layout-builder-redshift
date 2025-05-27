@@ -72,7 +72,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
   styleUrl: './container.component.scss',
 })
 export class ContainerComponent
-  implements LayoutElement<ContainerData>, OnInit {
+  implements LayoutElement<ContainerData>, OnInit, AfterViewInit {
   private _elementRef = inject(ElementRef);
 
   model = layoutModels[0]; //mock model para testes, tirar depois;
@@ -83,16 +83,18 @@ export class ContainerComponent
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {
-      const node = this.nodeSignal(); 
-      this.selectionSvc.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
-      this.selectionSvc.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
+      const node = this.nodeSignal();
+      if (this.isFocused()) {
+        this.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
+        this.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
+      }
       // const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       untracked(() => {
         if (node) {
           // console.log("b")
-          console.log(this.nodeSignal())
-          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
+          // console.log(this.nodeSignal())
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
           // this.processContainerStyle(node);
           // this.processContainerStyle(node);
         }
@@ -150,7 +152,6 @@ export class ContainerComponent
   children = signal(
     [] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
   );
-  elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
   nodeSignal: any;
 
   dynamicStyle: WritableSignal<any> = signal(null);
@@ -162,6 +163,9 @@ export class ContainerComponent
   lastPointerY = this.dragDropSvc.lastPointerY;
   pointerInternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
   pointerExternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
+
+  width = signal(this._elementRef.nativeElement.getBoundingClientRect.width);
+  height = signal(this._elementRef.nativeElement.getBoundingClientRect.height);
 
   ngOnInit() {
     this.id = this.data.id;
@@ -176,6 +180,16 @@ export class ContainerComponent
 
     // this.processContainerStyle(this.nodeSignal());
     // this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
+  }
+
+  ngAfterViewInit() {
+    this.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
+    this.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
+
+    console.log(this.width());
+
+    this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
+
   }
 
   // processContainerStyle(node: any) {

@@ -68,7 +68,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
         if (node) {
           this.dynamicHeader.set(node.data.headerSize);
           // this.processContainerStyle(node);
-          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
         }
       })
 
@@ -84,6 +84,8 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   readonly dragDropSvc = inject(DragDropService);
   readonly generalSvc = inject(GeneralFunctionsService);
 
+  private _elementRef = inject(ElementRef);
+
 
   // readonly cornerStylesSvc = inject(CornerStylesService);
 
@@ -98,6 +100,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   dynamicHeader: WritableSignal<any> = signal(null);
   internalStyle: WritableSignal<any> = signal(null);
   externalStyle: WritableSignal<any> = signal(null);
+
+  width = signal(this._elementRef.nativeElement.getBoundingClientRect.width);
+  height = signal(this._elementRef.nativeElement.getBoundingClientRect.height);
   
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');

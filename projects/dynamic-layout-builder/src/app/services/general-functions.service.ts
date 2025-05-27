@@ -41,16 +41,16 @@ export class GeneralFunctionsService {
     };
   }
 
-  ConvertBorderRadiusStyle(styles: Styles) {
+  ConvertBorderRadiusStyle(styles: Styles, width: number, height: number) {
     const convertedStyles: Styles = {};
     Object.entries(styles).forEach((attr) => {
       if (attr[0].endsWith('radius')) {
-        this.updateLayerStyle(convertedStyles, attr[0], this.computeBorderRadius(this.selectionSvc.width(), this.selectionSvc.height(), parseInt(attr[1])).toString() + 'px')
+        this.updateLayerStyle(convertedStyles, attr[0], this.computeBorderRadius(width, height, parseInt(attr[1])).toString() + 'px')
       }
       else
         this.updateLayerStyle(convertedStyles, attr[0], attr[1])
     })
-    console.log(convertedStyles)
+    // console.log(convertedStyles)
     return signal(convertedStyles);
   }
 
