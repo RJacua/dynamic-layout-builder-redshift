@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { ModelService } from './model.service';
@@ -17,9 +17,12 @@ export class SelectionService {
   readonly modelSvc = inject(ModelService);
 
   private _selectedId = signal<string>('canvas');
-
+  
   selectedElementId = computed(this._selectedId);
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
+
+  height = signal(0);
+  width = signal(0);
 
   select(element: ContainerData | AtomicElementData): void {
     if(element.type === 'canvas') {
@@ -63,5 +66,38 @@ export class SelectionService {
   unhover() {
     this._hoveredId.set('canvas');
   }
+
+  // findDeepestElementByDataIdAndTag(
+  //   id: string
+  // ) {
+  //   console.log("entrou");
+  //   const tagName = this.selectedNode().data.type === 'container' ? 'div' : this.selectedNode().data.type;
+  //   const allMatches = document.querySelectorAll<HTMLElement>(`${tagName}[data-id="${id}"]`);
+  //   if (allMatches.length === 0) {console.log('foinull'); return;}
+
+  //   let filtered = Array.from(allMatches);
+  //   filtered = filtered.filter((el) => !el.className.includes('tree-node'));
+
+  //   console.log(filtered)
+
+  //   // Ordena do mais interno (maior profundidade) para o mais externo
+  //   const sorted = filtered.sort((a, b) => {
+  //     return this.getDepth(b) - this.getDepth(a);
+  //   });
+
+  //   console.log(sorted[0]);
+
+  //   return sorted[0];
+  // }
+
+  // getDepth(el: HTMLElement): number {
+  //   let depth = 0;
+  //   let current: HTMLElement | null = el;
+  //   while (current?.parentElement) {
+  //     depth++;
+  //     current = current.parentElement;
+  //   }
+  //   return depth;
+  // }
 
 }

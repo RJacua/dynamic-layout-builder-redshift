@@ -73,6 +73,8 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 })
 export class ContainerComponent
   implements LayoutElement<ContainerData>, OnInit {
+  private _elementRef = inject(ElementRef);
+
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = 'container';
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
@@ -81,17 +83,30 @@ export class ContainerComponent
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {
-      const node = this.nodeSignal();
-      const canvasModel = this.modelSvc.hasCanvasModelChanged();
-
+      const node = this.nodeSignal(); 
+      this.selectionSvc.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
+      this.selectionSvc.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
+      // const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       untracked(() => {
         if (node) {
+          // console.log("b")
+          console.log(this.nodeSignal())
           this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
           // this.processContainerStyle(node);
           // this.processContainerStyle(node);
         }
       });
+    })
+    effect(() => {
+      this.isFocused();
+      untracked(() => {
+        if (this.isFocused()) {
+          // console.log("a")
+          // this.selectionSvc.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
+          // this.selectionSvc.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
+        }
+      })
     });
   }
 
@@ -117,7 +132,7 @@ export class ContainerComponent
     if (this.id === this.selectionSvc.hoveredElementId()) return true;
     if (!this.isDragging()) return false;
     if (this.selectionSvc.hoveredNode().data && this.selectionSvc.hoveredNode().data.type === 'container') return false;
-    return this.modelSvc.isChildOf(this.selectionSvc.hoveredElementId(),this.nodeSignal());
+    return this.modelSvc.isChildOf(this.selectionSvc.hoveredElementId(), this.nodeSignal());
   });
 
   isChildHovered = computed(() => this.modelSvc.isChildOf(this.selectionSvc.hoveredElementId(), this.nodeSignal()));
@@ -174,7 +189,7 @@ export class ContainerComponent
   //   const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
   //   this.internalStyle.set(inner);
   //   this.externalStyle.set(outer);
-    
+
   //   // console.log("inner", inner);
   //   // console.log("outer", outer);
 

@@ -164,7 +164,7 @@ export class DimensionStylesOptionsComponent {
 
     combineLatest([
       this.dimensionOptions.controls.width.valueChanges.pipe(startWith(this.node.data.style.width === 'auto' ? parseInt(this.defaultDimensionsStyles.width!) : (parseInt(this.node.data.style.width) ?? parseInt(this.defaultDimensionsStyles.width!)))),
-      this.dimensionOptions.controls.hUnit.valueChanges.pipe(startWith(this.node.data.style.width === 'auto' ? this.defaultUnit : (this.node.data.style.width?.replace(/[0-9.-]/g, '') ?? this.defaultUnit))),
+      this.dimensionOptions.controls.wUnit.valueChanges.pipe(startWith(this.node.data.style.width === 'auto' ? this.defaultUnit : (this.node.data.style.width?.replace(/[0-9.-]/g, '') ?? this.defaultUnit))),
     ])
       .pipe(
         // tap(([width, unit]) => console.log("tap", width, unit)),

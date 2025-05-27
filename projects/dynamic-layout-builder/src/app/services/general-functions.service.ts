@@ -1,10 +1,12 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Styles } from '../interfaces/layout-elements';
+import { SelectionService } from './selection.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeneralFunctionsService {
+  readonly selectionSvc = inject(SelectionService);
 
   constructor() { }
   isAttributeOf(attr: string, objToCheck: any): boolean {
@@ -39,6 +41,28 @@ export class GeneralFunctionsService {
     };
   }
 
+  ConvertBorderRadiusStyle(styles: Styles) {
+    const convertedStyles: Styles = {};
+    Object.entries(styles).forEach((attr) => {
+      if (attr[0].endsWith('radius')) {
+        this.updateLayerStyle(convertedStyles, attr[0], this.computeBorderRadius(this.selectionSvc.width(), this.selectionSvc.height(), parseInt(attr[1])).toString() + 'px')
+      }
+      else
+        this.updateLayerStyle(convertedStyles, attr[0], attr[1])
+    })
+    console.log(convertedStyles)
+    return signal(convertedStyles);
+  }
+
+
+  computeBorderRadius(width: number, height: number, normalizedValue: number): number {
+    const minDim = Math.min(width, height);
+    const radius = (normalizedValue / 100) * (minDim / 2);
+
+    // console.log(minDim, normalizedValue, radius);
+
+    return Math.floor(radius);
+  }
 
   filterStyles(styles: Styles) {
     const attributesToFilter = ['max-height', 'max-width', 'min-height', 'min-width'];

@@ -50,13 +50,16 @@ export class ComponentsService {
     dynamicStyle.set(node.data.style);
     const finalStyle = this.enablerSvc.changeStylesByEnablers(dynamicStyle(), (node.data.enabler), node.data.type)()
     dynamicStyle.set(finalStyle);
+    console.log(dynamicStyle())
+    const convertedBorderStyles = this.generalSvc.ConvertBorderRadiusStyle(dynamicStyle());
 
-    const filteredStyles = this.generalSvc.filterStyles(dynamicStyle());
+    const filteredStyles = this.generalSvc.filterStyles(convertedBorderStyles());
     // console.log("filtered: ", filteredStyles())
 
     const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
     internalStyle.set(inner);
     externalStyle.set(outer);
+    console.log(internalStyle())
   }
 
 
