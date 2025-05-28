@@ -8,6 +8,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 import { EnablerService } from '../../services/styles/enabler.service';
 import { IframeData } from '../../interfaces/layout-elements';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { sanitizeUrl } from "@braintree/sanitize-url"
 
 @Component({
   selector: 'app-iframe',
@@ -48,7 +49,18 @@ export class IframeComponent {
 
   id = '0';
 
-  src = computed(() => this._sanitizer.bypassSecurityTrustResourceUrl(this.getEmbedUrl(this.nodeSignal().data.src)));
+  src = computed(() => {
+    let url
+    try {
+      url = new URL(this.nodeSignal().data.src);
+      let sanatizedUrl = sanitizeUrl(url.toString());
+      return this._sanitizer.bypassSecurityTrustResourceUrl(sanatizedUrl);
+    }
+    catch (error) {
+
+    }
+    return '';
+  });
   parentId = signal('-1');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
   // dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
@@ -107,19 +119,19 @@ export class IframeComponent {
     this.externalStyle.set(outer);
   }
 
-  getEmbedUrl(url: string): string {
-    console.log(url);
-    url = url.split("&ab_channel")[0];
-    console.log(url);
-    if (url.includes("youtu.be")) {
-      url = url.replace("youtu.be/", "www.youtube.com/watch?v=")
-      console.log(url);
-    }
-    url = url.replace("watch?v=", "embed/");
-    console.log(url);
+  // getEmbedUrl(url: string): string {
+  //   console.log(url);
+  //   url = url.split("&ab_channel")[0];
+  //   console.log(url);
+  //   if (url.includes("youtu.be")) {
+  //     url = url.replace("youtu.be/", "www.youtube.com/watch?v=")
+  //     console.log(url);
+  //   }
+  //   url = url.replace("watch?v=", "embed/");
+  //   console.log(url);
 
-    return url;
-  }
+  //   return url;
+  // }
 
 
 

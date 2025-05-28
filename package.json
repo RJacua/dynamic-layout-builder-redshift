@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "@braintree/sanitize-url": "^7.1.1",
     "@material/dialog": "^14.0.0",
     "angular-split": "^19.0.0",
     "ngx-color-picker": "^19.0.0",
