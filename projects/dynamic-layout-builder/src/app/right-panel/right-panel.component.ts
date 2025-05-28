@@ -7,6 +7,7 @@ import { BorderStylesOptionsComponent } from './border-styles-options/border-sty
 import { CornerStylesOptionsComponent } from './corner-styles-options/corner-styles-options.component';
 import { PaddingStylesOptionsComponent } from './padding-styles-options/padding-styles-options.component';
 import { MarginStylesOptionsComponent } from "./margin-styles-options/margin-styles-options.component";
+import { IframeBasicOptionsComponent } from './iframe-basic-options/iframe-basic-options.component';
 
 @Component({
   selector: 'app-right-panel',
@@ -17,7 +18,8 @@ import { MarginStylesOptionsComponent } from "./margin-styles-options/margin-sty
     BorderStylesOptionsComponent,
     CornerStylesOptionsComponent,
     PaddingStylesOptionsComponent,
-    MarginStylesOptionsComponent
+    MarginStylesOptionsComponent,
+    IframeBasicOptionsComponent
 ],
   templateUrl: './right-panel.component.html',
   styleUrl: './right-panel.component.scss'

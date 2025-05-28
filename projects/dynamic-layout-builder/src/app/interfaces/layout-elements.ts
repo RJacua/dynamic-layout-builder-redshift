@@ -34,8 +34,7 @@ export interface ContainerData extends LayoutData {
 }
 
 export interface IframeData extends LayoutData {
-  src?: string;
-
+  src: string;
   
 }
 

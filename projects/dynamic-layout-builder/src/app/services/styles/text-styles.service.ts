@@ -51,7 +51,7 @@ export class TextStylesService {
   }
   setHeaderSize(headerSize: string) {
     // this.fontSizeSubject.next(fontSize);
-    this.stylesSvc.updateSelectedNodeHeaderSize(headerSize);
+    this.stylesSvc.updateSelectedNodeSpecificAttribute('headerSize', headerSize);
   }
 
   setAllMissing(defaultStyles: Styles, currentStyles: Styles) {

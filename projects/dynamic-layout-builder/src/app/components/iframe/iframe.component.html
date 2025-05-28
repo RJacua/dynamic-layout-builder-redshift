@@ -8,35 +8,47 @@
   [attr.data-id]="data.id"
   cdkDrag
   (cdkDragMoved)="onDragMoved($event)"
-  >
+>
   <!-- (click)="onClick()" -->
   <!-- <br> -->
   @if(editMode){
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">
+  <div
+    cdkDragHandle
+    class="drag-handle"
+    (pointerdown)="onHandleClick()"
+    (pointerup)="onMouseUp()"
+  >
     ⋮⋮
   </div>
-    <div class="main ">
-      <iframe
-        id="player"
-        [attr.data-id]="data.id"
-        [style]="internalStyle()"
-        scrolling="no"
-        frameborder="no"
-        allow="autoplay"
-        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/minh-huy-26/thunderstorm-and-rain-sounds-heavy-thunder-lightning-strike-ambience-for-relaxation&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false"
-      ></iframe>
+  @if(src() == ''){
+  <p>No Source Available</p>
+  } @else {
+  <div class="main">
+    <iframe
+      id="player"
+      [attr.data-id]="data.id"
+      [style]="internalStyle()"
+      scrolling="no"
+      frameborder="no"
+      allow="autoplay"
+      [src]="src()"
+    ></iframe>
   </div>
-} @else {
-      <iframe
-        [attr.data-id]="data.id"
-        (click)="onHandleClick()"
-        [style]="internalStyle()"
-        scrolling="no"
-        frameborder="no"
-        allow="autoplay"
-        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/minh-huy-26/thunderstorm-and-rain-sounds-heavy-thunder-lightning-strike-ambience-for-relaxation&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false"
-      ></iframe>
-  }
+  } } @else { @if(src() == ''){
+  <p>No Source Available</p>
+  } @else {
+  <div class="main">
+    <iframe
+      id="player"
+      [attr.data-id]="data.id"
+      [style]="internalStyle()"
+      scrolling="no"
+      frameborder="no"
+      allow="autoplay"
+      [src]="src()"
+    ></iframe>
+  </div>
+  } }
   <!-- <br> -->
 </div>

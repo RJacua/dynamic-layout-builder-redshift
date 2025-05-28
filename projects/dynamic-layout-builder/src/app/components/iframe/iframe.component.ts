@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, inject, input, Input, signal, untracked, viewChild, WritableSignal } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, input, Input, Sanitizer, SecurityContext, signal, untracked, viewChild, WritableSignal } from '@angular/core';
 import { ModelService } from '../../services/model.service';
 import { DragDropService } from '../../services/dragdrop.service';
 import { CdkDrag, DragDropModule, CdkDragMove } from '@angular/cdk/drag-drop';
@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { SelectionService } from '../../services/selection.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { EnablerService } from '../../services/styles/enabler.service';
+import { IframeData } from '../../interfaces/layout-elements';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-iframe',
@@ -18,8 +20,9 @@ import { EnablerService } from '../../services/styles/enabler.service';
   styleUrl: './iframe.component.scss'
 })
 export class IframeComponent {
+  private _sanitizer = inject(DomSanitizer)
   type = 'iframe';
-  @Input() data = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
+  @Input() data: IframeData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, src: '' };
   @Input() editMode: boolean = true;
 
   constructor() {
@@ -44,6 +47,8 @@ export class IframeComponent {
   readonly enablerSvc = inject(EnablerService);
 
   id = '0';
+
+  src = computed(() => this._sanitizer.bypassSecurityTrustResourceUrl(this.getEmbedUrl(this.nodeSignal().data.src)));
   parentId = signal('-1');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
   // dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
@@ -103,8 +108,19 @@ export class IframeComponent {
   }
 
   getEmbedUrl(url: string): string {
-    const encodedUrl = encodeURIComponent(url);
-    return `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%23ff5500&auto_play=false`;
+    console.log(url);
+    url = url.split("&ab_channel")[0];
+    console.log(url);
+    if (url.includes("youtu.be")) {
+      url = url.replace("youtu.be/", "www.youtube.com/watch?v=")
+      console.log(url);
+    }
+    url = url.replace("watch?v=", "embed/");
+    console.log(url);
+
+    return url;
   }
+
+
 
 }
