@@ -21,6 +21,8 @@ export class SelectionService {
   selectedElementId = computed(this._selectedId);
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
+  isPanning = signal(false);
+
   select(element: ContainerData | AtomicElementData): void {
     if (element.type === 'canvas') {
       this.unselect();

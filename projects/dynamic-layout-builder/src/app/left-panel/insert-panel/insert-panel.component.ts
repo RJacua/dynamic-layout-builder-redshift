@@ -20,6 +20,8 @@ export class InsertPanelComponent {
 
   selectedId = this.selectionSvc.selectedElementId;
 
+  isPanning = this.selectionSvc.isPanning;
+
   selectedElementType = computed(() => {
     let selectedNode = this.selectionSvc.selectedNode();
     if (selectedNode && 'data' in selectedNode) {
@@ -38,6 +40,14 @@ export class InsertPanelComponent {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.selectionSvc.selectedElementId());
     this.modelSvc.addChildNode(this.selectionSvc.selectedElementId(), newLayoutElement);
     setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
+  }
+
+  panningOn() {
+    this.isPanning.set(true);
+  }
+
+  panningOff() {
+    this.isPanning.set(false);
   }
 
 }

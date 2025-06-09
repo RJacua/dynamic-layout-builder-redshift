@@ -11,6 +11,11 @@
   height: 96.5vh;
   overflow: hidden;
   position: relative;
+
+}
+
+.viewport.movable {
+  cursor: grab;
 }
 
 .viewport.dragging {

@@ -19,7 +19,8 @@
     <as-split-area [size]="70" minSize="40">
       <div
         class="viewport"
-        [class.dragging]="isPanning"
+        [class.movable]="isPanning()"
+        [class.dragging]="isPanning() && isMoving"
         (mousedown)="onMouseDown($event)"
         (mouseup)="onMouseUp()"
         (mouseleave)="onMouseUp()"

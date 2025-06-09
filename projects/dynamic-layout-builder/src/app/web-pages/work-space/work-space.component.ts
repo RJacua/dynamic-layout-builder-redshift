@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModelService } from '../../services/model.service';
 import { ContainerData, LayoutElement } from '../../interfaces/layout-elements';
 import { EncodeService } from '../../services/encode.service';
+import { SelectionService } from '../../services/selection.service';
 
 @Component({
   selector: 'app-work-space',
@@ -20,6 +21,7 @@ export class WorkSpaceComponent implements OnInit {
   private router = inject(Router);
   readonly encodeSvc = inject(EncodeService);
   readonly modelSvc = inject(ModelService);
+  readonly selectionSvc = inject(SelectionService);
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null)
@@ -27,7 +29,7 @@ export class WorkSpaceComponent implements OnInit {
   encodedStr = this.encodeSvc.encodedStr;
   encodedParam = signal<string>('');
   parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
-  isPanning = false;
+  isPanning = this.selectionSvc.isPanning;
   private startX = 0;
   private startY = 0;
   private scrollLeft = 0;
@@ -41,6 +43,7 @@ export class WorkSpaceComponent implements OnInit {
   offsetY = 0;
   minScale = 0.3;
   maxScale = 3;
+  isMoving = false;
 
   constructor() {
 
@@ -80,8 +83,8 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   onMouseDown(event: MouseEvent) {
-    if (event.button === 1) {
-      this.isPanning = true;
+    if (event.button === 0 && this.isPanning()) {
+      this.isMoving = true;
       this.lastX = event.clientX;
       this.lastY = event.clientY;
       event.preventDefault();
@@ -89,7 +92,7 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   onMouseMove(event: MouseEvent) {
-    if (this.isPanning) {
+    if (event.button === 0 && this.isPanning() && this.isMoving) {
       const dx = event.clientX - this.lastX;
       const dy = event.clientY - this.lastY;
       this.translateX += dx;
@@ -100,7 +103,7 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   onMouseUp() {
-    this.isPanning = false;
+    this.isMoving = false;
   }
 
   onWheel(event: WheelEvent) {
