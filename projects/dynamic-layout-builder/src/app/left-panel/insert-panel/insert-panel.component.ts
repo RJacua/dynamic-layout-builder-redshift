@@ -8,6 +8,7 @@ import { ComponentsService } from '../../services/components.service';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+
 @Component({
   selector: 'app-insert-panel',
   imports: [MatButtonModule, MatMenuModule, MatIconModule, CommonModule,  MatTooltipModule],
