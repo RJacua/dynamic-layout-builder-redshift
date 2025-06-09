@@ -19,6 +19,7 @@
     <as-split-area [size]="70" minSize="40">
       <div
         class="viewport"
+        [class.dragging]="isPanning"
         (mousedown)="onMouseDown($event)"
         (mouseup)="onMouseUp()"
         (mouseleave)="onMouseUp()"
@@ -36,7 +37,7 @@
         </div>
       </div>
 
-      <button (click)="resetView()" class="reset-button">🔄 Centralizar</button>
+      <button (click)="resetView()" class="reset-button">🔄 Center</button>
     </as-split-area>
 
     <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30">

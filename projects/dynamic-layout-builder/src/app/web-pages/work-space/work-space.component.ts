@@ -20,17 +20,14 @@ export class WorkSpaceComponent implements OnInit {
   private router = inject(Router);
   readonly encodeSvc = inject(EncodeService);
   readonly modelSvc = inject(ModelService);
-
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null)
   )
-
   encodedStr = this.encodeSvc.encodedStr;
   encodedParam = signal<string>('');
   parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
-
-  private isPanning = false;
+  isPanning = false;
   private startX = 0;
   private startY = 0;
   private scrollLeft = 0;
@@ -38,14 +35,10 @@ export class WorkSpaceComponent implements OnInit {
   translateX = 0;
   translateY = 0;
   scale = 1;
-
   private lastX = 0;
   private lastY = 0;
-
-
   offsetX = 0;
   offsetY = 0;
-
   minScale = 0.3;
   maxScale = 3;
 
@@ -53,14 +46,12 @@ export class WorkSpaceComponent implements OnInit {
 
     effect(() => {
       this.canvasModel();
-
       untracked(() => {
         this.updateQueryParam('encoded', this.encodedStr())
       })
-
     });
-
   }
+
   ngOnInit(): void {
     this.activeRoute.queryParams.subscribe(params => {
       if (params['encoded']) {
@@ -88,14 +79,12 @@ export class WorkSpaceComponent implements OnInit {
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
 
-
-
   onMouseDown(event: MouseEvent) {
-    if (event.button === 1) { // botão do meio
+    if (event.button === 1) {
       this.isPanning = true;
       this.lastX = event.clientX;
       this.lastY = event.clientY;
-      event.preventDefault(); // impede scroll
+      event.preventDefault();
     }
   }
 
@@ -114,30 +103,23 @@ export class WorkSpaceComponent implements OnInit {
     this.isPanning = false;
   }
 
-
-
   onWheel(event: WheelEvent) {
     if (!event.ctrlKey) return;
-
     event.preventDefault();
-
     const delta = -event.deltaY;
     const zoomFactor = 0.001;
     const newScale = this.scale + delta * zoomFactor;
-
     this.scale = Math.min(this.maxScale, Math.max(this.minScale, newScale));
   }
 
-transformStyle() {
-  return `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
-}
-
-  resetView() {
-    console.log("aqui")
-    this.scale = 1;
-    this.offsetX = 0;
-    this.offsetY = 0;
+  transformStyle() {
+    return `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
   }
 
+  resetView() {
+    this.scale = 1;
+    this.translateX = 0;
+    this.translateY = 0;
+  }
 
 }
