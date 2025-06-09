@@ -11,17 +11,36 @@
 </mat-drawer-container> -->
 
 <div class="container">
-    <as-split direction="horizontal" unit="percent" [gutterSize]="2">
-        <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30"> 
-            <app-left-panel></app-left-panel>
-        </as-split-area>
+  <as-split direction="horizontal" unit="percent" [gutterSize]="2">
+    <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30">
+      <app-left-panel></app-left-panel>
+    </as-split-area>
 
-        <as-split-area [size]="70"  minSize="40">
-            <app-canvas [editMode]="true"></app-canvas>
-        </as-split-area>
+    <as-split-area [size]="70" minSize="40">
+      <div
+        class="viewport"
+        (mousedown)="onMouseDown($event)"
+        (mouseup)="onMouseUp()"
+        (mouseleave)="onMouseUp()"
+        (mousemove)="onMouseMove($event)"
+        (wheel)="onWheel($event)"
+      >
+        <div
+          #panZoomContainer
+          class="pan-zoom-container"
+          [style.transform]="transformStyle()"
+          [style.transform-origin]="'0 0'"
+          [style.transition]="'transform 0.05s ease-out'"
+        >
+          <app-canvas [editMode]="true"></app-canvas>
+        </div>
+      </div>
 
-        <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30">
-            <app-right-panel></app-right-panel>
-        </as-split-area>
-    </as-split>
+      <button (click)="resetView()" class="reset-button">🔄 Centralizar</button>
+    </as-split-area>
+
+    <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30">
+      <app-right-panel></app-right-panel>
+    </as-split-area>
+  </as-split>
 </div>

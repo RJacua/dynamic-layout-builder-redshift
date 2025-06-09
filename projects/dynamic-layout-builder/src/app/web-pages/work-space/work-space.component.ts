@@ -25,10 +25,29 @@ export class WorkSpaceComponent implements OnInit {
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null)
   )
-  
+
   encodedStr = this.encodeSvc.encodedStr;
   encodedParam = signal<string>('');
   parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
+
+  private isPanning = false;
+  private startX = 0;
+  private startY = 0;
+  private scrollLeft = 0;
+  private scrollTop = 0;
+  translateX = 0;
+  translateY = 0;
+  scale = 1;
+
+  private lastX = 0;
+  private lastY = 0;
+
+
+  offsetX = 0;
+  offsetY = 0;
+
+  minScale = 0.3;
+  maxScale = 3;
 
   constructor() {
 
@@ -68,4 +87,57 @@ export class WorkSpaceComponent implements OnInit {
     this.modelSvc.setCanvasModel(model);
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
+
+
+
+  onMouseDown(event: MouseEvent) {
+    if (event.button === 1) { // botão do meio
+      this.isPanning = true;
+      this.lastX = event.clientX;
+      this.lastY = event.clientY;
+      event.preventDefault(); // impede scroll
+    }
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (this.isPanning) {
+      const dx = event.clientX - this.lastX;
+      const dy = event.clientY - this.lastY;
+      this.translateX += dx;
+      this.translateY += dy;
+      this.lastX = event.clientX;
+      this.lastY = event.clientY;
+    }
+  }
+
+  onMouseUp() {
+    this.isPanning = false;
+  }
+
+
+
+  onWheel(event: WheelEvent) {
+    if (!event.ctrlKey) return;
+
+    event.preventDefault();
+
+    const delta = -event.deltaY;
+    const zoomFactor = 0.001;
+    const newScale = this.scale + delta * zoomFactor;
+
+    this.scale = Math.min(this.maxScale, Math.max(this.minScale, newScale));
+  }
+
+transformStyle() {
+  return `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
+}
+
+  resetView() {
+    console.log("aqui")
+    this.scale = 1;
+    this.offsetX = 0;
+    this.offsetY = 0;
+  }
+
+
 }

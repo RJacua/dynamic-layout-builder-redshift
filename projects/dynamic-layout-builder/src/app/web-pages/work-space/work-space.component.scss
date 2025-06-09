@@ -5,3 +5,24 @@
     padding: 1rem;
     // overflow-y: auto;
   }
+
+.viewport {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  cursor: grab;
+  position: relative;
+}
+
+.viewport.dragging {
+  cursor: grabbing;
+}
+
+.canvas-wrapper {
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.pan-zoom-container {
+  transform-origin: 0 0;
+}
