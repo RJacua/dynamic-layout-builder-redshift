@@ -189,7 +189,7 @@ export class StylesService {
     }
   }
 
-  updateSelectedNodeHeaderSize(value: string) {
+  updateSelectedNodeSpecificAttribute(attrName:string, value: string) {
     var currentNode = this.selectedNode();
     if (currentNode) {
 
@@ -197,7 +197,7 @@ export class StylesService {
         ...currentNode,
         data: {
           ...currentNode.data,
-          headerSize: value,
+          [attrName]: value,
         }
       };
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);

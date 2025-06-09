@@ -1,12 +1,10 @@
 <div [class]="'main header ' + dropIndicatorStyle()" [style]="externalStyle()" [class.border]="editMode"
   [class.active]="editMode && (isFocused() || isHovered() && !isDragging())" [cdkDragDisabled]="!editMode"
-  [attr.data-id]="data.id" cdkDrag
-    (cdkDragMoved)="onDragMoved($event)"
-  >
+  [attr.data-id]="data.id" cdkDrag (cdkDragMoved)="onDragMoved($event)">
   <!-- <br> -->
   @if(editMode){
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
+  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">⋮⋮</div>
   }
   <div [style]="internalStyle()">
   <p #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" 

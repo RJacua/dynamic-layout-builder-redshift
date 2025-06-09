@@ -63,7 +63,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       untracked(() => {
         if (node) {
           this.dynamicHeader.set(node.data.headerSize);
-          this.processContainerStyle(node);
+          this.processStyle(node);
         }
       })
 
@@ -109,7 +109,7 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   }
 
-  processContainerStyle(node: any) {
+  processStyle(node: any) {
     this.dynamicStyle.set(node.data.style);
     this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
   
@@ -145,6 +145,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.selectionSvc.selectById(this.id, true);
   }
 
+  onMouseUp() {
+    this.isDragging.set(false);
+  }
 
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);

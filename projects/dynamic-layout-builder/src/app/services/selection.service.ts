@@ -22,7 +22,7 @@ export class SelectionService {
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
   select(element: ContainerData | AtomicElementData): void {
-    if(element.type === 'canvas') {
+    if (element.type === 'canvas') {
       this.unselect();
       return
     }
@@ -35,7 +35,7 @@ export class SelectionService {
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
-    else if(!keep) this.unselect();
+    else if (!keep) this.unselect();
   }
 
   unselect() {
@@ -47,7 +47,7 @@ export class SelectionService {
   hoveredNode = computed(() => this.modelSvc.getNodeById(this.hoveredElementId(), this.modelSvc.canvasModel()));
 
   hover(element: ContainerData | AtomicElementData): void {
-    if(element.type === 'canvas') {
+    if (element.type === 'canvas') {
       this.unhover();
       return
     }
@@ -57,11 +57,40 @@ export class SelectionService {
   }
 
   hoverById(id: string) {
-      this._hoveredId.set(id);
+    this._hoveredId.set(id);
   }
 
   unhover() {
     this._hoveredId.set('canvas');
   }
+
+  findDeepestElementByDataIdAndTag(
+    dataId: string,
+    tagName: string
+  ): HTMLElement | null {
+    console.log("entrou");
+    const allMatches = document.querySelectorAll<HTMLElement>(`${tagName}[data-id="${dataId}"]`);
+    if (allMatches.length === 0) return null
+
+    // Ordena do mais interno (maior profundidade) para o mais externo
+    const sorted = Array.from(allMatches).sort((a, b) => {
+      return this.getDepth(b) - this.getDepth(a);
+    });
+
+    console.log(sorted[0]);
+
+    return sorted[0];
+  }
+
+  getDepth(el: HTMLElement): number {
+    let depth = 0;
+    let current: HTMLElement | null = el;
+    while (current?.parentElement) {
+      depth++;
+      current = current.parentElement;
+    }
+    return depth;
+  }
+
 
 }

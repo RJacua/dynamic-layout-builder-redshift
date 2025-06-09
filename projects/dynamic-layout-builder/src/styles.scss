@@ -212,3 +212,28 @@ mat-card {
   pointer-events: none;
   opacity: 1;
 }
+
+.iframe-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100px; /* ou o mesmo que o iframe */
+}
+
+.iframe-wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.iframe-click-catcher {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: rgba(255,0,0, 0.3);
+  z-index: 2;
+}

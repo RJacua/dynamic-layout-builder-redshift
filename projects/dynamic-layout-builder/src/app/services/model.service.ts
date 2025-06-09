@@ -84,6 +84,8 @@ export class ModelService {
     let style = defaultStyle || {};
     let enabler = {};
     let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
+    let src = '';
+    
     if (componentData?.style) {
       style = componentData.style;
     }
@@ -97,6 +99,11 @@ export class ModelService {
     if (componentType.toLowerCase() === 'container') {
       return {
         data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, children: children }
+      }
+    }
+    else if(componentType.toLowerCase() === 'iframe'){
+      return {
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, src: src }
       }
     }
     else {
