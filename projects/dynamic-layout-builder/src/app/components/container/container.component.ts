@@ -83,33 +83,35 @@ export class ContainerComponent
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {
-      const node = this.nodeSignal();
-      if (this.isFocused()) {
-        this.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
-        this.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
+
+      const element = this._elementRef.nativeElement.querySelector('#core');
+
+      if (element) {
+        this.resizeObserver = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            const rect = entry.contentRect;
+            this.width.set(rect.width);
+            this.height.set(rect.height);
+          }
+        });
+
+        this.resizeObserver.observe(element);
       }
+
+      const node = this.nodeSignal();
+
+      // this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+      // this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
+
+      // console.log("w: ", this.width(),"h: ", this.height())
       // const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       untracked(() => {
         if (node) {
-          // console.log("b")
-          // console.log(this.nodeSignal())
           this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
-          // this.processContainerStyle(node);
-          // this.processContainerStyle(node);
         }
       });
     })
-    effect(() => {
-      this.isFocused();
-      untracked(() => {
-        if (this.isFocused()) {
-          // console.log("a")
-          // this.selectionSvc.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
-          // this.selectionSvc.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
-        }
-      })
-    });
   }
 
   readonly modelSvc = inject(ModelService);
@@ -164,8 +166,10 @@ export class ContainerComponent
   pointerInternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
   pointerExternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
 
-  width = signal(this._elementRef.nativeElement.getBoundingClientRect.width);
-  height = signal(this._elementRef.nativeElement.getBoundingClientRect.height);
+  width = signal(0);
+  height = signal(0);
+
+  private resizeObserver?: ResizeObserver;
 
   ngOnInit() {
     this.id = this.data.id;
@@ -182,32 +186,17 @@ export class ContainerComponent
     // this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
   }
 
-  ngAfterViewInit() {
-    this.width.set(this._elementRef.nativeElement.getBoundingClientRect().width);
-    this.height.set(this._elementRef.nativeElement.getBoundingClientRect().height);
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+  }
 
-    console.log(this.width());
+  ngAfterViewInit() {
+    this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+    this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
 
     this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
 
   }
-
-  // processContainerStyle(node: any) {
-  //   this.dynamicStyle.set(node.data.style);
-  //   const finalStyle = this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)()
-  //   this.dynamicStyle.set(finalStyle);
-
-  //   const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
-  //   console.log("filtered: ", filteredStyles())
-
-  //   const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
-  //   this.internalStyle.set(inner);
-  //   this.externalStyle.set(outer);
-
-  //   // console.log("inner", inner);
-  //   // console.log("outer", outer);
-
-  // }
 
   onElementHover(event: MouseEvent) {
     let el = event.target as HTMLElement;

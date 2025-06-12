@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { SelectionService } from '../services/selection.service';
 import { CommonModule } from '@angular/common';
 import { BackgroundStylesOptionsComponent } from './background-styles-options/background-styles-options.component';
@@ -27,6 +27,6 @@ import { DimensionStylesOptionsComponent } from './dimension-styles-options/dime
 export class RightPanelComponent {
   private selectionService = inject(SelectionService)
 
-  selectedNode = this.selectionService.selectedNode;
+  selectedNode = computed(() => this.selectionService.selectedNode());
 
 }

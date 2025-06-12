@@ -162,7 +162,7 @@ export class DragDropService {
     this.isDragging.set(false);
     const draggedId = event.item.element.nativeElement.getAttribute('data-id');
     const dropTargetId = event.container.element.nativeElement.getAttribute('data-id');
-    console.log(this.dropTarget);
+    // console.log(this.dropTarget);
 
     if (!this.dropTarget) return
     if (!('children' in this.selectionSvc.selectedNode().data) && this.dropTarget === 'canvas') return

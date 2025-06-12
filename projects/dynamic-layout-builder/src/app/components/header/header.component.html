@@ -8,8 +8,8 @@
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()">⋮⋮</div>
   }
-  <div [style]="internalStyle()">
-  <p #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" 
+  <div id="core" [style]="internalStyle()">
+  <p  #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" 
     [class.editable-content]="editMode" [class.element]="editMode" [class]="'element ' + dynamicHeader()"></p>
   <!-- <br> -->
 </div>

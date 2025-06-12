@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, effect, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { ModelService } from './model.service';
@@ -11,8 +11,6 @@ import { ModelService } from './model.service';
   providedIn: 'root'
 })
 export class SelectionService {
-
-  constructor() { }
 
   readonly modelSvc = inject(ModelService);
 
@@ -30,11 +28,13 @@ export class SelectionService {
       return
     }
     else if (element.id) {
-      this._selectedId.set(element.id);
+      this.unselect();
+      setTimeout(() => this._selectedId.set(element.id), 0);
     }
   }
 
   selectById(id: string, keep = false) {
+    this.unselect();
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
@@ -42,6 +42,7 @@ export class SelectionService {
   }
 
   unselect() {
+    // console.log('unselect');
     this._selectedId.set('canvas');
   }
 

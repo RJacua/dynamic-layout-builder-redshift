@@ -57,9 +57,9 @@ export class GeneralFunctionsService {
 
   computeBorderRadius(width: number, height: number, normalizedValue: number): number {
     const minDim = Math.min(width, height);
-    const radius = (normalizedValue / 100) * (minDim / 2);
+    const radius = (normalizedValue / 100) * (minDim*(1.25) / 2);
 
-    // console.log(minDim, normalizedValue, radius);
+    // console.log("max: ", minDim, "normal: ", normalizedValue, "rad: ", radius);
 
     return Math.floor(radius);
   }

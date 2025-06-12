@@ -61,9 +61,24 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
       });
     });
     effect(() => {
+
+      const element = this._elementRef.nativeElement.querySelector('#core');
+
+      if (element) {
+        this.resizeObserver = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            const rect = entry.contentRect;
+            this.width.set(rect.width);
+            this.height.set(rect.height);
+          }
+        });
+
+        this.resizeObserver.observe(element);
+      }
+
       const node = this.nodeSignal();
-      const canvasModel = this.modelSvc.hasCanvasModelChanged();
-      
+      // const canvasModel = this.modelSvc.hasCanvasModelChanged();
+
       untracked(() => {
         if (node) {
           this.dynamicHeader.set(node.data.headerSize);
@@ -101,9 +116,13 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   internalStyle: WritableSignal<any> = signal(null);
   externalStyle: WritableSignal<any> = signal(null);
 
-  width = signal(this._elementRef.nativeElement.getBoundingClientRect.width);
-  height = signal(this._elementRef.nativeElement.getBoundingClientRect.height);
-  
+  // width = signal(this._elementRef.nativeElement.getBoundingClientRect.width);
+  // height = signal(this._elementRef.nativeElement.getBoundingClientRect.height);
+  width = signal(0);
+  height = signal(0);
+
+  private resizeObserver?: ResizeObserver;
+
   ngOnInit(): void {
     this.text.set(this.data.text ?? 'Your Title Here');
     // this.size.set(this.data.style.size ?? 1);
@@ -119,20 +138,16 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   }
 
-  // processContainerStyle(node: any) {
-  //   this.dynamicStyle.set(node.data.style);
-  //   this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
-  
-  //   const filteredStyles = this.generalSvc.filterStyles(this.dynamicStyle());
-  //   console.log("filtered: ", filteredStyles())
-
-  //   const { outer, inner } = this.generalSvc.getSplitStyles(filteredStyles());
-  //   this.internalStyle.set(inner);
-  //   this.externalStyle.set(outer);
-  // }
-
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+  }
 
   ngAfterViewInit(): void {
+    this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+    this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
+
+    this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
+
     this.target().nativeElement.innerText = this.data.text ?? 'Your Title Here';
 
   }
