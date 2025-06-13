@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector, HostListener, WritableSignal } from '@angular/core';
+import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, linkedSignal, OnChanges, OnInit, Output, Signal, signal, SimpleChanges, untracked, viewChild, Injector, HostListener, WritableSignal, AfterViewInit } from '@angular/core';
 import { LayoutElement, ParagraphData } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ComponentsService } from '../../services/components.service';
@@ -22,7 +22,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
   styleUrl: './paragraph.component.scss'
 })
 
-export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit {
+export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit, AfterViewInit {
   type = 'paragraph';
   @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
   @Input() editMode: boolean = true;
@@ -47,12 +47,30 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
       });
     });
     effect(() => {
+
+      const element = this._elementRef.nativeElement.querySelector('#core');
+
+      if (element) {
+        this.resizeObserver = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            const rect = entry.contentRect;
+            this.width.set(rect.width);
+            this.height.set(rect.height);
+          }
+        });
+
+        this.resizeObserver.observe(element);
+      }
+
+
       const node = this.nodeSignal();
-      const canvasChanged = this.modelSvc.hasCanvasModelChanged();
+      // const canvasModel = this.modelSvc.canvasModel();
+      // const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       untracked(() => {
         if (node) {
-          this.processStyle(node);
+          // this.processContainerStyle(node);
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
         }
       })
 
@@ -69,6 +87,8 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   readonly dragDropSvc = inject(DragDropService);
   readonly generalSvc = inject(GeneralFunctionsService);
 
+  private _elementRef = inject(ElementRef);
+
   id = '0';
   parentId = signal('-1');
   alignment = signal('align-center ');
@@ -80,25 +100,41 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit 
   dynamicStyle = signal({});
   internalStyle: WritableSignal<any> = signal(null);
   externalStyle: WritableSignal<any> = signal(null);
+
+  // width = signal(this._elementRef.nativeElement.getBoundingClientRect.width);
+  // height = signal(this._elementRef.nativeElement.getBoundingClientRect.height);
+  width = signal(0);
+  height = signal(0);
+
+  private resizeObserver?: ResizeObserver;
   
   ngOnInit(): void {
+    this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
+    
     this.id = this.data.id;
     this.parentId.set(this.data.parentId);
-    this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
-    this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
+
+    this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
+    
+    // this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     // this.alignment.set(this.data.style.alignment ?? 'align-center ');
 
     // this.dynamicStyle.set(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)() ?? {});
 
   }
 
-  processStyle(node: any) {
-    this.dynamicStyle.set(node.data.style);
-    this.dynamicStyle.update(() => this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)());
-  
-    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
-    this.internalStyle.set(inner);
-    this.externalStyle.set(outer);
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+  }
+
+  ngAfterViewInit(): void {
+    this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+    this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
+
+    this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
+
+    this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
+
   }
 
   isFocused = computed(() => {

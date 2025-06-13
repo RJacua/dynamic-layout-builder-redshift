@@ -70,7 +70,9 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
   styleUrl: './container.component.scss',
 })
 export class ContainerComponent
-  implements LayoutElement<ContainerData>, OnInit {
+  implements LayoutElement<ContainerData>, OnInit, AfterViewInit {
+  private _elementRef = inject(ElementRef);
+
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = 'container';
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
@@ -79,16 +81,35 @@ export class ContainerComponent
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
     effect(() => {
+
+      const element = this._elementRef.nativeElement.querySelector('#core');
+
+      if (element) {
+        this.resizeObserver = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            const rect = entry.contentRect;
+            this.width.set(rect.width);
+            this.height.set(rect.height);
+          }
+        });
+
+        this.resizeObserver.observe(element);
+      }
+
       const node = this.nodeSignal();
-      const canvasChanged = this.modelSvc.hasCanvasModelChanged();
+
+      // this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+      // this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
+
+      // console.log("w: ", this.width(),"h: ", this.height())
+      // const canvasModel = this.modelSvc.hasCanvasModelChanged();
 
       untracked(() => {
         if (node) {
-          this.processContainerStyle(node);
-          this.processContainerStyle(node);
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
         }
       });
-    });
+    })
   }
 
   readonly modelSvc = inject(ModelService);
@@ -128,12 +149,22 @@ export class ContainerComponent
   children = signal(
     [] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
   );
-  elementRef = new BehaviorSubject<ViewContainerRef | null>(null);
   nodeSignal: any;
 
   dynamicStyle: WritableSignal<any> = signal(null);
   internalStyle: WritableSignal<any> = signal(null);
   externalStyle: WritableSignal<any> = signal(null);
+
+  //PASSAR PARA DRAG AND DROP SVC
+  lastPointerX = this.dragDropSvc.lastPointerX;
+  lastPointerY = this.dragDropSvc.lastPointerY;
+  pointerInternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
+  pointerExternalPosition = this.dragDropSvc.pointerInsideRelativePosition;
+
+  width = signal(0);
+  height = signal(0);
+
+  private resizeObserver?: ResizeObserver;
 
   ngOnInit() {
     this.id = this.data.id;
@@ -146,17 +177,20 @@ export class ContainerComponent
 
     this.initialData = this.newAreaMenuSvc.rootLevelNodesAdd.slice();
 
-    this.processContainerStyle(this.nodeSignal());
+    // this.processContainerStyle(this.nodeSignal());
+    // this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle);
   }
 
-  processContainerStyle(node: any) {
-    this.dynamicStyle.set(node.data.style);
-    const finalStyle = this.enablerSvc.changeStylesByEnablers(this.dynamicStyle(), (node.data.enabler), node.data.type)()
-    this.dynamicStyle.set(finalStyle);
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+  }
 
-    const { outer, inner } = this.generalSvc.getSplitStyles(this.dynamicStyle());
-    this.internalStyle.set(inner);
-    this.externalStyle.set(outer);
+  ngAfterViewInit() {
+    this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+    this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
+
+    this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
+
   }
 
   onElementHover(event: MouseEvent) {

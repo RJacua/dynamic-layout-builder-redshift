@@ -8,8 +8,8 @@
     <div class="drag-placeholder" *cdkDragPlaceholder></div>
     <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()" >⋮⋮</div>
     }
-    <div [style]="internalStyle()">
-        <p #target [contentEditable]="editMode" [class.editable-content]="editMode" [class.element]="editMode" (input)="updateTextContent($event)"></p>
+    <div id="core" [style]="internalStyle()">
+        <p  #target [contentEditable]="editMode" [class.editable-content]="editMode" [class.element]="editMode" (input)="updateTextContent($event)"></p>
     </div>
     <!-- <br> -->
 </div>

@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, effect, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { ModelService } from './model.service';
@@ -12,14 +12,15 @@ import { ModelService } from './model.service';
 })
 export class SelectionService {
 
-  constructor() { }
-
   readonly modelSvc = inject(ModelService);
 
   private _selectedId = signal<string>('canvas');
-
+  
   selectedElementId = computed(this._selectedId);
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
+
+  height = signal(0);
+  width = signal(0);
 
   select(element: ContainerData | AtomicElementData): void {
     if (element.type === 'canvas') {
@@ -27,11 +28,13 @@ export class SelectionService {
       return
     }
     else if (element.id) {
-      this._selectedId.set(element.id);
+      this.unselect();
+      setTimeout(() => this._selectedId.set(element.id), 0);
     }
   }
 
   selectById(id: string, keep = false) {
+    this.unselect();
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
@@ -39,6 +42,7 @@ export class SelectionService {
   }
 
   unselect() {
+    // console.log('unselect');
     this._selectedId.set('canvas');
   }
 
@@ -64,33 +68,37 @@ export class SelectionService {
     this._hoveredId.set('canvas');
   }
 
-  findDeepestElementByDataIdAndTag(
-    dataId: string,
-    tagName: string
-  ): HTMLElement | null {
-    console.log("entrou");
-    const allMatches = document.querySelectorAll<HTMLElement>(`${tagName}[data-id="${dataId}"]`);
-    if (allMatches.length === 0) return null
+  // findDeepestElementByDataIdAndTag(
+  //   id: string
+  // ) {
+  //   console.log("entrou");
+  //   const tagName = this.selectedNode().data.type === 'container' ? 'div' : this.selectedNode().data.type;
+  //   const allMatches = document.querySelectorAll<HTMLElement>(`${tagName}[data-id="${id}"]`);
+  //   if (allMatches.length === 0) {console.log('foinull'); return;}
 
-    // Ordena do mais interno (maior profundidade) para o mais externo
-    const sorted = Array.from(allMatches).sort((a, b) => {
-      return this.getDepth(b) - this.getDepth(a);
-    });
+  //   let filtered = Array.from(allMatches);
+  //   filtered = filtered.filter((el) => !el.className.includes('tree-node'));
 
-    console.log(sorted[0]);
+  //   console.log(filtered)
 
-    return sorted[0];
-  }
+  //   // Ordena do mais interno (maior profundidade) para o mais externo
+  //   const sorted = filtered.sort((a, b) => {
+  //     return this.getDepth(b) - this.getDepth(a);
+  //   });
 
-  getDepth(el: HTMLElement): number {
-    let depth = 0;
-    let current: HTMLElement | null = el;
-    while (current?.parentElement) {
-      depth++;
-      current = current.parentElement;
-    }
-    return depth;
-  }
+  //   console.log(sorted[0]);
 
+  //   return sorted[0];
+  // }
+
+  // getDepth(el: HTMLElement): number {
+  //   let depth = 0;
+  //   let current: HTMLElement | null = el;
+  //   while (current?.parentElement) {
+  //     depth++;
+  //     current = current.parentElement;
+  //   }
+  //   return depth;
+  // }
 
 }

@@ -153,7 +153,7 @@ export class StylesService {
   updateSelectedNodeStyle(styleType: string, value: string) {
     var currentNode = this.selectedNode();
     if (currentNode) {
-
+      
       const updatedModel = {
         ...currentNode,
         data: {
@@ -164,7 +164,7 @@ export class StylesService {
           }
         }
       };
-
+      
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
     }
   }
