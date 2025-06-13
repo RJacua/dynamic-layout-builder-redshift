@@ -32,7 +32,7 @@ export class PaddingStylesService {
     // console.log("AQUI", generalPadding)
     if (!enableIndividualPadding) return
     if (individualPaddingOptions.top.value === individualPaddingOptions.right.value && individualPaddingOptions.right.value === individualPaddingOptions.bottom.value && individualPaddingOptions.bottom.value === individualPaddingOptions.left.value && individualPaddingOptions.top.value === 0 ) {
-      console.log("tudo zero", individualPaddingOptions.top.value);
+      // console.log("tudo zero", individualPaddingOptions.top.value);
 
       this.stylesSvc.updateSelectedNodeStyle('padding-top', (generalPadding ?? 0) + (unit ?? this.defaultUnit));
       individualPaddingOptions.top.value = (generalPadding ?? 0);

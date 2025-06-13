@@ -94,8 +94,6 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
   alignment = signal('align-center ');
   text = signal<string>('');
   size = signal<number>(1);
-  menuIsOn = signal(false);
-  data2 = input();
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
   // dynamicStyle = signal(this.borderStylesSvc.changeBorderStylesByEnablers(this.nodeSignal()?.data.style, (this.nodeSignal()?.data.enabler.enableStroke === 'true'), this.nodeSignal()?.data.type)());
@@ -157,12 +155,16 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
     this.modelSvc.removeNodeById(this.id);
   }
 
-  @Output() editingChanged = new EventEmitter<boolean>();
+  // @Output() editingChanged = new EventEmitter<boolean>();
 
   onHandleClick() {
     this.isDragging.set(true);
     // console.log("handle click: ",this.selectionSvc.isDragging());
     this.selectionSvc.selectById(this.id, true);
+  }
+
+  onMouseUp() {
+    this.isDragging.set(false);
   }
 
   onDragMoved(event: CdkDragMove<any>) {

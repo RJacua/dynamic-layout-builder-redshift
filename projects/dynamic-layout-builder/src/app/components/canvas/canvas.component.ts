@@ -26,6 +26,7 @@ import { ModelService } from '../../services/model.service';
 import { HeaderComponent } from '../header/header.component';
 import {
   Canvas,
+  CanvasData,
   ContainerData,
   LayoutElement,
 } from '../../interfaces/layout-elements';
@@ -62,7 +63,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 })
 export class CanvasComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: Canvas = { id: 'canvas', type: 'canvas', children: [] };
+  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {}};
   @Input() editMode: boolean = true;
 
   readonly generalSvc = inject(GeneralFunctionsService);
@@ -72,19 +73,19 @@ export class CanvasComponent {
 
   readonly dragDropSvc = inject(DragDropService);
 
-  canvasModel = computed(() => this.modelSvc.canvasModel());
+  canvas = computed(() => this.modelSvc.canvas());
 
   onlyContainers = computed(() =>
-    this.canvasModel().filter((el) => el.data.type === 'container')
+    this.canvas().data.children.filter((el) => el.data.type === 'container')
   );
   canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null)
+    () => JSON.stringify(this.canvas().data.children, null)
     // () => this.customStringify(this.canvasModel())
   );
 
   canvasCustomString: Signal<string> = computed(
     // () => JSON.stringify(this.canvasModel(), null)
-    () => this.generalSvc.customStringify(this.canvasModel())
+    () => this.generalSvc.customStringify(this.canvas().data.children)
   )
 
   utf8Str: Signal<string> = computed(() =>

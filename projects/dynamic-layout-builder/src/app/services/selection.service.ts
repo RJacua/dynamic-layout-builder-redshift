@@ -23,7 +23,7 @@ export class SelectionService {
   width = signal(0);
 
   select(element: ContainerData | AtomicElementData): void {
-    if(element.type === 'canvas') {
+    if (element.type === 'canvas') {
       this.unselect();
       return
     }
@@ -38,7 +38,7 @@ export class SelectionService {
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
-    else if(!keep) this.unselect();
+    else if (!keep) this.unselect();
   }
 
   unselect() {
@@ -51,7 +51,7 @@ export class SelectionService {
   hoveredNode = computed(() => this.modelSvc.getNodeById(this.hoveredElementId(), this.modelSvc.canvasModel()));
 
   hover(element: ContainerData | AtomicElementData): void {
-    if(element.type === 'canvas') {
+    if (element.type === 'canvas') {
       this.unhover();
       return
     }
@@ -61,7 +61,7 @@ export class SelectionService {
   }
 
   hoverById(id: string) {
-      this._hoveredId.set(id);
+    this._hoveredId.set(id);
   }
 
   unhover() {

@@ -7,6 +7,7 @@ import { BorderStylesOptionsComponent } from './border-styles-options/border-sty
 import { CornerStylesOptionsComponent } from './corner-styles-options/corner-styles-options.component';
 import { PaddingStylesOptionsComponent } from './padding-styles-options/padding-styles-options.component';
 import { MarginStylesOptionsComponent } from "./margin-styles-options/margin-styles-options.component";
+import { IframeBasicOptionsComponent } from './iframe-basic-options/iframe-basic-options.component';
 import { DimensionStylesOptionsComponent } from './dimension-styles-options/dimension-styles-options.component';
 
 @Component({
@@ -19,6 +20,7 @@ import { DimensionStylesOptionsComponent } from './dimension-styles-options/dime
     CornerStylesOptionsComponent,
     PaddingStylesOptionsComponent,
     MarginStylesOptionsComponent,
+    IframeBasicOptionsComponent,
     DimensionStylesOptionsComponent
 ],
   templateUrl: './right-panel.component.html',

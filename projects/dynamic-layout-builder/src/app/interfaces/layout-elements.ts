@@ -4,6 +4,7 @@ import { BehaviorSubject } from "rxjs";
 export type AtomicElementData = HeaderData | ParagraphData;
 
 export interface LayoutElement<T> {
+export interface LayoutElement<T> {
   data: T;
 
 }
@@ -13,17 +14,13 @@ export interface LayoutData {
   id: string;
   parentId: string;
   type: string;
-  style: Styles; //por enquanto, depois vamos usar a interface Styles
-  enabler: Enablers; //por enquanto, depois vamos usar a interface Enablers
-
+  style: Styles;
+  enabler: Enablers;
 }
 
 
 export interface ParagraphData extends LayoutData {
   text?: string;
-
-  isEditing?: boolean;
-
 }
 
 export interface HeaderData extends LayoutData {
@@ -37,13 +34,26 @@ export interface ContainerData extends LayoutData {
   children?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[];
 }
 
+export interface IframeData extends LayoutData {
+  src: string;
+  
+}
 
-export interface Canvas {
+export interface Canvas<T> {
+  data: T;
+
+}
+
+export interface CanvasData {
   id: string;
 
   type: string;
 
   children: LayoutElement<any>[];
+
+  expandedNodes:Set<String>;
+
+  style: Styles;
 
 }
 

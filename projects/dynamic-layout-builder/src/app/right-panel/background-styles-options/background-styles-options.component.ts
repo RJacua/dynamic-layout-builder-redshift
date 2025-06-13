@@ -18,7 +18,8 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
     MatCardModule,
     MatListModule,
     MatDividerModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+  ],
   templateUrl: './background-styles-options.component.html',
   styleUrl: './background-styles-options.component.scss'
 })

@@ -6,6 +6,7 @@ import { ComponentRegistryService } from './services/component-registry.service'
 import { ContainerComponent } from './components/container/container.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ParagraphComponent } from './components/paragraph/paragraph.component';
+import { IframeComponent } from './components/iframe/iframe.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
       registry.register('paragraph', ParagraphComponent);
       registry.register('header', HeaderComponent);
       registry.register('container', ContainerComponent);
+      registry.register('iframe', IframeComponent);
     })
   ]
 };

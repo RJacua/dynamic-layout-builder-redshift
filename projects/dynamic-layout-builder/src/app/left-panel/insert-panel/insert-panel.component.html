@@ -9,7 +9,7 @@
     </button>
 
     <button mat-icon-button aria-label="Example icon-button with a menu" (click)="addLayoutElement('container')"
-    *ngIf="selectedElementType() == 'container' || selectedElementType() == undefined">
+    *ngIf="selectedElementType() == 'container' || selectedElementType() == 'canvas'">
         <!-- [matMenuTriggerFor]="containerMenu" -->
         <mat-icon matTooltip="Add Container">add_box</mat-icon>
         <!-- <p>container</p> -->
@@ -59,15 +59,16 @@
         <mat-icon>title</mat-icon>
         <span>Header</span>
     </button>
-    <!-- <button mat-menu-item (click)="addLayoutElement('header')">Header</button> -->
     <button mat-menu-item (click)="addLayoutElement('paragraph')">
         <mat-icon>subtitles</mat-icon>
         <span>Paragraph</span>
     </button>
-    <!-- <button mat-menu-item (click)="addLayoutElement('paragraph')">Paragraph</button> -->
     <button mat-menu-item (click)="addLayoutElement('container')">
         <mat-icon>add_box</mat-icon>
         <span>Container</span>
     </button>
-    <!-- <button mat-menu-item (click)="addLayoutElement('container')">Container</button> -->
+    <button mat-menu-item (click)="addLayoutElement('iframe')">
+        <mat-icon>add_box</mat-icon>
+        <span>Iframe</span>
+    </button>
 </mat-menu>

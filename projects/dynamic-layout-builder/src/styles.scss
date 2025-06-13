@@ -172,43 +172,68 @@ mat-card {
 }
 
 .topHalf {
-    box-shadow: 0px -20px 0px #2196f377 !important;
+    box-shadow: 0px -10px 0px #2196f3 !important;
 }
 .bottomHalf {
-    box-shadow: 0px 20px 0px #2196f377 !important;
+    box-shadow: 0px 10px 0px #2196f3 !important;
 }
 .rightHalf {
-    box-shadow: 20px 0px 0px #2196f377 !important;
+    box-shadow: 10px 0px 0px #2196f3 !important;
 }
 .leftHalf {
-    box-shadow: -20px 0px 0px #2196f377 !important;
+    box-shadow: -10px 0px 0px #2196f3 !important;
 }
 
 .insideTopDrop {
-    box-shadow: inset 0px 20px 0px #2196f3, inset 0px 50px 0px #2196f377 !important;
+    box-shadow: inset 0px 5px 0px #2196f3, inset 0px 15px 0px #2196f377 !important;
 }
 .insideBottomDrop {
-    box-shadow: inset 0px -20px 0px #2196f3, inset 0px -50px 0px #2196f377 !important;
+    box-shadow: inset 0px -5px 0px #2196f3, inset 0px -15px 0px #2196f377 !important;
 
 }
 .insideLeftDrop {
-    box-shadow: inset 20px 0px 0px #2196f3, inset 50px 0px 0px #2196f377 !important;
+    box-shadow: inset 5px 0px 0px #2196f3, inset 15px 0px 0px #2196f377 !important;
 }
 .insideRightDrop {
-    box-shadow: inset -20px 0px 0px #2196f3, inset -50px 0px 0px #2196f377 !important;
+    box-shadow: inset -5px 0px 0px #2196f3, inset -15px 0px 0px #2196f377 !important;
 }
 
 .insideDrop {
-    box-shadow: inset 20px 20px 0px #2196f3, inset -20px -20px 0px #2196f3 !important;
+    box-shadow: inset 5px 5px 0px #2196f3, inset -5px -5px 0px #2196f3 !important;
 }
 
 .noDropZone {
     cursor: not-allowed;
-    box-shadow: -20px -20px 0px #F1968377, 20px 20px 0px #F1968377 !important;
+    box-shadow: -5px -5px 0px #ff4929, 5px 5px 0px #ff4929 !important;
 }
 
 .custom-placeholder {
   position: absolute;
   pointer-events: none;
   opacity: 1;
+}
+
+.iframe-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100px; /* ou o mesmo que o iframe */
+}
+
+.iframe-wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.iframe-click-catcher {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: rgba(255,0,0, 0.3);
+  z-index: 2;
 }

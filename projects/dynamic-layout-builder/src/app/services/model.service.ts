@@ -1,5 +1,5 @@
 import { computed, effect, Injectable, Signal, signal, untracked, ViewContainerRef, WritableSignal } from '@angular/core';
-import { ContainerData, LayoutElement, AtomicElementData, LayoutData, Styles } from '../interfaces/layout-elements';
+import { Canvas, CanvasData, ContainerData, LayoutElement, AtomicElementData, LayoutData, Styles } from '../interfaces/layout-elements';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +17,21 @@ export class ModelService {
   }
 
   canvasModel = signal<(LayoutElement<ContainerData>)[]>([]);
+
+  canvasStyle = signal<(Styles)>({['flex-direction']: 'column'});
+
+  expandedNodes = signal<Set<String>>(new Set());
+
+  canvas:Signal<Canvas<CanvasData>> = computed(() => {
+    return {data: {
+      id: 'canvas',
+      type: 'canvas',
+      children: this.canvasModel(),
+      expandedNodes: this.expandedNodes(),
+      style: this.canvasStyle(),
+    }};
+  });
+
   hasCanvasModelChanged = signal(false);
 
   lastAddedNodeId = signal('0')
@@ -37,7 +52,7 @@ export class ModelService {
     branch?: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
   ): any {
     if (id === 'canvas') {
-      return this.canvasModel();
+      return this.canvas();
     }
     const currentBranch = branch ?? this.canvasModel();
     return this._recursiveGetNodeById(id, currentBranch);
@@ -69,6 +84,8 @@ export class ModelService {
     let style = defaultStyle || {};
     let enabler = {};
     let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
+    let src = '';
+    
     if (componentData?.style) {
       style = componentData.style;
     }
@@ -82,6 +99,11 @@ export class ModelService {
     if (componentType.toLowerCase() === 'container') {
       return {
         data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, children: children }
+      }
+    }
+    else if(componentType.toLowerCase() === 'iframe'){
+      return {
+        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, src: src }
       }
     }
     else {

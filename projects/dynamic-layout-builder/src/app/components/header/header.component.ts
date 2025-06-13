@@ -53,10 +53,6 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
         };
 
         this.modelSvc.updateModel(this.id, updatedModel);
-        // console.log("on effect: ", this.modelSvc.canvasModel())
-        // this.dynamicStyle.set(node.data.style);
-        // this.dynamicStyle.update(() => this.borderStylesSvc.changeBorderStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableStroke), this.nodeSignal()?.data.type)());
-        // this.dynamicStyle.update(() => this.cornerStylesSvc.changeCornerStylesByEnablers(this.dynamicStyle(), (this.nodeSignal()?.data.enabler.enableIndividualCorner), this.nodeSignal()?.data.type)() ?? {});
 
       });
     });
@@ -173,6 +169,9 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
     this.selectionSvc.selectById(this.id, true);
   }
 
+  onMouseUp() {
+    this.isDragging.set(false);
+  }
 
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);
