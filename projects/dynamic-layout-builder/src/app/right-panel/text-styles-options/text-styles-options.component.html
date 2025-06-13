@@ -1,37 +1,39 @@
 <mat-card>
     <mat-list>
-        <mat-divider></mat-divider>
+        <mat-divider ></mat-divider>
         <mat-list-item>
-            <h3 class="center">Text Options</h3>
+            <h3 class="center subtitle">Text Options</h3>
         </mat-list-item>
         <form [formGroup]="fontOptions">
             <div *ngIf="fontOptions.contains('fontSize')">
                 <label for="fontSize">Font Size:</label><br>
-                <input type="number" id="fontSize" formControlName="fontSize"><br><br>
-              </div>
+                <span><input type="number" id="fontSize" formControlName="fontSize">
+                    px
+                </span>
+            </div>
 
-              <div *ngIf="fontOptions.contains('headerSize')">
-                <label for="headerSize">Header Size:</label><br>
+            <div *ngIf="fontOptions.contains('headerSize')">
+                <label for="headerSize">Header Size:</label>
                 <select name="headerSize" id="headerSize" formControlName="headerSize">
-                    <option *ngFor="let headerOption of headerOptions" [ngValue]="headerOption">{{ headerOption }}</option>
+                    <option *ngFor="let headerOption of headerOptions" [ngValue]="headerOption">{{ headerOption }}
+                    </option>
                 </select>
-              </div>
+            </div>
 
-            
-              <div *ngIf="fontOptions.contains('fontWeight')">
-                <label for="fontWeight">Font Weight:</label><br>
+
+            <div *ngIf="fontOptions.contains('fontWeight')">
+                <label for="fontWeight">Font Weight:</label>
                 <input type="range" id="fontWeight" min="100" max="900" step="100" formControlName="fontWeight">
-                <span>{{ fontOptions.get('fontWeight')?.value }}</span><br><br>
-              </div>
-              
-            <label for="fontColor">Font Color:</label><br>
-            <input type="color" id="fontColor" name="fontColor" formControlName="fontColor"><br><br>
+                <span class="valorSlider">{{ fontOptions.get('fontWeight')?.value }}</span>
+            </div>
+
+            <label for="fontColor">Font Color:</label>
+            <input type="color" id="fontColor" name="fontColor" formControlName="fontColor">
 
             <label for="hAlign">Horizontal Alignment:</label>
             <select name="hAlign" id="hAlign" formControlName="horizontalAlign">
                 <option *ngFor="let hOption of hOptions" [ngValue]="hOption.value">{{ hOption.label }}</option>
             </select>
-            <br><br>
         </form>
     </mat-list>
 </mat-card>

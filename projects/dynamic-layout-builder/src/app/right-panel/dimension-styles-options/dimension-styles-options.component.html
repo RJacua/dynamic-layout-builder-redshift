@@ -1,0 +1,101 @@
+<mat-card>
+    <mat-list>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+            <h3 class="center subtitle">Dimension Options</h3>
+        </mat-list-item>
+
+        <div>
+            <form [formGroup]="dimensionOptions">
+                <label for="height">Height:</label>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="heightAuto" name="heightAuto" formControlName="heightAuto">
+                    <label for="heightAuto">Auto</label>
+                </div>
+                <div *ngIf="!dimensionOptions.controls.heightAuto.value" class="row-input">
+                    <input type="number" id="height" name="height" min="0" formControlName="height">
+                    <select name="hUnit" id="hUnit" formControlName="hUnit">
+                        <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption }}
+                        </option>
+                    </select>
+                </div>
+
+                <label for="width">Width:</label>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="widthAuto" name="widthAuto" formControlName="widthAuto">
+                    <label for="widthAuto">Auto</label>
+                </div>
+                <div *ngIf="!dimensionOptions.controls.widthAuto.value" class="row-input">
+                    <input type="number" id="width" name="width" min="0" formControlName="width">
+                    <select name="wUnit" id="wUnit" formControlName="wUnit" >
+                        <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption }}
+                        </option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <br>
+        <div>
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="custom-expansion-panel">
+                    <mat-expansion-panel-header class="custom-expansion-header">
+                        <mat-panel-title>Maximum</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <form [formGroup]="maxDimensionOptions">
+                        <label for="maxHeight">Max Height:</label>
+                        <div class="row-input">
+                            <input type="number" id="maxHeight" name="maxHeight" min="0" formControlName="maxHeight">
+                            <select name="maxHUnit" id="maxHUnit" formControlName="maxHUnit" >
+                                <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                    }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <label for="width">Max Width:</label>
+                        <div class="row-input">
+                            <input type="number" id="maxWidth" name="maxWidth" min="0" formControlName="maxWidth">
+                            <select name="maxWUnit" id="maxWUnit" formControlName="maxWUnit" >
+                                <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                    }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        <br>
+        <div>
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="custom-expansion-panel">
+                    <mat-expansion-panel-header class="custom-expansion-header">
+                        <mat-panel-title>Minimum</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <form [formGroup]="minDimensionOptions">
+                        <label for="minHeight">Min Height:</label>
+                        <div class="row-input">
+                            <input type="number" id="minHeight" name="minHeight" min="0" formControlName="minHeight">
+                            <select name="minHUnit" id="minHUnit" formControlName="minHUnit" >
+                                <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                    }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <label for="width">Min Width:</label>
+                        <div class="row-input">
+                            <input type="number" id="minWidth" name="minWidth" min="0" formControlName="minWidth">
+                            <select name="minWUnit" id="minWUnit" formControlName="minWUnit" >
+                                <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption
+                                    }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+
+    </mat-list>
+</mat-card>

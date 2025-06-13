@@ -2,26 +2,25 @@
     <mat-list>
         <mat-divider></mat-divider>
         <mat-list-item>
-            <h3 class="center">Padding Options</h3>
+            <h3 class="center subtitle">Padding Options</h3>
         </mat-list-item>
-        <div>
-            <span>
-                <label for="individualPadding">Individual Paddings</label>
-                <input type="checkbox" id="individualPadding" name="individualPadding"
-                    [formControl]="enableIndividualPaddingCheckbox">
-            </span>
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="individualPadding" name="individualPadding"
+                [formControl]="enableIndividualPaddingCheckbox">
+            <label for="individualPadding">Individual Paddings</label>
         </div><br>
 
         <div *ngIf="!enableIndividualPaddingCheckbox.value">
             <form [formGroup]="paddingOptions">
-                <label for="padding">Padding:</label><br>
-                <input type="number" id="padding" name="padding" min="0" formControlName="padding" style="width: 50%">
-                <span>
+                <label for="padding">Padding:</label>
+                <div class="row-input">
+                    <input type="number" id="padding" name="padding" min="0" formControlName="padding"
+                        style="width: 50%">
                     <select name="unit" id="unit" formControlName="unit" style="width: 50px;">
                         <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption }}
                         </option>
                     </select>
-                </span>
+                </div>
             </form>
         </div>
 
@@ -41,21 +40,21 @@
             <form [formGroup]="individualPaddingOptions">
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; width: 100%;">
                     <div>
-                        <label for="top">Top</label><br>
+                        <label for="top">Top</label>
                         <input type="number" id="top" name="top" min="0" formControlName="top" style="width: 70%;">
                     </div>
                     <div>
-                        <label for="right">Right</label><br>
+                        <label for="right">Right</label>
                         <input type="number" id="right" name="right" min="0" formControlName="right"
                             style="width: 70%;">
                     </div>
                     <div>
-                        <label for="bottom">Bottom</label><br>
+                        <label for="bottom">Bottom</label>
                         <input type="number" id="bottom" name="bottom" min="0" formControlName="bottom"
                             style="width: 70%;">
                     </div>
                     <div>
-                        <label for="left">Left</label><br>
+                        <label for="left">Left</label>
                         <input type="number" id="left" name="left" min="0" formControlName="left" style="width: 70%;">
                     </div>
                 </div>

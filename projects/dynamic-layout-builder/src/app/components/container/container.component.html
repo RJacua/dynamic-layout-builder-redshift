@@ -9,7 +9,7 @@
     ⋮⋮
   </div>
   }
-  <div [class]="'container-flex'" [style]="internalStyle()" [attr.data-id]="data.id">
+  <div id="core" [class]="'container-flex'" [style]="internalStyle()" [attr.data-id]="data.id">
     <!-- [class]="'container-border container-flex ' + direction()" -->
     <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
     @for (node of nodeSignal().data.children; track node.data.id) { @switch

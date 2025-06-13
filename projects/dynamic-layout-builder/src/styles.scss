@@ -4,6 +4,8 @@ html {
     width: 100%;
     margin: 0 !important;
     padding: 0 !important;
+    background-color: #202020;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .border {
@@ -80,7 +82,8 @@ html {
     box-sizing: border-box;
 }
 
-.paragraph, .header {
+.paragraph,
+.header {
     position: relative;
 }
 
@@ -110,77 +113,74 @@ html {
 // .container-flex-column {
 //     flex-direction: column;
 // }
-html,
-body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 
 .main.active {
-    background-color: rgba(150,150,200,0.2);
+    background-color: rgba(150, 150, 200, 0.2);
     outline: none;
     transition: background-color 0.1s ease;
 }
 
 
 mat-card {
-    background: rgba(255,255,255,0)  !important;
+    background: rgba(255, 255, 255, 0) !important;
     box-shadow: 2px 2px 2px 1px rgba(255, 0, 0, 0) !important;
 }
 
+.subtitle {
+    color: #c8c8c8;
+    font-size: 14px;
+}
+
 .node-item {
-  cursor: grab;
+    cursor: grab;
 }
 
 .cdk-drag-dragging {
-  cursor: grabbing !important;
-  opacity: 0.8;
+    cursor: grabbing !important;
+    opacity: 0.8;
 }
 
 .cdk-drag-preview {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  background-color: white;
-  opacity: 0.5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    background-color: white;
+    opacity: 0.5;
 }
 
 .drag-handle {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  z-index: 10;
-  cursor: grab;
-  user-select: none;
-  font-size: 16px;
-  opacity: 0.3;
-  transition: opacity 0.1s ease;
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    z-index: 10;
+    cursor: grab;
+    user-select: none;
+    font-size: 16px;
+    opacity: 0.3;
+    transition: opacity 0.1s ease;
 }
 
 .drag-handle:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
-.drag-placeholder {
-
-}
+.drag-placeholder {}
 
 .dragging[cdkDropList] {
-  transition: none !important;
+    transition: none !important;
 }
 
 .topHalf {
     box-shadow: 0px -10px 0px #2196f3 !important;
 }
+
 .bottomHalf {
     box-shadow: 0px 10px 0px #2196f3 !important;
 }
+
 .rightHalf {
     box-shadow: 10px 0px 0px #2196f3 !important;
 }
+
 .leftHalf {
     box-shadow: -10px 0px 0px #2196f3 !important;
 }
@@ -188,13 +188,16 @@ mat-card {
 .insideTopDrop {
     box-shadow: inset 0px 5px 0px #2196f3, inset 0px 15px 0px #2196f377 !important;
 }
+
 .insideBottomDrop {
     box-shadow: inset 0px -5px 0px #2196f3, inset 0px -15px 0px #2196f377 !important;
 
 }
+
 .insideLeftDrop {
     box-shadow: inset 5px 0px 0px #2196f3, inset 15px 0px 0px #2196f377 !important;
 }
+
 .insideRightDrop {
     box-shadow: inset -5px 0px 0px #2196f3, inset -15px 0px 0px #2196f377 !important;
 }
@@ -209,35 +212,44 @@ mat-card {
 }
 
 .custom-placeholder {
-  position: absolute;
-  pointer-events: none;
-  opacity: 1;
+    position: absolute;
+    pointer-events: none;
+    opacity: 1;
 }
 
 .iframe-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 100px; /* ou o mesmo que o iframe */
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100px;
+    /* ou o mesmo que o iframe */
 }
 
 .iframe-wrapper iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: auto;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
 }
 
 .iframe-click-catcher {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  background: rgba(255,0,0, 0.3);
-  z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background: rgba(255, 0, 0, 0.3);
+    z-index: 2;
 }
+
+
+.side-panel mat-divider {
+    display: block;
+    width: calc(100% + 2rem);
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
 
 .container {
   height: 100vh;

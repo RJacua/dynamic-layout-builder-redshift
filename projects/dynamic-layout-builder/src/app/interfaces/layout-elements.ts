@@ -89,12 +89,21 @@ export interface Styles { //vai crescer
   ['padding-bottom']?: string;
   ['padding-left']?: string;
 
-  // Padding Styles
+  // Margin Styles
   margin?: string;
   ['margin-top']?: string;
   ['margin-right']?: string;
   ['margin-bottom']?: string;
   ['margin-left']?: string;
+
+  // Dimension Styles
+  height?: string;
+  width?: string;
+  ['max-height']?: string;
+  ['max-width']?: string;
+  ['min-height']?: string;
+  ['min-width']?: string;
+
 
 
 }

@@ -2,26 +2,24 @@
     <mat-list>
         <mat-divider></mat-divider>
         <mat-list-item>
-            <h3 class="center">Margin Options</h3>
+            <h3 class="center subtitle">Margin Options</h3>
         </mat-list-item>
-        <div>
-            <span>
-                <label for="individualMargin">Individual Margins</label>
-                <input type="checkbox" id="individualMargin" name="individualMargin"
-                    [formControl]="enableIndividualMarginCheckbox">
-            </span>
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="individualMargin" name="individualMargin"
+                [formControl]="enableIndividualMarginCheckbox">
+            <label for="individualMargin">Individual Margins</label>
         </div><br>
 
         <div *ngIf="!enableIndividualMarginCheckbox.value">
             <form [formGroup]="marginOptions">
-                <label for="margin">margin:</label><br>
-                <input type="number" id="margin" name="margin" min="0" formControlName="margin" style="width: 50%">
-                <span>
+                <label for="margin">Margin:</label>
+                <div class="row-input">
+                    <input type="number" id="margin" name="margin" min="0" formControlName="margin" style="width: 50%">
                     <select name="unit" id="unit" formControlName="unit" style="width: 50px;">
                         <option *ngFor="let unitOption of unitOptions" [ngValue]="unitOption">{{ unitOption }}
                         </option>
                     </select>
-                </span>
+                </div>
             </form>
         </div>
 
@@ -63,7 +61,3 @@
         </div>
     </mat-list>
 </mat-card>
-<br>
-<br>
-<br>
-<br>
