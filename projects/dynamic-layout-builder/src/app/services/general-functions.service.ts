@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Styles } from '../interfaces/layout-elements';
+import { SelectionService } from './selection.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeneralFunctionsService {
+  readonly selectionSvc = inject(SelectionService);
 
   constructor() { }
   isAttributeOf(attr: string, objToCheck: any): boolean {
@@ -39,6 +41,44 @@ export class GeneralFunctionsService {
     };
   }
 
+  ConvertBorderRadiusStyle(styles: Styles, width: number, height: number) {
+    const convertedStyles: Styles = {};
+    Object.entries(styles).forEach((attr) => {
+      if (attr[0].endsWith('radius')) {
+        this.updateLayerStyle(convertedStyles, attr[0], this.computeBorderRadius(width, height, parseInt(attr[1])).toString() + 'px')
+      }
+      else
+        this.updateLayerStyle(convertedStyles, attr[0], attr[1])
+    })
+    // console.log(convertedStyles)
+    return signal(convertedStyles);
+  }
+
+
+  computeBorderRadius(width: number, height: number, normalizedValue: number): number {
+    const minDim = Math.min(width, height);
+    const radius = (normalizedValue / 100) * (minDim*(1.25) / 2);
+
+    // console.log("max: ", minDim, "normal: ", normalizedValue, "rad: ", radius);
+
+    return Math.floor(radius);
+  }
+
+  filterStyles(styles: Styles) {
+    const attributesToFilter = ['max-height', 'max-width', 'min-height', 'min-width'];
+    const filtererStyles: Styles = {};
+
+    Object.entries(styles).forEach((attr) => {
+      // console.log(attr[0], attributesToFilter[0])
+      if (attributesToFilter.includes(attr[0])) {
+        if (parseInt(attr[1]) !== 0)
+          this.updateLayerStyle(filtererStyles, attr[0], attr[1])
+      }
+      else
+        this.updateLayerStyle(filtererStyles, attr[0], attr[1])
+    })
+    return signal(filtererStyles);
+  }
 
   getSplitStyles(styles: Styles): { outer: Styles; inner: Styles } {
     const outer: Styles = {};

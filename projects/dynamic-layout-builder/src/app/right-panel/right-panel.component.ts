@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { SelectionService } from '../services/selection.service';
 import { CommonModule } from '@angular/common';
 import { BackgroundStylesOptionsComponent } from './background-styles-options/background-styles-options.component';
@@ -8,6 +8,7 @@ import { CornerStylesOptionsComponent } from './corner-styles-options/corner-sty
 import { PaddingStylesOptionsComponent } from './padding-styles-options/padding-styles-options.component';
 import { MarginStylesOptionsComponent } from "./margin-styles-options/margin-styles-options.component";
 import { IframeBasicOptionsComponent } from './iframe-basic-options/iframe-basic-options.component';
+import { DimensionStylesOptionsComponent } from './dimension-styles-options/dimension-styles-options.component';
 
 @Component({
   selector: 'app-right-panel',
@@ -19,7 +20,8 @@ import { IframeBasicOptionsComponent } from './iframe-basic-options/iframe-basic
     CornerStylesOptionsComponent,
     PaddingStylesOptionsComponent,
     MarginStylesOptionsComponent,
-    IframeBasicOptionsComponent
+    IframeBasicOptionsComponent,
+    DimensionStylesOptionsComponent
 ],
   templateUrl: './right-panel.component.html',
   styleUrl: './right-panel.component.scss'
@@ -27,6 +29,6 @@ import { IframeBasicOptionsComponent } from './iframe-basic-options/iframe-basic
 export class RightPanelComponent {
   private selectionService = inject(SelectionService)
 
-  selectedNode = this.selectionService.selectedNode;
+  selectedNode = computed(() => this.selectionService.selectedNode());
 
 }

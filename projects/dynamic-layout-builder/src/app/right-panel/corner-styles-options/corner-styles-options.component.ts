@@ -84,6 +84,9 @@ export class CornerStylesOptionsComponent implements OnInit {
   // }
 
   ngOnInit() {
+
+    // this.el = this.selectionSvc.findDeepestElementByDataIdAndTag(this.selectionSvc.selectedElementId())!;
+
     this.strokeRadius.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe(strokeRadius => {

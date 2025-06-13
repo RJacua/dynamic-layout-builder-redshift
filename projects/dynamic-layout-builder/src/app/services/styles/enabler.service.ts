@@ -52,6 +52,7 @@ export class EnablerService {
         delete (nodeStyle as Record<string, string>)[attr];
       }
     })
+    // console.log(nodeStyle)
     return signal(nodeStyle);
   }
 
