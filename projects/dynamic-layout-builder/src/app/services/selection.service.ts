@@ -18,12 +18,17 @@ export class SelectionService {
 
   private _selectedId = signal<string>('canvas');
 
-  selectedElementId = computed(this._selectedId);
+  isPanning = signal(false);
+  selectedElementId = computed(!this.isPanning() ? this._selectedId : signal('canvas'));
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
-  isPanning = signal(false);
 
   select(element: ContainerData | AtomicElementData): void {
+    if (this.isPanning()) {
+      this.unselect()
+      return
+    }
+
     if (element.type === 'canvas') {
       this.unselect();
       return
@@ -34,6 +39,11 @@ export class SelectionService {
   }
 
   selectById(id: string, keep = false) {
+    if (this.isPanning()) {
+      this.unselect()
+      return
+    }
+
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
@@ -45,10 +55,14 @@ export class SelectionService {
   }
 
   private _hoveredId = signal<string>('canvas');
-  hoveredElementId = computed(this._hoveredId);
+  hoveredElementId = computed(!this.isPanning() ? this._hoveredId : signal('canvas'));
   hoveredNode = computed(() => this.modelSvc.getNodeById(this.hoveredElementId(), this.modelSvc.canvasModel()));
 
   hover(element: ContainerData | AtomicElementData): void {
+    if (this.isPanning()) {
+      this.unhover()
+      return
+    }
     if (element.type === 'canvas') {
       this.unhover();
       return
@@ -59,6 +73,10 @@ export class SelectionService {
   }
 
   hoverById(id: string) {
+    if (this.isPanning()) {
+      this.unhover()
+      return
+    }
     this._hoveredId.set(id);
   }
 

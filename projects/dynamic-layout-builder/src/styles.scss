@@ -45,6 +45,7 @@ html {
 .paragraph-align-left,
 .header-alignment-left {
     text-align: left;
+
 }
 
 .align-right,
@@ -236,4 +237,72 @@ mat-card {
   cursor: pointer;
   background: rgba(255,0,0, 0.3);
   z-index: 2;
+}
+
+.container {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.side-panel {
+  background-color: #f5f5f5;
+  overflow: auto;
+}
+
+/* Área do meio */
+.center-area {
+  position: relative;
+  overflow: hidden;
+
+}
+
+/* Viewport onde o pan e zoom acontecem */
+.viewport {
+  height: 100%;
+  width: 100%;
+  cursor: default;
+  overflow: hidden;
+  position: relative;
+}
+
+.viewport.movable {
+  cursor: grab;
+}
+
+.viewport.movable.dragging {
+  cursor: grabbing;
+}
+
+/* Container com zoom e pan aplicados */
+.pan-zoom-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1); /* vai ser atualizado dinamicamente com zoom e pan */
+  transform-origin: 0 0;
+  transition: transform 0.05s ease-out;
+}
+
+
+/* Canvas com tamanho fixo, centrado com translate */
+.canvas-wrapper {
+  width: 1920px;
+  height: 1080px;
+  transform: translate(-50%, -50%);
+  position: relative;
+}
+
+/* Botão de reset */
+.reset-button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 10;
+  pointer-events: auto;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
 }

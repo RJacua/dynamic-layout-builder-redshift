@@ -28,6 +28,7 @@
   </div>
 
   @if(editMode){
+
   <div class="align-center add-sign" [class.active]="isFocused() || isHovered()">
     <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add"
       (click)="forceSelection()"></app-menu>
