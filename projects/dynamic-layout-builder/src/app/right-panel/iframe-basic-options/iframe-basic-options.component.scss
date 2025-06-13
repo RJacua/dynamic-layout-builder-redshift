@@ -1,0 +1,27 @@
+mat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+
+/* Input personalizado */
+.custom-input {
+    width: 100%;
+    padding: 8px;
+    background-color: #383838;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    width: 90%;
+  }
+  
+  .custom-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #2097e1; /* cor de foco sutil */
+  }
+
+  label {
+    margin-bottom: 6px; /* adiciona espaço entre o label e o input */
+    display: inline-block;
+  }
