@@ -3,10 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { ModelService } from './model.service';
 
-//Criar selectedNode que vai ser passado pras coisas do style
-//Em cada style fazer o update do Canvas Model grande, isso vai atualizar o seçected node...
-//Garantir reatividade, acho q precisa de effect e untracked pra evitar loop infinito
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +13,9 @@ export class SelectionService {
   private _selectedId = signal<string>('canvas');
   
   isPanning = signal(false);
-  selectedElementId = computed(!this.isPanning() ? this._selectedId : signal('canvas'));
+  selectedElementId = computed(() => { 
+    if (!this.isPanning()) return this._selectedId()
+    else return 'canvas'});
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
   height = signal(0);
@@ -34,7 +32,7 @@ export class SelectionService {
       return
     }
     else if (element.id) {
-      this.unselect();
+      setTimeout(() => this.unselect(), 0);
       setTimeout(() => this._selectedId.set(element.id), 0);
     }
   }
@@ -84,6 +82,10 @@ export class SelectionService {
 
   unhover() {
     this._hoveredId.set('canvas');
+  }
+
+  togglePanning(){
+    this.isPanning.update(() => !this.isPanning());
   }
 
   // findDeepestElementByDataIdAndTag(

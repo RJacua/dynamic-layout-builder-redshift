@@ -9,6 +9,7 @@ import { ModelService } from '../../services/model.service';
 import { ContainerData, LayoutElement } from '../../interfaces/layout-elements';
 import { EncodeService } from '../../services/encode.service';
 import { SelectionService } from '../../services/selection.service';
+import { HotkeyService } from '../../services/hotkey.service';
 
 @Component({
   selector: 'app-work-space',
@@ -22,6 +23,7 @@ export class WorkSpaceComponent implements OnInit {
   readonly encodeSvc = inject(EncodeService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
+  readonly hotkeySvc = inject(HotkeyService);
   canvasModel = computed(() => this.modelSvc.canvasModel());
   canvasModelsString: Signal<string> = computed(
     () => JSON.stringify(this.canvasModel(), null)

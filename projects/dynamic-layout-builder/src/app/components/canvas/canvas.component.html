@@ -1,6 +1,7 @@
 <!-- <div class="canvas" [ngStyle]="dynamicStyles$ | async"  -->
   <div
     [class.canvas-edit]="editMode"
+    class="canvas"
     (click)="onElementClick($event)"
     cdkDropList
     (cdkDropListDropped)="onDrop($event)"

@@ -222,7 +222,6 @@ mat-card {
     display: inline-block;
     width: 100%;
     height: 100px;
-    /* ou o mesmo que o iframe */
 }
 
 .iframe-wrapper iframe {
@@ -269,13 +268,13 @@ mat-card {
 
 }
 
-/* Viewport onde o pan e zoom acontecem */
 .viewport {
   height: 100%;
   width: 100%;
   cursor: default;
   overflow: hidden;
   position: relative;
+
 }
 
 .viewport.movable {
@@ -286,26 +285,24 @@ mat-card {
   cursor: grabbing;
 }
 
-/* Container com zoom e pan aplicados */
 .pan-zoom-container {
   position: absolute;
-  top: 50%;
+  top: 75%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1); /* vai ser atualizado dinamicamente com zoom e pan */
+  transform: translate(-50%, -50%) scale(1); 
   transform-origin: 0 0;
   transition: transform 0.05s ease-out;
 }
 
 
-/* Canvas com tamanho fixo, centrado com translate */
 .canvas-wrapper {
   width: 1920px;
   height: 1080px;
   transform: translate(-50%, -50%);
   position: relative;
+  
 }
 
-/* Botão de reset */
 .reset-button {
   position: absolute;
   bottom: 10px;
@@ -317,4 +314,8 @@ mat-card {
   border-radius: 6px;
   padding: 5px 10px;
   cursor: pointer;
+}
+
+.canvas {
+      background: rgba(235,235,235,1);
 }
