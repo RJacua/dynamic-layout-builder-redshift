@@ -1,0 +1,48 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    input,
+    select {
+        background-color: #383838;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        outline: none;
+        transition: box-shadow 0.2s ease;
+        width: 80%;
+    }
+
+    input[type="color"] {
+        padding: 4px;
+        height: 36px;
+        width: 20%;
+    }
+
+    input[type="number"] {
+        width: 20%;
+
+        /* Remove os spinners no Chrome, Safari, Edge, Opera */
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Remove os spinners no Firefox */
+        -moz-appearance: textfield;
+    }
+
+
+    input:focus,
+    select:focus {
+        box-shadow: 0 0 0 2px #2097e1; // cor de foco sutil
+    }
+}
+
+form div label {
+    margin-bottom: 8px;
+    display: inline-block;
+}

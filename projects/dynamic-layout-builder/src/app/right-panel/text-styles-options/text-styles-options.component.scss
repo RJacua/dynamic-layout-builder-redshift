@@ -1,0 +1,205 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    input:not([type="range"]),
+    select {
+        background-color: #383838;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        outline: none;
+        transition: box-shadow 0.2s ease;
+        width: 80%;
+    }
+
+    
+
+    input[type="color"] {
+        padding: 4px;
+        height: 36px;
+        width: 20%;
+    }
+
+    input[type="number"] {
+        width: 20%;
+
+        /* Remove os spinners no Chrome, Safari, Edge, Opera */
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Remove os spinners no Firefox */
+        -moz-appearance: textfield;
+    }
+
+    input:not([type="range"]):focus,
+    select:focus {
+        box-shadow: 0 0 0 2px #2097e1; // cor de foco sutil
+    }
+
+}
+
+form div label {
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+  
+  /* Esconde o checkbox original */
+  .checkbox-wrapper input[type="checkbox"] {
+    /* Esconde mas mantém acessível para screen readers */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* Caixa customizada */
+  .checkbox-wrapper label {
+    position: relative;
+    padding-left: 28px; /* espaço para o quadradinho */
+    cursor: pointer;
+    display: inline-block;
+    line-height: 20px;
+  }
+  
+  /* O quadradinho */
+  .checkbox-wrapper label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background-color: #383838;
+    border: 2px solid #555;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  
+  /* Marca (check) que aparece quando o checkbox está marcado */
+  .checkbox-wrapper input[type="checkbox"]:checked + label::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 45%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    /* check branco */
+    box-sizing: border-box;
+  }
+  
+  /* Hover e foco para a caixa */
+  .checkbox-wrapper input[type="checkbox"]:focus + label::before {
+    box-shadow: 0 0 0 1px #2097e1; /* mesma cor do foco dos inputs */
+    border-color: #2097e1;
+  }
+  
+  .checkbox-wrapper label:hover::before {
+    border-color: #888;
+  }
+
+
+  .valorSlider {
+    margin-left: 10px; /* Ajusta o valor do espaço aqui */
+    vertical-align: middle; /* Alinha com o slider */
+  }
+
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 80%;
+    height: 6px;
+    background: #555; /* trilha escura */
+    border-radius: 3px;
+    outline: none;
+    margin: 8px 0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border: none; /* evita bordas extras */
+    box-shadow: none; /* tira sombra padrão */
+  }
+  
+  /* Hover clareia a trilha */
+  input[type="range"]:hover {
+    background: #777;
+  }
+  
+  /* Trilhas padrão para WebKit */
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    background: #555;
+    border-radius: 3px;
+    transition: background 0.3s ease;
+  }
+  
+  input[type="range"]:hover::-webkit-slider-runnable-track {
+    background: #777;
+  }
+  
+  /* Trilhas para Firefox */
+  input[type="range"]::-moz-range-track {
+    height: 6px;
+    background: #555;
+    border-radius: 3px;
+    transition: background 0.3s ease;
+  }
+  
+  input[type="range"]:hover::-moz-range-track {
+    background: #777;
+  }
+  
+  /* Thumb padrão WebKit */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #2097e1;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    margin-top: -6px; /* centraliza verticalmente */
+    transition: background 0.3s ease;
+    box-shadow: none; /* tira sombra padrão */
+  }
+  
+  input[type="range"]:hover::-webkit-slider-thumb {
+    background: #3cb0f7;
+  }
+  
+  /* Thumb padrão Firefox */
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #2097e1;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: background 0.3s ease;
+    box-shadow: none;
+  }
+  
+  input[type="range"]:hover::-moz-range-thumb {
+    background: #3cb0f7;
+  }
+  
+

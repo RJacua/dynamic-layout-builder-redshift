@@ -2,24 +2,29 @@
     <mat-list>
         <mat-divider></mat-divider>
         <mat-list-item>
-            <h3 class="center">Border Options</h3>
+            <h3 class="center subtitle">Border Options</h3>
         </mat-list-item>
-        <mat-list-item>Stroke / Border <input type="checkbox" id="stroke" name="stroke" [formControl]="enableStrokeCheckbox">
-        </mat-list-item>
-
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="stroke" name="stroke" [formControl]="enableStrokeCheckbox">
+            <label for="stroke">Stroke / Border</label>
+          </div>
+        <br>
         <div *ngIf="enableStrokeCheckbox.value">
             <div>
                 <form [formGroup]="strokeOptions">
-                    <label for="strokeClor">Color:</label><br>
-                    <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor"><br><br>
-    
+                    <label for="strokeClor">Color:</label>
+                    <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor">
+
                     <label for="strokeStyle">Style:</label>
                     <select name="strokeStyle" id="strokeStyle" formControlName="strokeStyle">
-                        <option *ngFor="let strokeStyleOption of strokeStyleOptions" [ngValue]="strokeStyleOption.value">{{ strokeStyleOption.label }}</option>
-                    </select><br><br>
-    
-                    <label for="strokeWidth">Width:</label><br>
-                    <input type="number" id="strokeWidth" name="strokeWidth" formControlName="strokeWidth"><br><br>
+                        <option *ngFor="let strokeStyleOption of strokeStyleOptions"
+                            [ngValue]="strokeStyleOption.value">{{ strokeStyleOption.label }}</option>
+                    </select>
+
+                    <label for="strokeWidth">Width:</label>
+                    <span><input type="number" id="strokeWidth" name="strokeWidth" formControlName="strokeWidth">
+                        px
+                    </span>
                 </form>
             </div>
 
