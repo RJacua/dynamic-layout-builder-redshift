@@ -28,6 +28,7 @@ export class ModelService {
       type: 'canvas',
       children: this.canvasModel(),
       expandedNodes: this.expandedNodes(),
+      
       style: this.canvasStyle(),
     }};
   });

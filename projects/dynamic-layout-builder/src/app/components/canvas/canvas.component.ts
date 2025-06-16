@@ -63,7 +63,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 })
 export class CanvasComponent {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {}};
+  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {} };
   @Input() editMode: boolean = true;
 
   readonly generalSvc = inject(GeneralFunctionsService);
@@ -72,6 +72,7 @@ export class CanvasComponent {
   readonly router = inject(Router);
 
   readonly dragDropSvc = inject(DragDropService);
+
 
   canvas = computed(() => this.modelSvc.canvas());
 
@@ -95,11 +96,14 @@ export class CanvasComponent {
   atob: Signal<string> = computed(() => atob(this.btoa()));
   decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
 
+  isPanning = this.selectionSvc.isPanning;
   isHovered = computed(() => {
     return this.selectionSvc.hoveredElementId() === 'canvas';
   });
 
   addContainer() {
+    if (this.isPanning()) return;
+
     const newLayoutElement = this.modelSvc.writeElementModel(
       'container',
       'canvas'

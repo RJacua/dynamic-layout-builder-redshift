@@ -75,6 +75,7 @@ export class ComponentsService {
   // }
 
   addComponent<T extends {}>(type: string, container: ViewContainerRef, id?: string, parentId?: string, data?: T): ComponentRef<LayoutElement<any>> | null {
+
     if (!container) {
       console.error("Nenhum container fornecido.");
       return null;

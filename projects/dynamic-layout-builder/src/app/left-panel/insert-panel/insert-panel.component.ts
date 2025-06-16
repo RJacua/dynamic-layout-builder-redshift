@@ -38,6 +38,8 @@ export class InsertPanelComponent {
   }
 
   addLayoutElement(componentType: string) {
+    if (this.isPanning()) return;
+    
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.selectionSvc.selectedElementId());
     this.modelSvc.addChildNode(this.selectionSvc.selectedElementId(), newLayoutElement);
     setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
