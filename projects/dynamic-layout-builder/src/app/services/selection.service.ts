@@ -32,7 +32,7 @@ export class SelectionService {
       return
     }
     else if (element.id) {
-      setTimeout(() => this.unselect(), 0);
+      setTimeout(() => this._selectedId.set(''), 0);
       setTimeout(() => this._selectedId.set(element.id), 0);
     }
   }
