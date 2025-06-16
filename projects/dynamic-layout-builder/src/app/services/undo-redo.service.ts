@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { SelectionService } from './selection.service';
 import { ModelService } from './model.service';
 import { ContainerData, LayoutElement } from '../interfaces/layout-elements';
@@ -14,25 +14,49 @@ export class UndoRedoService {
   readonly selectionSvc = inject(SelectionService);
   readonly modelSvc = inject(ModelService);
   readonly encodeSvc = inject(EncodeService);
+  readonly router = inject(Router);
+  readonly route = inject(ActivatedRoute);
   encodedHistory = signal<string[]>([]);
-  currentIndex = signal<number>(-1); // começa sem histórico
+  currentIndex = signal<number>(-1);
   readonly HISTORY_LIMIT = 10;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  private hasInitialized = false;
+  private suppressNextPush = false;
+
+  isSuppressedByCreation = signal(false);
+
+  constructor() {
     effect(() => {
-      const current = this.encodeSvc.encodedStr();
 
-      const history = this.encodedHistory();
-      const last = history[history.length - 1];
+      if(this.isSuppressedByCreation()) return;
 
-      if (current && current !== last) {
-        this.pushToHistory(current);
-      }
+      this.modelSvc.hasCanvasModelChanged();
+      console.log(this.encodedHistory());
+      
+      untracked(() => {
+        const current = this.encodeSvc.encodedStr();
+        const history = this.encodedHistory();
+        const last = history[history.length - 1];
+
+        if (!this.hasInitialized) {
+          if (current) {
+            this.hasInitialized = true;
+          }
+          return;
+        }
+
+        if (this.suppressNextPush) {
+          this.suppressNextPush = false;
+          return;
+        }
+
+        if (current && current !== last && !current.includes('=')) {
+          this.pushToHistory(current);
+        }
+      });
     });
   }
+
 
   undo() {
     const index = this.currentIndex();
@@ -40,11 +64,14 @@ export class UndoRedoService {
       const newIndex = index - 1;
       this.currentIndex.set(newIndex);
       const previousEncoded = this.encodedHistory()[newIndex];
+      this.suppressNextPush = true;
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: { encoded: previousEncoded },
         queryParamsHandling: 'merge',
       });
+    } else {
+      this.currentIndex.set(0);
     }
   }
 
@@ -55,6 +82,7 @@ export class UndoRedoService {
       const newIndex = index + 1;
       this.currentIndex.set(newIndex);
       const nextEncoded = history[newIndex];
+      this.suppressNextPush = true;
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: { encoded: nextEncoded },
@@ -63,15 +91,19 @@ export class UndoRedoService {
     }
   }
 
+
   pushToHistory(encoded: string) {
     const history = this.encodedHistory();
     const index = this.currentIndex();
 
-    // Remove qualquer item "à frente" se o usuário alterou o estado após um undo
+    if (encoded === history[index]) {
+      return;
+    }
+
     const newHistory = history.slice(0, index + 1);
 
     if (newHistory.length >= this.HISTORY_LIMIT) {
-      newHistory.shift(); // remove o mais antigo
+      newHistory.shift();
     }
 
     newHistory.push(encoded);
