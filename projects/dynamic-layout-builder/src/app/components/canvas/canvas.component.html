@@ -9,8 +9,9 @@
     (cdkDropListEntered)="onEnter($event)"
     [attr.data-id]="data.id"
     [class.noDropZone]="noDrop()"
+    [style]="internalStyle()"
   >
-    <div class="align-center">
+    <div id="core" class="align-center">
       @for (node of onlyContainers(); track node.data.id) { 
         <!-- @switch
       (node.data.type) { @case ('container') {
