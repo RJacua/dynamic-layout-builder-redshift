@@ -10,7 +10,7 @@ export class GeneralFunctionsService {
 
   constructor() { }
   isAttributeOf(attr: string, objToCheck: any): boolean {
-    // console.log("AQUI: ", objToCheck)
+    if (objToCheck === undefined) return false;
     let found = false;
 
     Object.entries(objToCheck).forEach((a) => {

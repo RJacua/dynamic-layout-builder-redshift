@@ -1,27 +1,41 @@
-<!-- <mat-drawer-container class="container">
-    <mat-drawer class="side-panel" mode="side" opened position="start">
-        <app-left-panel></app-left-panel>
-    </mat-drawer>
-    <mat-drawer-content>
-        <app-canvas></app-canvas>
-    </mat-drawer-content>
-    <mat-drawer class="side-panel" mode="side" opened position="end">
-        <app-right-panel></app-right-panel>
-    </mat-drawer>
-</mat-drawer-container> -->
-
 <div class="container">
-    <as-split direction="horizontal" unit="percent" [gutterSize]="1">
-        <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30"> 
-            <app-left-panel></app-left-panel>
-        </as-split-area>
+  <as-split direction="horizontal" unit="percent" [gutterSize]="1">
+    <!-- Painel esquerdo -->
+    <as-split-area class="side-panel" [size]="14" minSize="10" maxSize="20">
+      <app-left-panel></app-left-panel>
+    </as-split-area>
 
-        <as-split-area [size]="70"  minSize="40">
+    <!-- Área central -->
+    <as-split-area class="center-area" [size]="72" minSize="40">
+      <div
+        class="viewport"
+        [class.movable]="isPanning()"
+        [class.dragging]="isPanning() && isMoving"
+        (mousedown)="onMouseDown($event)"
+        (mouseup)="onMouseUp()"
+        (mouseleave)="onMouseUp()"
+        (mousemove)="onMouseMove($event)"
+        (wheel)="onWheel($event)"
+      >
+        <div
+          #panZoomContainer
+          class="pan-zoom-container"
+          [style.transform]="transformStyle()"
+          [style.transform-origin]="'0 0'"
+        >
+          <div class="canvas-wrapper">
             <app-canvas [editMode]="true"></app-canvas>
-        </as-split-area>
+          </div>
+        </div>
+      </div>
 
-        <as-split-area class="side-panel" [size]="15" minSize="15" maxSize="30">
-            <app-right-panel></app-right-panel>
-        </as-split-area>
-    </as-split>
+      <!-- Botão de centralizar -->
+      <button (click)="resetView()" class="reset-button">🔄 Center</button>
+    </as-split-area>
+
+    <!-- Painel direito -->
+    <as-split-area class="side-panel" [size]="14" minSize="10" maxSize="20">
+      <app-right-panel></app-right-panel>
+    </as-split-area>
+  </as-split>
 </div>

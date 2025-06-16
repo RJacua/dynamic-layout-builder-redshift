@@ -4,7 +4,12 @@
 
 <div class="buttons-list">
     <button mat-icon-button [matMenuTriggerFor]="handMenu" aria-label="Example icon-button with a menu">
-        <mat-icon matTooltip="Move">back_hand</mat-icon>
+        @if(isPanning()){
+            <mat-icon matTooltip="Move">back_hand</mat-icon>
+        }
+        @else {
+            <mat-icon matTooltip="Edit">border_color</mat-icon>
+        }
         <!-- <p>move</p> -->
     </button>
 
@@ -29,14 +34,14 @@
 </div>
 
 <mat-menu #handMenu="matMenu">
-    <button mat-menu-item >
+    <button mat-menu-item (click)="panningOn()">
         <mat-icon>back_hand</mat-icon>
         <span>Move</span>
     </button>
     <!-- <button mat-menu-item>Move</button> -->
-    <button mat-menu-item >
-        <mat-icon>photo_size_select_small</mat-icon>
-        <span>Scale</span>
+    <button mat-menu-item (click)="panningOff()">
+        <mat-icon>border_color</mat-icon>
+        <span>Edit</span>
     </button>
     <!-- <button mat-menu-item>Scale</button> -->
 </mat-menu>

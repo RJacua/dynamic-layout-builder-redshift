@@ -1,8 +1,14 @@
-
 .add-sign {
-  margin-top: -3%;
+  position: absolute;
+  left: 50%;
+  bottom: 0px;
+  transform: translate(-50%, 50%);
   opacity: 0;
+  z-index: 10;
+  transition: opacity 0.2s ease;
+  pointer-events: auto;
 }
+
 .add-sign.active {
   opacity: 1;
 }

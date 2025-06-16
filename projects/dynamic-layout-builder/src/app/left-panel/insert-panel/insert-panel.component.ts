@@ -8,6 +8,7 @@ import { ComponentsService } from '../../services/components.service';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+
 @Component({
   selector: 'app-insert-panel',
   imports: [MatButtonModule, MatMenuModule, MatIconModule, CommonModule,  MatTooltipModule],
@@ -19,6 +20,8 @@ export class InsertPanelComponent {
   readonly selectionSvc = inject(SelectionService);
 
   selectedId = this.selectionSvc.selectedElementId;
+
+  isPanning = this.selectionSvc.isPanning;
 
   selectedElementType = computed(() => {
     let selectedNode = this.selectionSvc.selectedNode();
@@ -38,6 +41,14 @@ export class InsertPanelComponent {
     const newLayoutElement = this.modelSvc.writeElementModel(componentType, this.selectionSvc.selectedElementId());
     this.modelSvc.addChildNode(this.selectionSvc.selectedElementId(), newLayoutElement);
     setTimeout(() => {this.selectionSvc.select(newLayoutElement.data), 0});
+  }
+
+  panningOn() {
+    this.isPanning.set(true);
+  }
+
+  panningOff() {
+    this.isPanning.set(false);
   }
 
 }

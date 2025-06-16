@@ -3,10 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { ModelService } from './model.service';
 
-//Criar selectedNode que vai ser passado pras coisas do style
-//Em cada style fazer o update do Canvas Model grande, isso vai atualizar o seçected node...
-//Garantir reatividade, acho q precisa de effect e untracked pra evitar loop infinito
-
 @Injectable({
   providedIn: 'root'
 })
@@ -16,25 +12,37 @@ export class SelectionService {
 
   private _selectedId = signal<string>('canvas');
   
-  selectedElementId = computed(this._selectedId);
+  isPanning = signal(false);
+  selectedElementId = computed(() => { 
+    if (!this.isPanning()) return this._selectedId()
+    else return 'canvas'});
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
   height = signal(0);
   width = signal(0);
 
   select(element: ContainerData | AtomicElementData): void {
+    if (this.isPanning()) {
+      this.unselect()
+      return
+    }
+
     if (element.type === 'canvas') {
       this.unselect();
       return
     }
     else if (element.id) {
-      this.unselect();
+      setTimeout(() => this._selectedId.set(''), 0);
       setTimeout(() => this._selectedId.set(element.id), 0);
     }
   }
 
   selectById(id: string, keep = false) {
-    this.unselect();
+    if (this.isPanning()) {
+      this.unselect()
+      return
+    }
+
     if (id !== this._selectedId()) {
       this._selectedId.set(id);
     }
@@ -47,10 +55,14 @@ export class SelectionService {
   }
 
   private _hoveredId = signal<string>('canvas');
-  hoveredElementId = computed(this._hoveredId);
+  hoveredElementId = computed(!this.isPanning() ? this._hoveredId : signal('canvas'));
   hoveredNode = computed(() => this.modelSvc.getNodeById(this.hoveredElementId(), this.modelSvc.canvasModel()));
 
   hover(element: ContainerData | AtomicElementData): void {
+    if (this.isPanning()) {
+      this.unhover()
+      return
+    }
     if (element.type === 'canvas') {
       this.unhover();
       return
@@ -61,11 +73,19 @@ export class SelectionService {
   }
 
   hoverById(id: string) {
+    if (this.isPanning()) {
+      this.unhover()
+      return
+    }
     this._hoveredId.set(id);
   }
 
   unhover() {
     this._hoveredId.set('canvas');
+  }
+
+  togglePanning(){
+    this.isPanning.update(() => !this.isPanning());
   }
 
   // findDeepestElementByDataIdAndTag(

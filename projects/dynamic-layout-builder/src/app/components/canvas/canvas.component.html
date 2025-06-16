@@ -1,6 +1,7 @@
 <!-- <div class="canvas" [ngStyle]="dynamicStyles$ | async"  -->
   <div
     [class.canvas-edit]="editMode"
+    class="canvas"
     (click)="onElementClick($event)"
     cdkDropList
     (cdkDropListDropped)="onDrop($event)"
@@ -41,4 +42,4 @@
 <!-- <pre>{{decoded()}}</pre> -->
 <!-- <pre>--------------------</pre> -->
 <!-- <pre>{{ canvasModelsString() }}</pre> -->
-<!-- <pre>{{ canvasCustomString() }}</pre> -->
+<pre>{{ canvasCustomString() }}</pre>

@@ -1,64 +1,77 @@
 <ng-container *ngIf="selectedNode() as selected">
-    <ng-container [ngSwitch]="selected.data?.type">
-
-        <!-- <div *ngSwitchCase="'canvas'">
+  <ng-container [ngSwitch]="selected.data?.type">
+    <!-- <div *ngSwitchCase="'canvas'">
             <app-background-styles-options></app-background-styles-options>
             <app-corner-styles-options></app-corner-styles-options>
         </div> -->
 
-        <div *ngSwitchCase="'container'">
-            <app-background-styles-options></app-background-styles-options>
-            <app-border-styles-options></app-border-styles-options>
-            <app-corner-styles-options></app-corner-styles-options>
-            <app-padding-styles-options></app-padding-styles-options>
-            <app-margin-styles-options></app-margin-styles-options>
-            <app-dimension-styles-options></app-dimension-styles-options>
+    <div *ngSwitchCase="'container'">
+      <app-background-styles-options></app-background-styles-options>
+      <app-border-styles-options></app-border-styles-options>
+      <app-corner-styles-options></app-corner-styles-options>
+      <app-padding-styles-options></app-padding-styles-options>
+      <app-margin-styles-options></app-margin-styles-options>
+      <app-dimension-styles-options></app-dimension-styles-options>
 
-            <br>
-            <br>
-            <br>
-            <br>
-        </div>
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
 
-        <div *ngSwitchCase="'header'">
-            <app-background-styles-options></app-background-styles-options>
-            <app-text-styles-options></app-text-styles-options>
-            <app-border-styles-options></app-border-styles-options>
-            <app-corner-styles-options></app-corner-styles-options>
-            <app-padding-styles-options></app-padding-styles-options>
-            <app-margin-styles-options></app-margin-styles-options>
-            <app-dimension-styles-options></app-dimension-styles-options>
+    <div *ngSwitchCase="'header'">
+      <app-background-styles-options></app-background-styles-options>
+      <app-text-styles-options></app-text-styles-options>
+      <app-border-styles-options></app-border-styles-options>
+      <app-corner-styles-options></app-corner-styles-options>
+      <app-padding-styles-options></app-padding-styles-options>
+      <app-margin-styles-options></app-margin-styles-options>
+      <app-dimension-styles-options></app-dimension-styles-options>
 
-            <br>
-            <br>
-            <br>
-            <br>
-        </div>
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
 
-        <div *ngSwitchCase="'paragraph'">
-            <app-background-styles-options></app-background-styles-options>
-            <app-text-styles-options></app-text-styles-options>
-            <app-border-styles-options></app-border-styles-options>
-            <app-corner-styles-options></app-corner-styles-options>
-            <app-padding-styles-options></app-padding-styles-options>
-            <app-margin-styles-options></app-margin-styles-options>
-            <app-dimension-styles-options></app-dimension-styles-options>
+    <div *ngSwitchCase="'paragraph'">
+      <app-background-styles-options></app-background-styles-options>
+      <app-text-styles-options></app-text-styles-options>
+      <app-border-styles-options></app-border-styles-options>
+      <app-corner-styles-options></app-corner-styles-options>
+      <app-padding-styles-options></app-padding-styles-options>
+      <app-margin-styles-options></app-margin-styles-options>
+      <app-dimension-styles-options></app-dimension-styles-options>
 
-            <br>
-            <br>
-            <br>
-            <br>
-        </div>
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
 
-        <div *ngSwitchCase="'iframe'">
-             <app-iframe-basic-options></app-iframe-basic-options>
-             <app-background-styles-options></app-background-styles-options>
-             <app-border-styles-options></app-border-styles-options>
-             <app-corner-styles-options></app-corner-styles-options>
-             <app-padding-styles-options></app-padding-styles-options>
-             <app-margin-styles-options></app-margin-styles-options>
-        </div>
+    <div *ngSwitchCase="'iframe'">
+      <app-iframe-basic-options></app-iframe-basic-options>
+      <app-background-styles-options></app-background-styles-options>
+      <app-border-styles-options></app-border-styles-options>
+      <app-corner-styles-options></app-corner-styles-options>
+      <app-padding-styles-options></app-padding-styles-options>
+      <app-margin-styles-options></app-margin-styles-options>
+    </div>
 
-        <div *ngSwitchDefault>No element selected!</div>
-    </ng-container>
+    <div *ngSwitchCase="'canvas'">
+      <app-background-styles-options></app-background-styles-options>
+      <app-border-styles-options></app-border-styles-options>
+      <app-corner-styles-options></app-corner-styles-options>
+      <app-padding-styles-options></app-padding-styles-options>
+      <app-margin-styles-options></app-margin-styles-options>
+      <app-dimension-styles-options></app-dimension-styles-options>
+
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
+
+    <div *ngSwitchDefault>No element selected!</div>
+  </ng-container>
 </ng-container>
