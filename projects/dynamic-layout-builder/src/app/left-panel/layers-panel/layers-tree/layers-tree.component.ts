@@ -118,7 +118,7 @@ export class LayersTreeComponent {
         this.selectionSvc.hoverById(id);
       }
     }
-    console.log("hovered: ", this.selectionSvc.hoveredElementId());
+    // console.log("hovered: ", this.selectionSvc.hoveredElementId());
 
     const dataId = el.getAttribute('data-id');
     if (this.isDragging() && dataId) {

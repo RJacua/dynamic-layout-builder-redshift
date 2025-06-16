@@ -62,6 +62,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   constructor() {
 
     effect(() => {
+
       let defaultStyles: Styles;
       const node = this.selectedNode();
       if (!node) return;
