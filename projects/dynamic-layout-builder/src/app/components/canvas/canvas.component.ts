@@ -141,21 +141,32 @@ export class CanvasComponent {
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
     let el = event.target as HTMLElement;
-
+    let originalEl = event.target as HTMLElement;
+    
     while (
       el &&
       el.tagName &&
       !el.tagName.startsWith('APP-') &&
+      // el.id !== "core" &&
       el.parentElement
     ) {
+      console.log(el.classList)
       el = el.parentElement;
     }
 
     if (el && el.tagName.startsWith('APP-')) {
       const componentInstance = (window as any).ng?.getComponent?.(el);
-
+      
       if (componentInstance) {
-        this.selectionService.select(componentInstance.data);
+        let data = componentInstance.data;
+        
+        if(originalEl.classList.contains("external")){
+          this.selectionService.selectById(data.parentId, true);
+        }
+        else {
+          this.selectionService.select(componentInstance.data);
+        }
+
       } else {
         console.warn('ng.getComponent não disponível (modo produção?).');
       }
