@@ -165,8 +165,8 @@ export class StylesService {
           }
         }
       };
-      console.log("updatedModel", updatedModel)
-      console.log("id? ", this.selectionSvc.selectedElementId())
+      // console.log("updatedModel", updatedModel)
+      // console.log("id? ", this.selectionSvc.selectedElementId())
       
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
     }
@@ -208,7 +208,7 @@ export class StylesService {
   }
 
   setAllMissingStyles(defaultStyles: Styles, currentStyles: Styles) {
-    console.log("Default Style:", defaultStyles);
+    // console.log("Default Style:", defaultStyles);
 
     Object.entries(defaultStyles).forEach((attr) => {
       // console.log("update", attr[0], " ->", attr[1]);

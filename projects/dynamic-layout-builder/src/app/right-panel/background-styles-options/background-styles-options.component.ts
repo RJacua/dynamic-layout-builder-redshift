@@ -45,22 +45,22 @@ export class BackgroundStylesOptionsComponent implements OnInit {
       const node = this.selectedNode();
       if (!node) return;
 
-      console.log("Tipo selecionado:", this.selectedNode()?.data.type);
+      // console.log("Tipo selecionado:", this.selectedNode()?.data.type);
 
 
       if (this.selectedNode()?.data.type === 'container') {
         defaultStyles = this.containerStyles;
       }
       else {
-        console.log("ELSE")
+        // console.log("ELSE")
         defaultStyles = this.allStyles;
       }
       // if (Object.keys(node.data.style).length === 0) {
       // !this.generalSvc.isSubset(defaultStyles, node.data.style)
       untracked(() => {
-        console.log("node", node)
+        // console.log("node", node)
         this.bgStylesService.setAllMissing(defaultStyles, node.data.style);
-        console.log("node style", node.data.style)
+        // console.log("node style", node.data.style)
         // this.bgStylesService.setAll(defaultStyles);
       })
       // }

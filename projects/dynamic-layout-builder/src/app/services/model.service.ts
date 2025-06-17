@@ -169,7 +169,7 @@ export class ModelService {
     
     if(model.data.type !== 'canvas'){
       const currentBranch = branch ?? this.canvasModel();
-      console.log("entrou", currentBranch)
+      // console.log("entrou", currentBranch)
       
       const updated = this._recursiveUpdateModel(id, model, currentBranch);
       
@@ -325,12 +325,13 @@ export class ModelService {
   }
 
 
-  setCanvasModel(model: LayoutElement<ContainerData>[]) {
-    this.canvasModel.set(model)
-  }
+  setCanvasModel2(model: Canvas<CanvasData>) {
 
-  resetCanvasModel() {
-    this.canvasModel.set([])
+    this.canvasModel.set(model.data.children);
+    this.expandedNodes.set(new Set());
+    this.canvasStyle.set(model.data.style);
+    this.canvasEnabler.set(model.data.enabler);
+
   }
 
   addChildrenTemplate(parentId: string, childrenModels: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]) {

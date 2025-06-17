@@ -69,15 +69,15 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, AfterViewInit {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
   private _elementRef = inject(ElementRef);
-  
-  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {},  enabler: {} };
+
+  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {}, enabler: {} };
   @Input() editMode: boolean = true;
 
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
     this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
 
     effect(() => {
-
+      console.log("canvas no canvas: ", this.canvas())
       const element = this._elementRef.nativeElement.querySelector('#core');
 
       if (element) {
@@ -117,14 +117,19 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
   id: string = '0';
   canvas = computed(() => this.modelSvc.canvas());
- children = signal(
+  children = signal(
     [] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
   );
   onlyContainers = computed(() =>
     this.canvas().data.children.filter((el) => el.data.type === 'container')
   );
-  canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvas().data.children, null)
+  // canvasModelsString: Signal<string> = computed(
+  //   () => JSON.stringify(this.canvas().data.children, null)
+  //   // () => this.customStringify(this.canvasModel())
+  // );
+
+  canvasString: Signal<string> = computed(
+    () => JSON.stringify(this.canvas(), null)
     // () => this.customStringify(this.canvasModel())
   );
 
@@ -144,7 +149,7 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
   private resizeObserver?: ResizeObserver;
 
   utf8Str: Signal<string> = computed(() =>
-    encodeURIComponent(this.canvasModelsString())
+    encodeURIComponent(this.canvasString())
   );
   btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
   atob: Signal<string> = computed(() => atob(this.btoa()));
@@ -159,7 +164,7 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
       'container',
       'canvas'
     );
-    console.log(newLayoutElement);
+    // console.log(newLayoutElement);
     this.modelSvc.addChildNode('canvas', newLayoutElement);
     setTimeout(() => {
       this.selectionSvc.select(newLayoutElement.data), 0;
@@ -169,9 +174,9 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
     });
   }
 
-  renderFromModel() {
-    this.modelSvc.setCanvasModel([layoutModels[0][0]]);
-  }
+  // renderFromModel() {
+  //   this.modelSvc.setCanvasModel([layoutModels[0][0]]);
+  // }
 
   private selectionService = inject(SelectionService);
   initialData: string[];
