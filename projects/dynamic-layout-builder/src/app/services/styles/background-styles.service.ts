@@ -18,11 +18,26 @@ export class BackgroundStylesService {
     { value: 'column-reverse', label: 'Column Reverse' }
   ];
   readonly flexDirectionDefault = this.flexDirections[2].value;
+  
+  readonly BgRepeats = [
+    { value: 'repeat', label: 'Repeat' },
+    { value: 'no-repeat', label: 'No Repeat' },
+  ];
+  readonly BgRepeatDefault = this.BgRepeats[1].value;
 
+  readonly BgSizes = [
+    { value: 'auto', label: 'Auto' },
+    { value: 'cover', label: 'Cover' },
+    { value: 'contain', label: 'Contain' },
+  ];
+  readonly BgSizeDefault = this.BgSizes[1].value;
   readonly containerStyles: Styles = {
     ["background-color"]: 'rgba(255, 255, 255,0)',
     opacity: "1",
     ['flex-direction']: this.flexDirectionDefault,
+    ["background-image"]: '',
+    ["background-repeat"]: 'no-repeat',
+    ["background-size"]: 'auto',
   };
 
   readonly allStyles: Styles = {
@@ -43,17 +58,18 @@ export class BackgroundStylesService {
     // this.bgOpacitySubject.next(bgOpacity / 100);
     this.stylesSvc.updateSelectedNodeStyle('flex-direction', direction);
   }
+  setUrlImage(urlImage: string) {
+    var backgroundImage = `url('${urlImage}')`;
+    this.stylesSvc.updateSelectedNodeStyle('background-image', backgroundImage);
+  }
 
-  // setAll(defaultStyles: Styles) {
-  //   // console.log("Default Style:", defaultStyles);
+  setBgRepeat(BgRepeat: string) {
+    this.stylesSvc.updateSelectedNodeStyle('background-repeat', BgRepeat);
+  }
 
-  //   Object.entries(defaultStyles).forEach((attr) => {
-  //     // console.log("update", attr[0], " ->", attr[1]);
-  //     this.stylesSvc.updateSelectedNodeStyle(attr[0], attr[1]);
-  //   })
-
-  // }
-
+  setBgSize(BgSize: string) {
+    this.stylesSvc.updateSelectedNodeStyle('background-size', BgSize);
+  }
   setAllMissing(defaultStyles: Styles, currentStyles: Styles) {
     this.stylesSvc.setAllMissingStyles(defaultStyles, currentStyles)
   }

@@ -69,6 +69,9 @@ export interface Styles { //vai crescer
   ["background-color"]?: string;
   opacity?: string;
   ["flex-direction"]?: string;
+   ["background-image"]?: string;
+   ["background-repeat"]?: string;
+   ["background-size"]?: string;
 
   // Border Styles
   ['border-color']?: string;

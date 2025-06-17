@@ -31,7 +31,7 @@ export class UndoRedoService {
       if(this.isSuppressedByCreation()) return;
 
       this.modelSvc.hasCanvasModelChanged();
-      console.log(this.encodedHistory());
+      // console.log(this.encodedHistory());
       
       untracked(() => {
         const current = this.encodeSvc.encodedStr();

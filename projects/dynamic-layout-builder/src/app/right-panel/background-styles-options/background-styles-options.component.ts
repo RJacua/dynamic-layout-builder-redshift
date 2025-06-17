@@ -32,31 +32,17 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
   flexDirections = this.bgStylesService.flexDirections;
   flexDirectionDefault = this.bgStylesService.flexDirectionDefault;
+  
+  BgRepeats = this.bgStylesService.BgRepeats;
+  BgRepeatDefault = this.bgStylesService.BgRepeatDefault;
+
+  BgSizes = this.bgStylesService.BgSizes;
+  BgSizeDefault = this.bgStylesService.BgSizeDefault;
 
   containerStyles = this.bgStylesService.containerStyles;
   allStyles = this.bgStylesService.allStyles;
 
-  // flexDirections = [
-  //   { value: 'row', label: 'Row' },
-  //   { value: 'row-reverse', label: 'Row Reverse' },
-  //   { value: 'column', label: 'Column' },
-  //   { value: 'column-reverse', label: 'Column Reverse' }
-  // ];
-  // flexDirectionDefault = this.flexDirections[2].value;
 
-  // containerStyles: Styles = {
-  //   ["background-color"]: 'rgba(255, 255, 255,0)',
-  //   opacity: "1",
-  //   ['flex-direction']: this.flexDirectionDefault,
-  // };
-
-  // allStyles: Styles = {
-  //   ["background-color"]: 'rgba(255,255,255,0)',
-  //   opacity: "1",
-  // };
-
-  // bgColor = new FormControl<string>('rgba(255,255,255,0)');
-  // bgOpacity = new FormControl<number>(100);
 
   backgroundOptions = new FormGroup({});
   constructor() {
@@ -88,6 +74,15 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         if (!this.backgroundOptions.contains('flexDirection')) {
           this.backgroundOptions.addControl('flexDirection', new FormControl(''));
         }
+        if (!this.backgroundOptions.contains('urlImage')) {
+          this.backgroundOptions.addControl('urlImage', new FormControl(''));
+        }
+        if (!this.backgroundOptions.contains('BgRepeat')) {
+          this.backgroundOptions.addControl('BgRepeat', new FormControl(''));
+        }
+        if (!this.backgroundOptions.contains('BgSize')) {
+          this.backgroundOptions.addControl('BgSize', new FormControl(''));
+        }
       }
 
 
@@ -102,7 +97,10 @@ export class BackgroundStylesOptionsComponent implements OnInit {
           bgColor: node.data.style["background-color"] || this.containerStyles['background-color'],
           bgOpacity: node.data.style["opacity"] * 100 || (parseInt(this.containerStyles.opacity!) * 100),
           flexDirection: node.data.style["flex-direction"] || this.containerStyles['flex-direction'],
-        });
+          urlImage: node.data.style["background-image"].substring(5, node.data.style["background-image"].length - 2) || this.containerStyles["background-image"],
+          BgRepeat: node.data.style["background-repeat"] || this.containerStyles["background-repeat"],
+          BgSize: node.data.style["background-size"] || this.containerStyles["background-size"],
+        }, { emitEvent: false });
       }
 
 
@@ -144,26 +142,48 @@ export class BackgroundStylesOptionsComponent implements OnInit {
             }
           });
       }
+
+      const urlImageControl = this.backgroundOptions.get('urlImage');
+      if (urlImageControl instanceof FormControl) {
+        urlImageControl.valueChanges
+          .pipe(distinctUntilChanged())
+          .subscribe(url => {
+            // console.log('Selected url:', url);
+            if (url !== 'none') {
+              this.bgStylesService.setUrlImage(url);
+            }
+          });
+      }
+      
+      const BgRepeatControl = this.backgroundOptions.get('BgRepeat');
+      if (BgRepeatControl instanceof FormControl) {
+        BgRepeatControl.valueChanges
+          .pipe(distinctUntilChanged())
+          .subscribe(bgRepeat => {
+            // console.log('Selected bgRepeat:', bgRepeat);
+            if (bgRepeat !== 'none') {
+              this.bgStylesService.setBgRepeat(bgRepeat);
+            }
+          });
+      }
+
+      const BgSizeControl = this.backgroundOptions.get('BgSize');
+      if (BgSizeControl instanceof FormControl) {
+        BgSizeControl.valueChanges
+          .pipe(distinctUntilChanged())
+          .subscribe(bgSize => {
+            // console.log('Selected bgSize:', bgSize);
+            if (bgSize !== 'none') {
+              this.bgStylesService.setBgSize(bgSize);
+            }
+          });
+      }
     });
 
   }
 
   ngOnInit() {
-    // this.bgColor.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(color => {
-    //     console.log('Selected bg color:', color);
-    //     if (color)
-    //       this.bgStylesService.setBgColor(color);
-    //   });
 
-    // this.bgOpacity.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(opacity => {
-    //     console.log('Selected bg opacity:', opacity);
-    //     if (opacity)
-    //       this.bgStylesService.setBgOpacity(opacity);
-    //   });
   }
 
 }
