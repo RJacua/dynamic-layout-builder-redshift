@@ -36,28 +36,6 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   containerStyles = this.bgStylesService.containerStyles;
   allStyles = this.bgStylesService.allStyles;
 
-  // flexDirections = [
-  //   { value: 'row', label: 'Row' },
-  //   { value: 'row-reverse', label: 'Row Reverse' },
-  //   { value: 'column', label: 'Column' },
-  //   { value: 'column-reverse', label: 'Column Reverse' }
-  // ];
-  // flexDirectionDefault = this.flexDirections[2].value;
-
-  // containerStyles: Styles = {
-  //   ["background-color"]: 'rgba(255, 255, 255,0)',
-  //   opacity: "1",
-  //   ['flex-direction']: this.flexDirectionDefault,
-  // };
-
-  // allStyles: Styles = {
-  //   ["background-color"]: 'rgba(255,255,255,0)',
-  //   opacity: "1",
-  // };
-
-  // bgColor = new FormControl<string>('rgba(255,255,255,0)');
-  // bgOpacity = new FormControl<number>(100);
-
   backgroundOptions = new FormGroup({});
   constructor() {
 

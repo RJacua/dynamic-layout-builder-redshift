@@ -9,8 +9,9 @@
     (cdkDropListEntered)="onEnter($event)"
     [attr.data-id]="data.id"
     [class.noDropZone]="noDrop()"
-    [style]="internalStyle()"
+   
   >
+  <div  [style]="internalStyle()">
     <div id="core" class="align-center">
       @for (node of onlyContainers(); track node.data.id) { 
         <!-- @switch
@@ -38,6 +39,7 @@
     </div>
     }
   </div>
+</div>
 <!-- <pre>{{btoa()}}</pre> -->
 <!-- <pre>--------------------</pre> -->
 <!-- <pre>{{decoded()}}</pre> -->
