@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, Signal, signal, untracked } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, OnInit, Signal, signal, untracked, ViewChild } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CanvasComponent } from "../../components/canvas/canvas.component";
 import { RightPanelComponent } from "../../right-panel/right-panel.component";
@@ -33,6 +33,11 @@ export class WorkSpaceComponent implements OnInit {
   encodedStr = this.encodeSvc.encodedStr;
   encodedParam = signal<string>('');
   parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
+
+  @ViewChild('panZoomContainer', { static: true }) panZoomContainerRef!: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) canvasWrapperRef!: ElementRef;
+  @ViewChild('viewport', { static: true }) viewportRef!: ElementRef;
+
   isPanning = this.selectionSvc.isPanning;
   startX = this.panningSvc.startX;
   startY = this.panningSvc.startY;
@@ -128,5 +133,34 @@ export class WorkSpaceComponent implements OnInit {
   resetView() {
     this.panningSvc.resetView();
   }
+
+  fitView() {
+    const viewportEl = this.viewportRef.nativeElement as HTMLElement;
+    const canvasEl = this.canvasWrapperRef.nativeElement as HTMLElement;
+
+    const viewportWidth = viewportEl.clientWidth;
+    const viewportHeight = viewportEl.clientHeight;
+
+    const canvasWidth = canvasEl.scrollWidth;
+    const canvasHeight = canvasEl.scrollHeight;
+
+    if (!canvasWidth || !canvasHeight) return;
+
+    // Calcular o scale que encaixa no viewport (mantendo proporção)
+    const scaleX = viewportWidth / canvasWidth;
+    const scaleY = viewportHeight / canvasHeight;
+    const scale = Math.min(scaleX, scaleY, this.maxScale());
+
+    // Atualizar no serviço
+    this.scale.set(scale);
+
+    // Centralizar o canvas visualmente
+    const offsetX = (viewportWidth - canvasWidth * scale) / 2;
+    const offsetY = (viewportHeight - canvasHeight * scale) / 2;
+
+    this.translateX.set(offsetX);
+    this.translateY.set(offsetY);
+  }
+
 
 }
