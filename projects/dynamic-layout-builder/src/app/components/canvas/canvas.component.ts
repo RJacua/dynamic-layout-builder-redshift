@@ -77,7 +77,7 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
     this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
 
     effect(() => {
-      console.log("canvas no canvas: ", this.canvas())
+      // console.log("canvas no canvas: ", this.canvas())
       const element = this._elementRef.nativeElement.querySelector('#core');
 
       if (element) {

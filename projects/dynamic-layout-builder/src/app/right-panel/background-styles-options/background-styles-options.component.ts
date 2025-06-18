@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-import { distinctUntilChanged } from 'rxjs';
+import { combineLatest, distinctUntilChanged, startWith } from 'rxjs';
 import { BackgroundStylesService } from '../../services/styles/background-styles.service';
 import { ModelService } from '../../services/model.service';
 import { SelectionService } from '../../services/selection.service';
@@ -32,11 +32,18 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
   flexDirections = this.bgStylesService.flexDirections;
   flexDirectionDefault = this.bgStylesService.flexDirectionDefault;
-
+  colorOpacityDefault = this.bgStylesService.colorOpacityDefault;
   containerStyles = this.bgStylesService.containerStyles;
   allStyles = this.bgStylesService.allStyles;
 
   backgroundOptions = new FormGroup({});
+  node = this.selectedNode();
+  bgColorRgba = this.node.data.style["background-color"] || this.containerStyles['background-color'];
+  bgColorHex = this.generalSvc.extractHex(this.bgColorRgba) ?? '#ffffff';
+  colorOpacity = this.generalSvc.extractOpacity(this.bgColorRgba) ?? parseInt(this.colorOpacityDefault) * 100;
+
+
+
   constructor() {
 
     effect(() => {
@@ -44,10 +51,9 @@ export class BackgroundStylesOptionsComponent implements OnInit {
       let defaultStyles: Styles;
       const node = this.selectedNode();
       if (!node) return;
-
+  
       // console.log("Tipo selecionado:", this.selectedNode()?.data.type);
-
-
+  
       if (this.selectedNode()?.data.type === 'container') {
         defaultStyles = this.containerStyles;
       }
@@ -55,99 +61,106 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         // console.log("ELSE")
         defaultStyles = this.allStyles;
       }
-      // if (Object.keys(node.data.style).length === 0) {
-      // !this.generalSvc.isSubset(defaultStyles, node.data.style)
+
       untracked(() => {
         // console.log("node", node)
         this.bgStylesService.setAllMissing(defaultStyles, node.data.style);
-        // console.log("node style", node.data.style)
-        // this.bgStylesService.setAll(defaultStyles);
       })
       // }
-
-      this.backgroundOptions.addControl('bgColor', new FormControl(''));
-      this.backgroundOptions.addControl('bgOpacity', new FormControl(''));
-
-      if (this.selectedNode()?.data.type === 'container') {
-        if (!this.backgroundOptions.contains('flexDirection')) {
-          this.backgroundOptions.addControl('flexDirection', new FormControl(''));
-        }
-      }
-
-
-      if (this.selectedNode()?.data.type !== 'container') {
-        this.backgroundOptions.setValue({
-          bgColor: node.data.style["background-color"] || this.allStyles['background-color'],
-          bgOpacity: node.data.style["opacity"] * 100 || (parseInt(this.allStyles.opacity!) * 100),
-        });
-      }
-      else if (this.selectedNode()?.data.type === 'container') {
-        this.backgroundOptions.setValue({
-          bgColor: node.data.style["background-color"] || this.containerStyles['background-color'],
-          bgOpacity: node.data.style["opacity"] * 100 || (parseInt(this.containerStyles.opacity!) * 100),
-          flexDirection: node.data.style["flex-direction"] || this.containerStyles['flex-direction'],
-        });
-      }
-
-
     });
 
-    effect(() => {
-      const bgColorControl = this.backgroundOptions.get('bgColor');
-      if (bgColorControl instanceof FormControl) {
-        bgColorControl.valueChanges
-          .pipe(distinctUntilChanged())
-          .subscribe(color => {
-            // console.log('Selected color:', color);
-            if (color !== null) {
-              this.bgStylesService.setBgColor(color);
-            }
-          });
-      }
-
-      const bgOpacityControl = this.backgroundOptions.get('bgOpacity');
-      if (bgOpacityControl instanceof FormControl) {
-        bgOpacityControl.valueChanges
-          .pipe(distinctUntilChanged())
-          .subscribe(opacity => {
-            // console.log('Selected opacity:', opacity);
-            if (opacity !== null) {
-              this.bgStylesService.setBgOpacity(opacity);
-            }
-          });
-      }
-
-      const flexDirectionControl = this.backgroundOptions.get('flexDirection');
-      if (flexDirectionControl instanceof FormControl) {
-        flexDirectionControl.valueChanges
-          .pipe(distinctUntilChanged())
-          .subscribe(direction => {
-            // console.log('Selected direction:', direction);
-            if (direction !== null) {
-              this.bgStylesService.setFlexDirection(direction);
-            }
-          });
-      }
-    });
 
   }
 
   ngOnInit() {
-    // this.bgColor.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(color => {
-    //     console.log('Selected bg color:', color);
-    //     if (color)
-    //       this.bgStylesService.setBgColor(color);
-    //   });
-
-    // this.bgOpacity.valueChanges
-    //   .pipe(distinctUntilChanged())
-    //   .subscribe(opacity => {
-    //     console.log('Selected bg opacity:', opacity);
-    //     if (opacity)
-    //       this.bgStylesService.setBgOpacity(opacity);
-    //   });
+    this.setupFormControls();
+    this.setupReactiveListeners();
   }
+
+
+  setupFormControls() {
+   
+    const node = this.selectedNode();
+
+    this.backgroundOptions.addControl('bgColor', new FormControl(''));
+    this.backgroundOptions.addControl('colorOpacity', new FormControl(''));
+    this.backgroundOptions.addControl('bgOpacity', new FormControl(''));
+
+    if (this.selectedNode()?.data.type === 'container') {
+      if (!this.backgroundOptions.contains('flexDirection')) {
+        this.backgroundOptions.addControl('flexDirection', new FormControl(''));
+      }
+    }
+
+    const bgColorRgba = node.data.style["background-color"] || this.containerStyles['background-color'];
+    const bgColorHex = this.generalSvc.extractHex(bgColorRgba) ?? '#ffffff';
+    const colorOpacity = this.generalSvc.extractOpacity(bgColorRgba) ?? parseInt(this.colorOpacityDefault) * 100;
+
+
+    if (this.selectedNode()?.data.type !== 'container') {
+      this.backgroundOptions.setValue({
+        bgColor: bgColorHex,
+        colorOpacity: colorOpacity,
+        bgOpacity: parseFloat(node.data.style["opacity"]) * 100 || (parseInt(this.allStyles.opacity!) * 100),
+      }, { emitEvent: false });
+    }
+    else if (this.selectedNode()?.data.type === 'container') {
+      this.backgroundOptions.setValue({
+        bgColor: bgColorHex,
+        colorOpacity: colorOpacity,
+        bgOpacity: parseFloat(node.data.style["opacity"]) * 100 || (parseInt(this.containerStyles.opacity!) * 100),
+        flexDirection: node.data.style["flex-direction"] || this.containerStyles['flex-direction'],
+      }, { emitEvent: false });
+    }
+  }
+
+
+  setupReactiveListeners() {
+
+    combineLatest([
+      this.backgroundOptions.get('bgColor')!.valueChanges.pipe(
+        startWith(this.bgColorHex),
+        // distinctUntilChanged()
+      ),
+      this.backgroundOptions.get('colorOpacity')!.valueChanges.pipe(
+        startWith(this.colorOpacity),
+        // distinctUntilChanged()
+      ),
+    ])
+      .pipe(distinctUntilChanged())
+      .subscribe(([hex, opacity]) => {
+        if (hex && opacity !== null) {
+          const rgba = this.generalSvc.hexToRgba(hex, opacity);
+          this.bgStylesService.setBgColor(rgba);
+        }
+      });
+
+    const bgOpacityControl = this.backgroundOptions.get('bgOpacity');
+    if (bgOpacityControl instanceof FormControl) {
+      bgOpacityControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(opacity => {
+          // console.log('Selected opacity:', opacity);
+          if (opacity !== null) {
+            this.bgStylesService.setBgOpacity(opacity);
+          }
+        });
+    }
+
+    const flexDirectionControl = this.backgroundOptions.get('flexDirection');
+    if (flexDirectionControl instanceof FormControl) {
+      flexDirectionControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(direction => {
+          // console.log('Selected direction:', direction);
+          if (direction !== null) {
+            this.bgStylesService.setFlexDirection(direction);
+          }
+        });
+    }
+
+  }
+
+
 
 }

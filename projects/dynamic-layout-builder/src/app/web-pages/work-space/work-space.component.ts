@@ -50,8 +50,8 @@ export class WorkSpaceComponent implements OnInit {
   constructor() {
 
     effect(() => {
-      console.log("canvas ws: ", this.canvas());
-      console.log("decoded ws: ", this.encodeSvc.decodedStr());
+      // console.log("canvas ws: ", this.canvas());
+      // console.log("decoded ws: ", this.encodeSvc.decodedStr());
       this.canvas();
       untracked(() => {
         this.updateQueryParam('encoded', this.encodeSvc.encodedStr())
@@ -64,14 +64,14 @@ export class WorkSpaceComponent implements OnInit {
       if (params['encoded']) {
         this.encodedParam.set(params['encoded']);
         this.parsedJSON = computed(() => JSON.parse(this.encodeSvc.decoder(this.encodedParam)));
-        console.log("parsed: ", this.parsedJSON())
+        // console.log("parsed: ", this.parsedJSON())
         this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
       }
     });
   }
 
   updateQueryParam(key: string, value: string | null) {
-    console.log("to funcionando sim")
+    // console.log("to funcionando sim")
     this.router.navigate([], {
       relativeTo: this.activeRoute,
       queryParams: {
