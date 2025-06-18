@@ -38,6 +38,13 @@ export interface IframeData extends LayoutData {
   
 }
 
+export interface ImageData extends LayoutData {
+  url: string;
+  alt: string;
+  tooltip: string;
+  
+}
+
 export interface Canvas<T> {
   data: T;
 

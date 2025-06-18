@@ -41,6 +41,9 @@ import {
 } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportModelDialogComponent } from '../export-model-dialog/export-model-dialog.component';
+import { ExportImportService } from '../../services/export-import.service';
 
 @Component({
   selector: 'app-canvas',
@@ -73,6 +76,9 @@ export class CanvasComponent {
 
   readonly dragDropSvc = inject(DragDropService);
 
+  readonly dialog = inject(MatDialog);
+
+  readonly importSvc = inject(ExportImportService);
 
   canvas = computed(() => this.modelSvc.canvas());
 
@@ -122,6 +128,17 @@ export class CanvasComponent {
     this.modelSvc.setCanvasModel([layoutModels[0][0]]);
   }
 
+  openExportDialog() {
+    const dialogRef = this.dialog.open(ExportModelDialogComponent, {
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+
   private selectionService = inject(SelectionService);
   initialData: string[];
   constructor(private newAreaMenuSvc: NewAreaMenuService) {
@@ -142,7 +159,7 @@ export class CanvasComponent {
     event.stopPropagation();
     let el = event.target as HTMLElement;
     let originalEl = event.target as HTMLElement;
-    
+
     while (
       el &&
       el.tagName &&
@@ -156,11 +173,11 @@ export class CanvasComponent {
 
     if (el && el.tagName.startsWith('APP-')) {
       const componentInstance = (window as any).ng?.getComponent?.(el);
-      
+
       if (componentInstance) {
         let data = componentInstance.data;
-        
-        if(originalEl.classList.contains("external")){
+
+        if (originalEl.classList.contains("external")) {
           this.selectionService.selectById(data.parentId, true);
         }
         else {
@@ -197,6 +214,10 @@ export class CanvasComponent {
     console.log('Canvas entered:', event)
   }
 
-  noDrop = computed(() => this.isHovered() && this.dragDropSvc.isDragging() && this.selectionSvc.selectedNode().data.type !== 'container')
+  noDrop = computed(() => this.isHovered() && this.dragDropSvc.isDragging() && this.selectionSvc.selectedNode().data.type !== 'container');
+
+  importModel() {
+    this.importSvc.importModel();
+  }
 
 }

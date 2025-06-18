@@ -18,19 +18,21 @@ export class ModelService {
 
   canvasModel = signal<(LayoutElement<ContainerData>)[]>([]);
 
-  canvasStyle = signal<(Styles)>({['flex-direction']: 'column'});
+  canvasStyle = signal<(Styles)>({ ['flex-direction']: 'column' });
 
   expandedNodes = signal<Set<String>>(new Set());
 
-  canvas:Signal<Canvas<CanvasData>> = computed(() => {
-    return {data: {
-      id: 'canvas',
-      type: 'canvas',
-      children: this.canvasModel(),
-      expandedNodes: this.expandedNodes(),
-      
-      style: this.canvasStyle(),
-    }};
+  canvas: Signal<Canvas<CanvasData>> = computed(() => {
+    return {
+      data: {
+        id: 'canvas',
+        type: 'canvas',
+        children: this.canvasModel(),
+        expandedNodes: this.expandedNodes(),
+
+        style: this.canvasStyle(),
+      }
+    };
   });
 
   hasCanvasModelChanged = signal(false);
@@ -86,7 +88,7 @@ export class ModelService {
     let enabler = {};
     let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
     let src = '';
-    
+
     if (componentData?.style) {
       style = componentData.style;
     }
@@ -102,7 +104,7 @@ export class ModelService {
         data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, children: children }
       }
     }
-    else if(componentType.toLowerCase() === 'iframe'){
+    else if (componentType.toLowerCase() === 'iframe') {
       return {
         data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, src: src }
       }
@@ -359,5 +361,13 @@ export class ModelService {
       });
     }
     return found
+  }
+
+  setCanvasByString(canvas: string) {
+    let canvasObj = JSON.parse(canvas);
+
+    this.canvasModel.set(canvasObj);
+    // this.expandedNodes.set(canvasObj.expandedNodes);
+    // this.canvasStyle.set(canvasObj.style)
   }
 }
