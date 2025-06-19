@@ -9,8 +9,10 @@
     (cdkDropListEntered)="onEnter($event)"
     [attr.data-id]="data.id"
     [class.noDropZone]="noDrop()"
+   
   >
-    <div class="align-center">
+  <div  [style]="internalStyle()">
+    <div id="core" class="align-center">
       @for (node of onlyContainers(); track node.data.id) { 
         <!-- @switch
       (node.data.type) { @case ('container') {
@@ -32,14 +34,15 @@
         (click)="onPlusClick()"
       ></app-menu>
       <!-- <button class="round-button" (click)="addContainer()">A</button>-->
-      <button class="round-button" (click)="renderFromModel()">M</button>
+      <!-- <button class="round-button" (click)="renderFromModel()">M</button> -->
       <button class="round-button" (click)="goToRender()">Preview</button>
     </div>
     }
   </div>
+</div>
 <!-- <pre>{{btoa()}}</pre> -->
 <!-- <pre>--------------------</pre> -->
 <!-- <pre>{{decoded()}}</pre> -->
 <!-- <pre>--------------------</pre> -->
-<!-- <pre>{{ canvasModelsString() }}</pre> -->
+<!-- <pre>{{ canvasString() }}</pre> -->
 <pre>{{ canvasCustomString() }}</pre>

@@ -19,14 +19,16 @@ export class BackgroundStylesService {
   ];
   readonly flexDirectionDefault = this.flexDirections[2].value;
 
+  readonly colorOpacityDefault = "1";
+
   readonly containerStyles: Styles = {
-    ["background-color"]: 'rgba(255, 255, 255,0)',
+    ["background-color"]: `rgba(255, 255, 255, ${this.colorOpacityDefault})`,
     opacity: "1",
     ['flex-direction']: this.flexDirectionDefault,
   };
 
   readonly allStyles: Styles = {
-    ["background-color"]: 'rgba(255,255,255,0)',
+    ["background-color"]: `rgba(255, 255, 255, ${this.colorOpacityDefault})`,
     opacity: "1",
   };
 
@@ -44,15 +46,6 @@ export class BackgroundStylesService {
     this.stylesSvc.updateSelectedNodeStyle('flex-direction', direction);
   }
 
-  // setAll(defaultStyles: Styles) {
-  //   // console.log("Default Style:", defaultStyles);
-
-  //   Object.entries(defaultStyles).forEach((attr) => {
-  //     // console.log("update", attr[0], " ->", attr[1]);
-  //     this.stylesSvc.updateSelectedNodeStyle(attr[0], attr[1]);
-  //   })
-
-  // }
 
   setAllMissing(defaultStyles: Styles, currentStyles: Styles) {
     this.stylesSvc.setAllMissingStyles(defaultStyles, currentStyles)

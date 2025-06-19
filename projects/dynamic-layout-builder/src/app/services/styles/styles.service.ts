@@ -151,6 +151,7 @@ export class StylesService {
   // );
 
   updateSelectedNodeStyle(styleType: string, value: string) {
+    
     var currentNode = this.selectedNode();
     if (currentNode) {
       
@@ -164,6 +165,8 @@ export class StylesService {
           }
         }
       };
+      // console.log("updatedModel", updatedModel)
+      // console.log("id? ", this.selectionSvc.selectedElementId())
       
       this.modelSvc.updateModel(this.selectionSvc.selectedElementId(), updatedModel);
     }

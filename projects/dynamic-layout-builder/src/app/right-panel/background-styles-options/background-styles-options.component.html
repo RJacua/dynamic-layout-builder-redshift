@@ -1,12 +1,18 @@
 <mat-card>
-    <mat-list >
+    <mat-list>
         <mat-list-item>
             <h3 class="center subtitle">Background Options</h3>
         </mat-list-item>
 
-        <form [formGroup]="backgroundOptions" >
+        <form [formGroup]="backgroundOptions">
             <label for="bgColor">Background Color:</label>
-            <input type="color" id="bgColor" name="bgColor" formControlName="bgColor">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <input type="color" id="bgColor" name="bgColor" formControlName="bgColor" />
+
+                <input type="number" id="colorOpacity" name="colorOpacity" formControlName="colorOpacity" min="0"
+                    max="100" />
+                <span>%</span>
+            </div>
 
             <label for="bgOpacity">Background Opacity:</label>
             <span><input type="number" id="bgOpacity" name="bgOpacity" min="0" max="100" formControlName="bgOpacity">
@@ -24,5 +30,3 @@
 
     </mat-list>
 </mat-card>
-
-

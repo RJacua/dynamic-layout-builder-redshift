@@ -1,7 +1,7 @@
 import { Component, computed, effect, HostListener, inject, signal, Signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { ModelService } from '../../services/model.service';
 import { ActivatedRoute } from '@angular/router';
-import { LayoutElement, ContainerData } from '../../interfaces/layout-elements';
+import { LayoutElement, ContainerData, Canvas, CanvasData } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../../components/container/container.component';
 import { layoutModels } from '../../model';
@@ -22,7 +22,7 @@ export class PresentationComponent {
   // readonly activeRoute = inject(ActivatedRoute);
 
   // canvasModel = computed(() => this.modelSvc.canvasModel());
-  models: LayoutElement<ContainerData>[][] = [[]];
+  models: Canvas<CanvasData>[] = [];
   modelIndex = -1;
   constructor() {
 
@@ -32,9 +32,8 @@ export class PresentationComponent {
     this.loadPresentation();
   }
 
-  renderFromModel(model: LayoutElement<ContainerData>[]) {
-    this.modelSvc.resetCanvasModel();
-    this.modelSvc.setCanvasModel(model);
+  renderFromModel(model: Canvas<CanvasData>) {
+    this.modelSvc.setCanvasModel2(model);
   }
 
   loadPresentation() {
@@ -59,6 +58,7 @@ export class PresentationComponent {
         }
       }
     }
+    console.log(this.modelIndex);
   }
 
 

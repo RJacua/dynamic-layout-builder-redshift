@@ -64,7 +64,11 @@ export class PaddingStylesOptionsComponent {
       })
       // console.log(node.data.enabler)
 
-      this.paddingOptions.controls.unit.setValue(node.data.style.padding.replace(/[0-9.-]/g, '') ?? this.defaultUnit, { emitEvent: false });
+      // this.paddingOptions.controls.unit.setValue(node.data.style.padding.replace(/[0-9.-]/g, '') ?? this.defaultUnit, { emitEvent: false });
+      this.paddingOptions.controls.unit.setValue(
+        (node.data.style.padding ?? '').replace(/[0-9.-]/g, '') || this.defaultUnit,
+        { emitEvent: false }
+      );
       this.paddingOptions.controls.padding.setValue(parseInt(node.data.style.padding) ?? parseInt(this.defaultPaddingStyles.padding!), { emitEvent: false });
 
       this.individualPaddingOptions.setValue({

@@ -1,478 +1,123 @@
 import { InjectionToken } from "@angular/core";
-import { ContainerData, LayoutElement, AtomicElementData } from "./interfaces/layout-elements";
+import { ContainerData, LayoutElement, AtomicElementData, Canvas, CanvasData } from "./interfaces/layout-elements";
 
 // export const DYNAMIC_LAYOUT_BUILDER_TOKEN = new InjectionToken('DynamicLayoutBuilderToken');
 
-export const layoutModels: LayoutElement<ContainerData>[][] = [
-    [{
-        data: {
-            id: "3616768e",
-            parentId: "canvas",
-            type: "container",
-            enabler: {
-                enableStroke: false
-            },
-            style: {
-                "background-color": "rgba(255, 255, 255,0)",
-                "opacity": "1",
-                "flex-direction": "column",
-                "border-color": "#81828555",
-                "border-style": "solid",
-                "border-width": "1px",
-                "border-radius": "0px"
-            },
-            children: [
-                {
-                    data: {
-                        id: "95c27bd6",
-                        parentId: "3616768e",
-                        type: "header",
-                        enabler: {
-                            enableStroke: false
-                        },
-                        style: {
-                            "background-color": "rgba(255,255,255,0)",
-                            "opacity": "1",
-                            "color": "#ff0000",
-                            "text-align": "center",
-                            "border-color": "",
-                            "border-style": "",
-                            "border-width": "0px"
-                        },
-                        text: "Primeiro Slide",
-                        headerSize: "h1"
-                    }
-                }
-            ]
-        }
-    }],
-    [{
-        data: {
-            id: "a6cc0864",
-            parentId: "canvas",
-            type: "container",
-            enabler: {
-                enableStroke: false
-            },
-            style: {
-                "background-color": "rgba(255, 255, 255,0)",
-                "opacity": "1",
-                "flex-direction": "column",
-                "border-color": "#81828555",
-                "border-style": "solid",
-                "border-width": "1px",
-                "border-radius": "0px"
-            },
-            children: [
-                {
-                    data: {
-                        id: "7d6cf9ad",
-                        parentId: "a6cc0864",
-                        type: "header",
-                        enabler: {
-                            enableStroke: false
-                        },
-                        style: {
-                            "background-color": "rgba(255,255,255,0)",
-                            "opacity": "1",
-                            "color": "#ff0000",
-                            "text-align": "center",
-                            "border-color": "",
-                            "border-style": "",
-                            "border-width": "0px"
-                        },
-                        text: "Segundo Slide",
-                        headerSize: "h1"
-                    }
-                },
-                {
-                    data: {
-                        id: "b63471a2",
-                        parentId: "a6cc0864",
-                        type: "container",
-                        enabler: {
-                            enableStroke: false
-                        },
-                        style: {
-                            "background-color": "rgba(255, 255, 255,0)",
-                            "opacity": "1",
-                            "flex-direction": "column",
-                            "border-color": "#81828555",
-                            "border-style": "solid",
-                            "border-width": "1px",
-                            "border-radius": "0px"
-                        },
-                        children: [
-                            {
-                                data: {
-                                    id: "6dbb3745",
-                                    parentId: "b63471a2",
-                                    type: "header",
-                                    enabler: {
-                                        enableStroke: false
-                                    },
-                                    style: {
-                                        "background-color": "rgba(255,255,255,0)",
-                                        "opacity": "1",
-                                        "color": "#000000",
-                                        "text-align": "center",
-                                        "border-color": "",
-                                        "border-style": "",
-                                        "border-width": "0px"
-                                    },
-                                    text: "Your Title Here",
-                                    headerSize: "h2"
-                                }
-                            },
-                            {
-                                data: {
-                                    id: "827da5db",
-                                    parentId: "b63471a2",
-                                    type: "paragraph",
-                                    enabler: {
-                                        enableStroke: false
-                                    },
-                                    style: {
-                                        "background-color": "rgba(255,255,255,0)",
-                                        "opacity": "1",
-                                        "font-size": "16px",
-                                        "font-weight": "400",
-                                        "color": "#000000",
-                                        "text-align": "center",
-                                        "border-color": "",
-                                        "border-style": "",
-                                        "border-width": "0px"
-                                    },
-                                    text: "Lorem ipsum dolor sit amet consectetur..."
-                                }
-                            },
-                            {
-                                data: {
-                                    id: "9e2e2060",
-                                    parentId: "b63471a2",
-                                    type: "container",
-                                    enabler: {
-                                        enableStroke: false
-                                    },
-                                    style: {
-                                        "background-color": "rgba(255, 255, 255,0)",
-                                        "opacity": "1",
-                                        "flex-direction": "row",
-                                        "border-color": "#81828555",
-                                        "border-style": "solid",
-                                        "border-width": "1px",
-                                        "border-radius": "0px"
-                                    },
-                                    children: [
-                                        {
-                                            data: {
-                                                id: "125f332d",
-                                                parentId: "9e2e2060",
-                                                type: "paragraph",
-                                                enabler: {
-                                                    enableStroke: false
-                                                },
-                                                style: {
-                                                    "background-color": "rgba(255,255,255,0)",
-                                                    "opacity": "1",
-                                                    "font-size": "16px",
-                                                    "font-weight": "400",
-                                                    "color": "#000000",
-                                                    "text-align": "center",
-                                                    "border-color": "",
-                                                    "border-style": "",
-                                                    "border-width": "0px"
-                                                },
-                                                text: "Lorem ipsum dolor sit amet consectetur..."
-                                            }
-                                        },
-                                        {
-                                            data: {
-                                                id: "51a4288b",
-                                                parentId: "9e2e2060",
-                                                type: "paragraph",
-                                                enabler: {
-                                                    enableStroke: false
-                                                },
-                                                style: {
-                                                    "background-color": "rgba(255,255,255,0)",
-                                                    "opacity": "1",
-                                                    "font-size": "16px",
-                                                    "font-weight": "400",
-                                                    "color": "#000000",
-                                                    "text-align": "center",
-                                                    "border-color": "",
-                                                    "border-style": "",
-                                                    "border-width": "0px"
-                                                },
-                                                text: "Lorem ipsum dolor sit amet consectetur..."
-                                            }
-                                        },
-                                        {
-                                            data: {
-                                                id: "80460d09",
-                                                parentId: "9e2e2060",
-                                                type: "paragraph",
-                                                enabler: {
-                                                    enableStroke: false
-                                                },
-                                                style: {
-                                                    "background-color": "rgba(255,255,255,0)",
-                                                    "opacity": "1",
-                                                    "font-size": "16px",
-                                                    "font-weight": "400",
-                                                    "color": "#000000",
-                                                    "text-align": "center",
-                                                    "border-color": "",
-                                                    "border-style": "",
-                                                    "border-width": "0px"
-                                                },
-                                                text: "Lorem ipsum dolor sit amet consectetur..."
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    }],
-    [{
-        data: {
-            id: "3616768e",
-            parentId: "canvas",
-            type: "container",
-            enabler: {
-                enableStroke: false
-            },
-            style: {
-                "background-color": "rgba(255, 255, 255,0)",
-                "opacity": "1",
-                "flex-direction": "column",
-                "border-color": "#81828555",
-                "border-style": "solid",
-                "border-width": "1px",
-                "border-radius": "0px"
-            },
-            children: [
-                {
-                    data: {
-                        id: "95c27bd6",
-                        parentId: "3616768e",
-                        type: "header",
-                        enabler: {
-                            enableStroke: false
-                        },
-                        style: {
-                            "background-color": "rgba(255,255,255,0)",
-                            "opacity": "1",
-                            "color": "#ff0000",
-                            "text-align": "center",
-                            "border-color": "",
-                            "border-style": "",
-                            "border-width": "0px"
-                        },
-                        text: "Terceiro Slide",
-                        headerSize: "h1"
-                    }
-                }
-            ]
-        }
-    }],
-    [{
-        data: {
-            id: "a6cc0864",
-            parentId: "canvas",
-            type: "container",
-            enabler: {
-                enableStroke: false
-            },
-            style: {
-                "background-color": "rgba(255, 255, 255,0)",
-                "opacity": "1",
-                "flex-direction": "column",
-                "border-color": "#81828555",
-                "border-style": "solid",
-                "border-width": "1px",
-                "border-radius": "0px"
-            },
-            children: [
-                {
-                    data: {
-                        id: "7d6cf9ad",
-                        parentId: "a6cc0864",
-                        type: "header",
-                        enabler: {
-                            enableStroke: false
-                        },
-                        style: {
-                            "background-color": "rgba(255,255,255,0)",
-                            "opacity": "1",
-                            "color": "#ff0000",
-                            "text-align": "center",
-                            "border-color": "",
-                            "border-style": "",
-                            "border-width": "0px"
-                        },
-                        text: "Quarto Slide",
-                        headerSize: "h1"
-                    }
-                },
-                {
-                    data: {
-                        id: "b63471a2",
-                        parentId: "a6cc0864",
-                        type: "container",
-                        enabler: {
-                            enableStroke: false
-                        },
-                        style: {
-                            "background-color": "rgba(255, 255, 255,0)",
-                            "opacity": "1",
-                            "flex-direction": "column",
-                            "border-color": "#81828555",
-                            "border-style": "solid",
-                            "border-width": "1px",
-                            "border-radius": "0px"
-                        },
-                        children: [
-                            {
-                                data: {
-                                    id: "6dbb3745",
-                                    parentId: "b63471a2",
-                                    type: "header",
-                                    enabler: {
-                                        enableStroke: false
-                                    },
-                                    style: {
-                                        "background-color": "rgba(255,255,255,0)",
-                                        "opacity": "1",
-                                        "color": "#000000",
-                                        "text-align": "center",
-                                        "border-color": "",
-                                        "border-style": "",
-                                        "border-width": "0px"
-                                    },
-                                    text: "Title is different now",
-                                    headerSize: "h2"
-                                }
-                            },
-                            {
-                                data: {
-                                    id: "827da5db",
-                                    parentId: "b63471a2",
-                                    type: "paragraph",
-                                    enabler: {
-                                        enableStroke: false
-                                    },
-                                    style: {
-                                        "background-color": "rgba(255,255,255,0)",
-                                        "opacity": "1",
-                                        "font-size": "16px",
-                                        "font-weight": "400",
-                                        "color": "#000000",
-                                        "text-align": "center",
-                                        "border-color": "",
-                                        "border-style": "",
-                                        "border-width": "0px"
-                                    },
-                                    text: "Lorem ipsum dolor sit amet consectetur..."
-                                }
-                            },
-                            {
-                                data: {
-                                    id: "9e2e2060",
-                                    parentId: "b63471a2",
-                                    type: "container",
-                                    enabler: {
-                                        enableStroke: false
-                                    },
-                                    style: {
-                                        "background-color": "rgba(255, 255, 255,0)",
-                                        "opacity": "1",
-                                        "flex-direction": "row",
-                                        "border-color": "#81828555",
-                                        "border-style": "solid",
-                                        "border-width": "1px",
-                                        "border-radius": "0px"
-                                    },
-                                    children: [
-                                        {
-                                            data: {
-                                                id: "125f332d",
-                                                parentId: "9e2e2060",
-                                                type: "paragraph",
-                                                enabler: {
-                                                    enableStroke: false
-                                                },
-                                                style: {
-                                                    "background-color": "rgba(255,255,255,0)",
-                                                    "opacity": "1",
-                                                    "font-size": "16px",
-                                                    "font-weight": "400",
-                                                    "color": "#000000",
-                                                    "text-align": "center",
-                                                    "border-color": "",
-                                                    "border-style": "",
-                                                    "border-width": "0px"
-                                                },
-                                                text: "Lorem ipsum dolor sit amet consectetur..."
-                                            }
-                                        },
-                                        {
-                                            data: {
-                                                id: "51a4288b",
-                                                parentId: "9e2e2060",
-                                                type: "paragraph",
-                                                enabler: {
-                                                    enableStroke: false
-                                                },
-                                                style: {
-                                                    "background-color": "rgba(255,255,255,0)",
-                                                    "opacity": "1",
-                                                    "font-size": "16px",
-                                                    "font-weight": "400",
-                                                    "color": "#000000",
-                                                    "text-align": "center",
-                                                    "border-color": "",
-                                                    "border-style": "",
-                                                    "border-width": "0px"
-                                                },
-                                                text: "Lorem ipsum dolor sit amet consectetur..."
-                                            }
-                                        },
-                                        {
-                                            data: {
-                                                id: "80460d09",
-                                                parentId: "9e2e2060",
-                                                type: "paragraph",
-                                                enabler: {
-                                                    enableStroke: false
-                                                },
-                                                style: {
-                                                    "background-color": "rgba(255,255,255,0)",
-                                                    "opacity": "1",
-                                                    "font-size": "16px",
-                                                    "font-weight": "400",
-                                                    "color": "#000000",
-                                                    "text-align": "center",
-                                                    "border-color": "",
-                                                    "border-style": "",
-                                                    "border-width": "0px"
-                                                },
-                                                text: "Lorem ipsum dolor sit amet consectetur..."
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    }]
+export const layoutModels: Canvas<CanvasData>[] = [
 
+    {
+        data: {
+            id: "canvas",
+            type: "canvas",
+            children: [
+                {
+                    data: {
+                        id: "3616768e",
+                        parentId: "canvas",
+                        type: "container",
+                        enabler: {
+                            enableStroke: false,
+                            enableIndividualCorner: false,
+                            enableIndividualPadding: false,
+                            enableIndividualMargin: false
+                        },
+                        style: {
+                            "background-color": "#c62a2a",
+                            "opacity": "1",
+                            "flex-direction": "column",
+                            "border-color": "#81828555",
+                            "border-style": "solid",
+                            "border-width": "1px",
+                            "border-radius": "0px",
+                            "border-top-left-radius": "0px",
+                            "border-top-right-radius": "0px",
+                            "border-bottom-left-radius": "0px",
+                            "border-bottom-right-radius": "0px",
+                            "padding": "10px",
+                            "padding-top": "0px",
+                            "padding-right": "0px",
+                            "padding-bottom": "0px",
+                            "padding-left": "0px",
+                            "margin": "0px",
+                            "margin-top": "0px",
+                            "margin-right": "0px",
+                            "margin-bottom": "0px",
+                            "margin-left": "0px",
+                            "height": "auto",
+                            "width": "auto",
+                            "max-height": "0%",
+                            "max-width": "0%",
+                            "min-height": "0%",
+                            "min-width": "0%"
+                        },
+                        children: [
+                            {
+                                data: {
+                                    id: "95c27bd6",
+                                    parentId: "3616768e",
+                                    type: "header",
+                                    enabler: {
+                                        enableStroke: false,
+                                        enableIndividualCorner: false,
+                                        enableIndividualPadding: false,
+                                        enableIndividualMargin: false
+                                    },
+                                    style: {
+                                        "background-color": "rgba(255,255,255,0)",
+                                        "opacity": "1",
+                                        "color": "#002aff",
+                                        "text-align": "center",
+                                        "border-color": "",
+                                        "border-style": "",
+                                        "border-width": "0px",
+                                        "border-radius": "0px",
+                                        "border-top-left-radius": "0px",
+                                        "border-top-right-radius": "0px",
+                                        "border-bottom-left-radius": "0px",
+                                        "border-bottom-right-radius": "0px",
+                                        "padding": "10px",
+                                        "padding-top": "0px",
+                                        "padding-right": "0px",
+                                        "padding-bottom": "0px",
+                                        "padding-left": "0px",
+                                        "margin": "0px",
+                                        "margin-top": "0px",
+                                        "margin-right": "0px",
+                                        "margin-bottom": "0px",
+                                        "margin-left": "0px",
+                                        "height": "auto",
+                                        "width": "auto",
+                                        "max-height": "0%",
+                                        "max-width": "0%",
+                                        "min-height": "0%",
+                                        "min-width": "0%"
+                                    },
+                                    text: "Primeaaairo Slwideagg",
+                                    headerSize: "h1"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            expandedNodes: new Set(),
+            style: {
+                "background-color": "#ee1b1b",
+                "opacity": "1",
+                "border-color": "#81828",
+                "border-style": "solid",
+                "border-width": "0px",
+                "padding": "10px",
+                "padding-top": "10px",
+                "padding-right": "10px",
+                "padding-bottom": "10px",
+                "padding-left": "10px"
+            },
+            enabler: {
+                enableStroke: false,
+                enableIndividualPadding: false
+            }
+        }
+    }
+    
 ]
