@@ -376,8 +376,10 @@ export class ModelService {
   setCanvasByString(canvas: string) {
     let canvasObj = JSON.parse(canvas);
 
-    this.canvasModel.set(canvasObj);
-    // this.expandedNodes.set(canvasObj.expandedNodes);
-    // this.canvasStyle.set(canvasObj.style)
+    this.canvasModel.set(canvasObj.data.children);
+    this.expandedNodes.set(canvasObj.data.expandedNodes);
+    this.canvasStyle.set(canvasObj.data.style);
+    this.canvasEnabler.set(canvasObj.data.enabler);
+
   }
 }
