@@ -17,7 +17,7 @@ export class SelectionService {
   isPanning = this.panningSvc.isPanning;
   selectedElementId = computed(() => { 
     if (!this.isPanning()) return this._selectedId()
-    else return 'canvas'});
+    else return ''});
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
   height = signal(0);
@@ -62,7 +62,7 @@ export class SelectionService {
 
   hover(element: ContainerData | AtomicElementData): void {
     if (this.isPanning()) {
-      this.unhover()
+      this._hoveredId.set('');
       return
     }
     if (element.type === 'canvas') {

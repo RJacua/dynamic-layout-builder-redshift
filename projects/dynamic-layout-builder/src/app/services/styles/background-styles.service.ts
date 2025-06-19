@@ -18,6 +18,8 @@ export class BackgroundStylesService {
     { value: 'column-reverse', label: 'Column Reverse' }
   ];
   readonly flexDirectionDefault = this.flexDirections[2].value;
+
+  readonly colorOpacityDefault = "1";
   
   readonly BgRepeats = [
     { value: 'repeat', label: 'Repeat' },
@@ -32,7 +34,7 @@ export class BackgroundStylesService {
   ];
   readonly BgSizeDefault = this.BgSizes[1].value;
   readonly containerStyles: Styles = {
-    ["background-color"]: 'rgba(255, 255, 255,0)',
+    ["background-color"]: `rgba(255, 255, 255, ${this.colorOpacityDefault})`,
     opacity: "1",
     ['flex-direction']: this.flexDirectionDefault,
     ["background-image"]: '',
@@ -41,7 +43,7 @@ export class BackgroundStylesService {
   };
 
   readonly allStyles: Styles = {
-    ["background-color"]: 'rgba(255,255,255,0)',
+    ["background-color"]: `rgba(255, 255, 255, ${this.colorOpacityDefault})`,
     opacity: "1",
   };
 

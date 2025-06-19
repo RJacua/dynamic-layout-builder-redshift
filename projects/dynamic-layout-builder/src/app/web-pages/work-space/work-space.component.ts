@@ -6,7 +6,7 @@ import { LeftPanelComponent } from '../../left-panel/left-panel.component';
 import { AngularSplitModule } from 'angular-split';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModelService } from '../../services/model.service';
-import { ContainerData, LayoutElement } from '../../interfaces/layout-elements';
+import { Canvas, CanvasData, ContainerData, LayoutElement } from '../../interfaces/layout-elements';
 import { EncodeService } from '../../services/encode.service';
 import { SelectionService } from '../../services/selection.service';
 import { HotkeyService } from '../../services/hotkey.service';
@@ -26,13 +26,13 @@ export class WorkSpaceComponent implements OnInit {
   readonly selectionSvc = inject(SelectionService);
   readonly hotkeySvc = inject(HotkeyService);
   readonly panningSvc = inject(PanningService);
-  canvasModel = computed(() => this.modelSvc.canvasModel());
-  canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null)
+  canvas = computed(() => this.modelSvc.canvas());
+  canvasString: Signal<string> = computed(
+    () => JSON.stringify(this.canvas(), null)
   )
   encodedStr = this.encodeSvc.encodedStr;
   encodedParam = signal<string>('');
-  parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
+  parsedJSON: Signal<Partial<Canvas<CanvasData>>> = signal('');
 
   @ViewChild('panZoomContainer', { static: true }) panZoomContainerRef!: ElementRef;
   @ViewChild('canvasWrapper', { static: true }) canvasWrapperRef!: ElementRef;
@@ -57,9 +57,11 @@ export class WorkSpaceComponent implements OnInit {
   constructor() {
 
     effect(() => {
-      this.canvasModel();
+      // console.log("canvas ws: ", this.canvas());
+      // console.log("decoded ws: ", this.encodeSvc.decodedStr());
+      this.canvas();
       untracked(() => {
-        this.updateQueryParam('encoded', this.encodedStr())
+        this.updateQueryParam('encoded', this.encodeSvc.encodedStr())
       })
     });
   }
@@ -68,13 +70,15 @@ export class WorkSpaceComponent implements OnInit {
     this.activeRoute.queryParams.subscribe(params => {
       if (params['encoded']) {
         this.encodedParam.set(params['encoded']);
-        this.parsedJSON = computed(() => JSON.parse(this.encodeSvc.decoder(this.encodedParam)))
-        this.renderFromModel(this.parsedJSON());
+        this.parsedJSON = computed(() => JSON.parse(this.encodeSvc.decoder(this.encodedParam)));
+        // console.log("parsed: ", this.parsedJSON())
+        this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
       }
     });
   }
 
   updateQueryParam(key: string, value: string | null) {
+    // console.log("to funcionando sim")
     this.router.navigate([], {
       relativeTo: this.activeRoute,
       queryParams: {
@@ -85,8 +89,7 @@ export class WorkSpaceComponent implements OnInit {
     });
   }
 
-  renderFromModel(model: LayoutElement<ContainerData>[]) {
-    this.modelSvc.resetCanvasModel();
+  renderFromModel(model: Canvas<CanvasData>) {
     this.modelSvc.setCanvasModel(model);
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }

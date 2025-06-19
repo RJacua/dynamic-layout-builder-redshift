@@ -60,6 +60,8 @@ export interface CanvasData {
   expandedNodes:Set<String>;
 
   style: Styles;
+  
+  enabler: Enablers;
 
 }
 

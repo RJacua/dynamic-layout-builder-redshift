@@ -1,7 +1,7 @@
 import { Component, computed, effect, HostListener, inject, signal, Signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { ModelService } from '../../services/model.service';
 import { ActivatedRoute } from '@angular/router';
-import { LayoutElement, ContainerData } from '../../interfaces/layout-elements';
+import { LayoutElement, ContainerData, Canvas, CanvasData } from '../../interfaces/layout-elements';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../../components/container/container.component';
 import { CanvasComponent } from '../../components/canvas/canvas.component';
@@ -24,7 +24,7 @@ export class PreviewComponent {
 
   encodedStr = signal<string>('');
   decodedStr = signal<string>('');
-  parsedJSON: Signal<LayoutElement<ContainerData>[]> = signal([]);
+  parsedJSON: Signal<Partial<Canvas<CanvasData>>> = signal('');
 
   constructor() {
 
@@ -40,7 +40,7 @@ export class PreviewComponent {
         this.decodedStr.set(this.encodeSvc.decodedStr());
         // console.log("INIT: ", this.decodedStr())
         this.parsedJSON = computed(() => JSON.parse(this.decodedStr()));
-        this.renderFromModel(this.parsedJSON());
+        this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
       } catch (error) {
         console.error("Can not decode url", error)
       }
@@ -49,8 +49,7 @@ export class PreviewComponent {
 
   }
 
-  renderFromModel(model: LayoutElement<ContainerData>[]) {
-    this.modelSvc.resetCanvasModel();
+  renderFromModel(model: Canvas<CanvasData>) {
     this.modelSvc.setCanvasModel(model);
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }

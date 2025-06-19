@@ -8,13 +8,13 @@ export class EncodeService {
 
   readonly modelSvc = inject(ModelService);
 
-  canvasModel = computed(() => this.modelSvc.canvasModel());
-  canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvasModel(), null)
+  canvas = computed(() => this.modelSvc.canvas());
+  canvasString: Signal<string> = computed(
+    () => JSON.stringify(this.canvas(), null)
   )
 
   // Encode String
-  utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasModelsString()));
+  utf8Str: Signal<string> = computed(() => encodeURIComponent(this.canvasString()));
   encodedStr: Signal<string> = computed(() => btoa(this.utf8Str()));
 
   // Decode String

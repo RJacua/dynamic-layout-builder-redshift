@@ -35,7 +35,7 @@ export class BorderStylesOptionsComponent implements OnInit {
     { value: 'dotted', label: 'Dotted' },
     { value: 'dashed', label: 'Dashed' },
     { value: 'solid', label: 'Solid' },
-    { value: 'Double', label: 'Double' }
+    { value: 'double', label: 'Double' }
   ];
   strokeStyleOptionsDefault = this.strokeStyleOptions[2].value;
 
@@ -60,7 +60,7 @@ export class BorderStylesOptionsComponent implements OnInit {
 
       let componentType = node.data.type;
 
-      if (componentType === 'container') {
+      if (componentType === 'container' || componentType === 'canvas') {
         defaultStyles = this.containerStyles;
       }
       else {
@@ -78,9 +78,9 @@ export class BorderStylesOptionsComponent implements OnInit {
 
       
       this.strokeOptions.setValue({
-        strokeColor: node.data.style["border-color"] || (componentType === 'container' ? this.containerStyles['border-color'] : ''),
-        strokeStyle: node.data.style["border-style"] || (componentType === 'container' ? this.containerStyles['border-style'] : ''),
-        strokeWidth:  parseInt(node.data.style["border-width"]) || (componentType === 'container' ? parseInt(this.containerStyles['border-width']!) : 0),
+        strokeColor: node.data.style["border-color"] || ((componentType === 'container' || componentType === 'canvas') ? this.containerStyles['border-color'] : ''),
+        strokeStyle: node.data.style["border-style"] || ((componentType === 'container' || componentType === 'canvas') ? this.containerStyles['border-style'] : ''),
+        strokeWidth:  parseInt(node.data.style["border-width"]) || ((componentType === 'container' || componentType === 'canvas') ? parseInt(this.containerStyles['border-width']!) : 0),
       });
 
 

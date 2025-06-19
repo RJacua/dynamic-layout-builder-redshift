@@ -107,7 +107,7 @@ export class GeneralFunctionsService {
 
   customStringify(obj: any, indent = 2): string {
     const noQuoteKeys = new Set([
-      "id", "parentId", "type", "data", "style", "children",
+      "id", "parentId", "type", "data", "expandedNodes", "style", "children",
       "text", "headerSize", "enabler", "enableStroke",
       "enableIndividualCorner", "enableIndividualPadding", "enableIndividualMargin"
     ]);
@@ -140,4 +140,40 @@ export class GeneralFunctionsService {
 
     return format(obj, 0);
   }
+
+  hexToRgba(hex: string, opacityPercent: number): string {
+    const hexClean = hex.replace('#', '');
+    const bigint = parseInt(hexClean, 16);
+  
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+  
+    const alpha = Math.min(Math.max(opacityPercent / 100, 0), 1); // garante entre 0 e 1
+  
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  
+  extractOpacity(rgba: string): number | null {
+    const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/);
+    if (!match) return null;
+    return parseFloat(match[4]) * 100;
+  }
+  
+  extractHex(rgba: string): string | null {
+    const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (!match) return null;
+  
+    const [r, g, b] = match.slice(1, 4).map(n => Number(n));
+    return (
+      '#' +
+      [r, g, b]
+        .map(x => {
+          const hex = x.toString(16);
+          return hex.length === 1 ? '0' + hex : hex;
+        })
+        .join('')
+    );
+  }
+
 }

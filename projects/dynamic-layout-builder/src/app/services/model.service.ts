@@ -1,5 +1,5 @@
 import { computed, effect, Injectable, Signal, signal, untracked, ViewContainerRef, WritableSignal } from '@angular/core';
-import { Canvas, CanvasData, ContainerData, LayoutElement, AtomicElementData, LayoutData, Styles } from '../interfaces/layout-elements';
+import { Canvas, CanvasData, ContainerData, LayoutElement, AtomicElementData, LayoutData, Styles, Enablers } from '../interfaces/layout-elements';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +18,9 @@ export class ModelService {
 
   canvasModel = signal<(LayoutElement<ContainerData>)[]>([]);
 
-  canvasStyle = signal<(Styles)>({ ['flex-direction']: 'column' });
+  canvasStyle = signal<(Styles)>({});
+
+  canvasEnabler = signal<(Enablers)>({});
 
   expandedNodes = signal<Set<String>>(new Set());
 
@@ -29,8 +31,8 @@ export class ModelService {
         type: 'canvas',
         children: this.canvasModel(),
         expandedNodes: this.expandedNodes(),
-
         style: this.canvasStyle(),
+        enabler: this.canvasEnabler(),
       }
     };
   });
@@ -166,12 +168,19 @@ export class ModelService {
     model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>,
     branch?: (LayoutElement<ContainerData>)[]
   ) {
-    const currentBranch = branch ?? this.canvasModel();
 
-    const updated = this._recursiveUpdateModel(id, model, currentBranch);
+    if (model.data.type !== 'canvas') {
+      const currentBranch = branch ?? this.canvasModel();
+      // console.log("entrou", currentBranch)
 
-    if (updated) {
-      this.canvasModel.set([...currentBranch]);
+      const updated = this._recursiveUpdateModel(id, model, currentBranch);
+
+      if (updated) {
+        this.canvasModel.set([...currentBranch]);
+      }
+    } else {
+      this.canvasStyle.set(model.data.style);
+      this.canvasEnabler.set(model.data.enabler);
     }
   }
 
@@ -318,12 +327,13 @@ export class ModelService {
   }
 
 
-  setCanvasModel(model: LayoutElement<ContainerData>[]) {
-    this.canvasModel.set(model)
-  }
+  setCanvasModel(model: Canvas<CanvasData>) {
 
-  resetCanvasModel() {
-    this.canvasModel.set([])
+    this.canvasModel.set(model.data.children);
+    this.expandedNodes.set(new Set());
+    this.canvasStyle.set(model.data.style);
+    this.canvasEnabler.set(model.data.enabler);
+
   }
 
   addChildrenTemplate(parentId: string, childrenModels: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]) {

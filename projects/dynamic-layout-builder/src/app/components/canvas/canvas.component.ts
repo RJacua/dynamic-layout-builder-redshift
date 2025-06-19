@@ -10,6 +10,10 @@ import {
   ViewContainerRef,
   Input,
   OnInit,
+  signal,
+  WritableSignal,
+  ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +29,7 @@ import { ComponentsService } from '../../services/components.service';
 import { ModelService } from '../../services/model.service';
 import { HeaderComponent } from '../header/header.component';
 import {
+  AtomicElementData,
   Canvas,
   CanvasData,
   ContainerData,
@@ -64,39 +69,93 @@ import { ExportImportService } from '../../services/export-import.service';
   styleUrl: './canvas.component.scss',
   providers: [],
 })
-export class CanvasComponent {
+export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, AfterViewInit {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {} };
+  private _elementRef = inject(ElementRef);
+
+  @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {}, enabler: {} };
   @Input() editMode: boolean = true;
+
+  constructor(private newAreaMenuSvc: NewAreaMenuService) {
+    this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
+
+    effect(() => {
+      // console.log("canvas no canvas: ", this.canvas())
+      const element = this._elementRef.nativeElement.querySelector('#core');
+
+      if (element) {
+        this.resizeObserver = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            const rect = entry.contentRect;
+            this.width.set(rect.width);
+            this.height.set(rect.height);
+          }
+        });
+
+        this.resizeObserver.observe(element);
+      }
+
+      const node = this.nodeSignal();
+
+      // this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+      // this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
+
+      // console.log("w: ", this.width(),"h: ", this.height())
+      // const canvasModel = this.modelSvc.hasCanvasModelChanged();
+
+      untracked(() => {
+        if (node) {
+          this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
+        }
+      });
+    })
+  }
 
   readonly generalSvc = inject(GeneralFunctionsService);
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly router = inject(Router);
-
+  readonly componentsSvc = inject(ComponentsService);
   readonly dragDropSvc = inject(DragDropService);
-
   readonly dialog = inject(MatDialog);
 
   readonly importSvc = inject(ExportImportService);
 
+  id: string = '0';
   canvas = computed(() => this.modelSvc.canvas());
-
+  children = signal(
+    [] as (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[]
+  );
   onlyContainers = computed(() =>
     this.canvas().data.children.filter((el) => el.data.type === 'container')
   );
-  canvasModelsString: Signal<string> = computed(
-    () => JSON.stringify(this.canvas().data.children, null)
+  // canvasModelsString: Signal<string> = computed(
+  //   () => JSON.stringify(this.canvas().data.children, null)
+  //   // () => this.customStringify(this.canvasModel())
+  // );
+
+  canvasString: Signal<string> = computed(
+    () => JSON.stringify(this.canvas(), null)
     // () => this.customStringify(this.canvasModel())
   );
 
   canvasCustomString: Signal<string> = computed(
     // () => JSON.stringify(this.canvasModel(), null)
-    () => this.generalSvc.customStringify(this.canvas().data.children)
+    () => this.generalSvc.customStringify(this.canvas())
   )
 
+  nodeSignal: any;
+  dynamicStyle: WritableSignal<any> = signal(null);
+  internalStyle: WritableSignal<any> = signal(null);
+  externalStyle: WritableSignal<any> = signal(null);
+
+  width = signal(0);
+  height = signal(0);
+
+  private resizeObserver?: ResizeObserver;
+
   utf8Str: Signal<string> = computed(() =>
-    encodeURIComponent(this.canvasModelsString())
+    encodeURIComponent(this.canvasString())
   );
   btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
   atob: Signal<string> = computed(() => atob(this.btoa()));
@@ -114,7 +173,7 @@ export class CanvasComponent {
       'container',
       'canvas'
     );
-    console.log(newLayoutElement);
+    // console.log(newLayoutElement);
     this.modelSvc.addChildNode('canvas', newLayoutElement);
     setTimeout(() => {
       this.selectionSvc.select(newLayoutElement.data), 0;
@@ -124,9 +183,9 @@ export class CanvasComponent {
     });
   }
 
-  renderFromModel() {
-    this.modelSvc.setCanvasModel([layoutModels[0][0]]);
-  }
+  // renderFromModel() {
+  //   this.modelSvc.setCanvasModel([layoutModels[0][0]]);
+  // }
 
   openExportDialog() {
     const dialogRef = this.dialog.open(ExportModelDialogComponent, {
@@ -141,20 +200,29 @@ export class CanvasComponent {
 
   private selectionService = inject(SelectionService);
   initialData: string[];
-  constructor(private newAreaMenuSvc: NewAreaMenuService) {
-    this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
-  }
 
   ngOnInit(): void {
+    this.id = this.data.id;
+    this.children.set(this.data.children ?? []);
+
+    this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
+
+    this.modelSvc.updateModel(this.id, this.nodeSignal());
+
     this.initialData = this.newAreaMenuSvc.rootLevelNodes.slice();
   }
 
-  // readonly defaultBorder = this.stylesService.defaultBorder;
-  // readonly dynamicStyles$ = this.stylesService.dynamicStyles$;
-  // readonly dynamicBorder$ = this.stylesService.dynamicBorder$;
-  // readonly dynamicBorderRadius$ = this.stylesService.strokeRadius$;
-  // readonly individualDynamicCornerRadius$ = this.stylesService.individualDynamicCornerRadius$;
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+  }
 
+  ngAfterViewInit() {
+    this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
+    this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
+
+    this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
+
+  }
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
     let el = event.target as HTMLElement;

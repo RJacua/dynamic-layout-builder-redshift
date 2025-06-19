@@ -31,7 +31,7 @@ export class ExportModelDialogComponent {
 
   // modelArea = new FormControl<string>(this.generalSvc.customStringify(this.encodeSvc.canvasModel()), { nonNullable: true });
   modelArea = new FormControl<string>(
-  JSON.stringify(this.encodeSvc.canvasModel(), null, 2),
+  JSON.stringify(this.encodeSvc.canvas(), null, 2),
   { nonNullable: true }
 );
 
