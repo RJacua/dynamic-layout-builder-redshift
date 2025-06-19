@@ -48,7 +48,7 @@ import { DragDropService } from '../../services/dragdrop.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportModelDialogComponent } from '../export-model-dialog/export-model-dialog.component';
-import { ExportImportService } from '../../services/export-import.service';
+import { EncodeService } from '../../services/encode.service';
 
 @Component({
   selector: 'app-canvas',
@@ -118,8 +118,7 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
   readonly componentsSvc = inject(ComponentsService);
   readonly dragDropSvc = inject(DragDropService);
   readonly dialog = inject(MatDialog);
-
-  readonly importSvc = inject(ExportImportService);
+  readonly encodeSvc = inject(EncodeService);
 
   id: string = '0';
   canvas = computed(() => this.modelSvc.canvas());
@@ -154,12 +153,9 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
   private resizeObserver?: ResizeObserver;
 
-  utf8Str: Signal<string> = computed(() =>
-    encodeURIComponent(this.canvasString())
-  );
-  btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
-  atob: Signal<string> = computed(() => atob(this.btoa()));
-  decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
+
+  encoded = computed(() => this.encodeSvc.encodedStr());
+  decoded = computed(() => this.encodeSvc.decodedStr());
 
   isPanning = this.selectionSvc.isPanning;
   isHovered = computed(() => {
@@ -264,7 +260,7 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
   goToRender() {
     this.router.navigate(['/preview'], {
-      queryParams: { encoded: this.btoa() },
+      queryParams: { encoded: this.encoded() },
     });
   }
 
@@ -283,9 +279,5 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
   }
 
   noDrop = computed(() => this.isHovered() && this.dragDropSvc.isDragging() && this.selectionSvc.selectedNode().data.type !== 'container');
-
-  importModel() {
-    this.importSvc.importModel();
-  }
 
 }

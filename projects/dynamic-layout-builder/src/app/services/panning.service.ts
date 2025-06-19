@@ -19,6 +19,8 @@ export class PanningService {
   offsetY = signal(0);
   minScale = signal(0.3);
   maxScale = signal(3);
+  fullViewFlag = signal(false);
+  fitViewFlag = signal(false);
 
   constructor() { }
 
@@ -29,10 +31,20 @@ export class PanningService {
     this.isPanning.update(() => !this.isPanning());
   }
 
-  resetView() {
+  fullView() {
     this.scale.set(1);
     this.translateX.set(0);
     this.translateY.set(0);
+  }
+
+  emitFullViewFlag(){
+    this.fullViewFlag.set(true);
+    setTimeout(() => this.fullViewFlag.set(false), 0);
+  }
+
+  emitFitViewFlag(){
+    this.fitViewFlag.set(true);
+    setTimeout(() => this.fitViewFlag.set(false), 0);
   }
 
 }

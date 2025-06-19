@@ -28,11 +28,10 @@ export class UndoRedoService {
   constructor() {
     effect(() => {
 
-      if(this.isSuppressedByCreation()) return;
+      if (this.isSuppressedByCreation()) return;
 
       this.modelSvc.hasCanvasModelChanged();
-      // console.log(this.encodedHistory());
-      
+
       untracked(() => {
         const current = this.encodeSvc.encodedStr();
         const history = this.encodedHistory();
@@ -50,9 +49,8 @@ export class UndoRedoService {
           return;
         }
 
-        if (current && current !== last && !current.includes('=')) {
-          this.pushToHistory(current);
-        }
+        this.pushToHistory(current);
+
       });
     });
   }
@@ -95,6 +93,7 @@ export class UndoRedoService {
   pushToHistory(encoded: string) {
     const history = this.encodedHistory();
     const index = this.currentIndex();
+
 
     if (encoded === history[index]) {
       return;

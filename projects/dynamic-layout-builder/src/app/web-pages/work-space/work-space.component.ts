@@ -11,6 +11,7 @@ import { EncodeService } from '../../services/encode.service';
 import { SelectionService } from '../../services/selection.service';
 import { HotkeyService } from '../../services/hotkey.service';
 import { PanningService } from '../../services/panning.service';
+import { UndoRedoService } from '../../services/undo-redo.service';
 
 @Component({
   selector: 'app-work-space',
@@ -26,6 +27,7 @@ export class WorkSpaceComponent implements OnInit {
   readonly selectionSvc = inject(SelectionService);
   readonly hotkeySvc = inject(HotkeyService);
   readonly panningSvc = inject(PanningService);
+  readonly undoRedoSvc = inject(UndoRedoService);
   canvas = computed(() => this.modelSvc.canvas());
   canvasString: Signal<string> = computed(
     () => JSON.stringify(this.canvas(), null)
@@ -64,6 +66,17 @@ export class WorkSpaceComponent implements OnInit {
         this.updateQueryParam('encoded', this.encodeSvc.encodedStr())
       })
     });
+
+    effect(() => {
+      this.panningSvc.fullViewFlag();
+      this.fullView();
+    })
+    
+    effect(() => {
+      this.panningSvc.fitViewFlag();
+      this.fitView();
+    })
+
   }
 
   ngOnInit(): void {
@@ -95,6 +108,7 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   onMouseDown(event: MouseEvent) {
+    this.selectionSvc.unselect();
     if (event.button === 0 && this.isPanning()) {
       this.isMoving = true;
       this.lastX.set(event.clientX);
@@ -133,8 +147,8 @@ export class WorkSpaceComponent implements OnInit {
     return `translate(${this.translateX()}px, ${this.translateY()}px) scale(${this.scale()})`;
   }
 
-  resetView() {
-    this.panningSvc.resetView();
+  fullView() {
+    this.panningSvc.fullView();
   }
 
   fitView() {
@@ -164,6 +178,5 @@ export class WorkSpaceComponent implements OnInit {
     this.translateX.set(offsetX);
     this.translateY.set(offsetY);
   }
-
 
 }

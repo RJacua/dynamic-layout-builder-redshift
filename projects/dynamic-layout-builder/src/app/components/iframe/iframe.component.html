@@ -12,6 +12,9 @@
   <!-- (click)="onClick()" -->
   <!-- <br> -->
   @if(editMode){
+  <div class="element-name" [class]>
+    {{data.type + " - " + data.id}}
+  </div>
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
   <div
     cdkDragHandle
