@@ -7,7 +7,6 @@ import { SelectionService } from '../../services/selection.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 import { ImageData } from '../../interfaces/layout-elements';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { sanitizeUrl } from "@braintree/sanitize-url"
 
 @Component({
@@ -21,7 +20,6 @@ import { sanitizeUrl } from "@braintree/sanitize-url"
   styleUrl: './image.component.scss'
 })
 export class ImageComponent {
-  private _sanitizer = inject(DomSanitizer)
   type = 'image';
   @Input() data: ImageData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, url: '', tooltip: 'this is an image', alt: 'Image' };
   @Input() editMode: boolean = true;
@@ -53,8 +51,9 @@ export class ImageComponent {
     let url
     try {
       url = new URL(this.nodeSignal().data.src);
-      let sanatizedUrl = sanitizeUrl(url.toString());
-      return this._sanitizer.bypassSecurityTrustResourceUrl(sanatizedUrl);
+      // let sanatizedUrl = sanitizeUrl(url.toString());
+      // return this._sanitizer.bypassSecurityTrustResourceUrl(sanatizedUrl);
+      return url;
     }
     catch (error) {
 
@@ -78,6 +77,8 @@ export class ImageComponent {
   });
 
   isDragging = this.dragDropSvc.isDragging;
+
+  alt = computed(() => this.nodeSignal().data.alt);
 
   ngAfterViewInit() {
 

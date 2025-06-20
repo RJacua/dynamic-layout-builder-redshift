@@ -15,17 +15,28 @@
   <div id="core" [class]="'container-flex'" [style]="internalStyle()" [attr.data-id]="data.id" >
     <!-- [class]="'container-border container-flex ' + direction()" -->
     <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
-    @for (node of nodeSignal().data.children; track node.data.id) { @switch
-    (node.data.type) { @case ('container') {
-    <app-container class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-    } @case ('header') {
-    <app-header class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-    } @case ('paragraph') {
-    <app-paragraph class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-    } @case ('iframe') {
-    <app-iframe class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-    } @default { } } } @if (editMode && nodeSignal().data.children.length ===
-    0){
+    @for (node of nodeSignal().data.children; track node.data.id) {
+      @switch (node.data.type) { 
+        @case ('container') {
+        <app-container class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
+        } 
+        @case ('header') {
+        <app-header class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
+        } 
+        @case ('paragraph') {
+        <app-paragraph class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
+        } 
+        @case ('iframe') {
+        <app-iframe class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
+        } 
+        @case ('image') {
+        <app-image class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
+        } 
+        @default { } 
+        }
+    } 
+    
+    @if (editMode && nodeSignal().data.children.length ===0) {
     <p class="default-text">This Container is Empty</p>
     }
   </div>

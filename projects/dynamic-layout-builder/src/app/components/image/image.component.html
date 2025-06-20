@@ -22,32 +22,28 @@
     ⋮⋮
   </div>
   @if(src() == ''){
-  <p>No Source Available</p>
+  <p>No Image Source Available</p>
   } @else {
-  <div class="main">
-    <iframe
-      id="player"
+  <div class="main core">
+    <img
+      id="image"
+      [alt]="alt()"
       [attr.data-id]="data.id"
       [style]="internalStyle()"
-      scrolling="no"
-      frameborder="no"
-      allow="autoplay"
       [src]="src()"
-    ></iframe>
+    />
   </div>
   } } @else { @if(src() == ''){
-  <p>No Source Available</p>
+  <p>No Image Source Available</p>
   } @else {
-  <div class="main">
-    <iframe
+  <div class="main core">
+    <img
       id="player"
+      [alt]="alt()"
       [attr.data-id]="data.id"
       [style]="internalStyle()"
-      scrolling="no"
-      frameborder="no"
-      allow="autoplay"
       [src]="src()"
-    ></iframe>
+    />
   </div>
   } }
   <!-- <br> -->

@@ -48,6 +48,7 @@ import {
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
+import { ImageComponent } from '../image/image.component';
 
 @Component({
   selector: 'app-container',
@@ -56,6 +57,7 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
     HeaderComponent,
     ParagraphComponent,
     IframeComponent,
+    ImageComponent,
     CommonModule,
     MatFormFieldModule,
     MatButtonModule,

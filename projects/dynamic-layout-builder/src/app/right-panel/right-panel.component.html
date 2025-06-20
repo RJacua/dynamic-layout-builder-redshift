@@ -1,5 +1,12 @@
 <ng-container *ngIf="selectedNode() as selected">
-  <p>{{selectedNode().data.type + (selectedNode().data.id !== "canvas" ? " - " + selectedNode().data.id : "")}}</p>
+  <p>
+    {{
+      selectedNode().data.type +
+        (selectedNode().data.id !== "canvas"
+          ? " - " + selectedNode().data.id
+          : "")
+    }}
+  </p>
   <ng-container [ngSwitch]="selected.data?.type">
     <!-- <div *ngSwitchCase="'canvas'">
             <app-background-styles-options></app-background-styles-options>
@@ -43,13 +50,13 @@
       <app-padding-styles-options></app-padding-styles-options>
       <app-margin-styles-options></app-margin-styles-options>
       <app-dimension-styles-options></app-dimension-styles-options>
-
+      
       <br />
       <br />
       <br />
       <br />
     </div>
-
+    
     <div *ngSwitchCase="'iframe'">
       <app-iframe-basic-options></app-iframe-basic-options>
       <app-background-styles-options></app-background-styles-options>
@@ -57,6 +64,22 @@
       <app-corner-styles-options></app-corner-styles-options>
       <app-padding-styles-options></app-padding-styles-options>
       <app-margin-styles-options></app-margin-styles-options>
+      <app-dimension-styles-options></app-dimension-styles-options>
+      
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
+    
+    <div *ngSwitchCase="'image'">
+      <app-iframe-basic-options></app-iframe-basic-options>
+      <app-background-styles-options></app-background-styles-options>
+      <app-border-styles-options></app-border-styles-options>
+      <app-corner-styles-options></app-corner-styles-options>
+      <app-padding-styles-options></app-padding-styles-options>
+      <app-margin-styles-options></app-margin-styles-options>
+      <app-dimension-styles-options></app-dimension-styles-options>
 
       <br />
       <br />
@@ -68,7 +91,7 @@
       <app-background-styles-options></app-background-styles-options>
       <app-border-styles-options></app-border-styles-options>
       <app-padding-styles-options></app-padding-styles-options>
-      
+
       <br />
       <br />
       <br />
