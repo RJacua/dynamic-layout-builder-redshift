@@ -1,5 +1,5 @@
 <div>
-    <h3 class="align-center">Actions</h3>
+    <h3 class="align-center">Tools</h3>
 </div>
 
 <div class="buttons-list">
@@ -73,7 +73,34 @@
         <span>Container</span>
     </button>
     <button mat-menu-item (click)="addLayoutElement('iframe')">
-        <mat-icon>add_box</mat-icon>
+        <mat-icon>computer</mat-icon>
         <span>Iframe</span>
     </button>
+    <button mat-menu-item (click)="addLayoutElement('image')">
+        <mat-icon>image</mat-icon>
+        <span>Image</span>
+    </button>
 </mat-menu>
+
+<div>
+    <h3 class="align-center">Actions</h3>
+</div>
+<div class="buttons-list">
+    <button mat-icon-button (click)="fullView()">
+            <mat-icon matTooltip="Full Scale">fullscreen</mat-icon>
+    </button>
+    <button mat-icon-button (click)="fitView()">
+            <mat-icon matTooltip="Fit to Screen">fullscreen_exit</mat-icon>
+    </button>
+</div>
+<div class="buttons-list">
+    <button mat-icon-button (click)="openExportDialog()">
+            <mat-icon matTooltip="Export">unarchive</mat-icon>
+    </button>
+    <button mat-icon-button (click)="import()">
+            <mat-icon matTooltip="Import">archive</mat-icon>
+    </button>
+    <button mat-icon-button (click)="preview()">
+            <mat-icon matTooltip="Preview Final Project">remove_red_eye</mat-icon>
+    </button>
+</div>

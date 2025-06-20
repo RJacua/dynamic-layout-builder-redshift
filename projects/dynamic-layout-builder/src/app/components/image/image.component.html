@@ -12,9 +12,6 @@
   <!-- (click)="onClick()" -->
   <!-- <br> -->
   @if(editMode){
-  <div class="element-name" [class]>
-    {{data.type + " - " + data.id}}
-  </div>
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
   <div
     cdkDragHandle
@@ -25,32 +22,28 @@
     ⋮⋮
   </div>
   @if(src() == ''){
-  <p>No Source Available</p>
+  <p>No Image Source Available</p>
   } @else {
   <div class="main core">
-    <iframe
-      id="player"
+    <img
+      id="image"
+      [alt]="alt()"
       [attr.data-id]="data.id"
       [style]="internalStyle()"
-      scrolling="no"
-      frameborder="no"
-      allow="autoplay"
       [src]="src()"
-    ></iframe>
+    />
   </div>
   } } @else { @if(src() == ''){
-  <p>No Source Available</p>
+  <p>No Image Source Available</p>
   } @else {
   <div class="main core">
-    <iframe
+    <img
       id="player"
+      [alt]="alt()"
       [attr.data-id]="data.id"
       [style]="internalStyle()"
-      scrolling="no"
-      frameborder="no"
-      allow="autoplay"
       [src]="src()"
-    ></iframe>
+    />
   </div>
   } }
   <!-- <br> -->

@@ -3,10 +3,13 @@
   [attr.data-id]="data.id" cdkDrag (cdkDragMoved)="onDragMoved($event)">
   <!-- <br> -->
   @if(editMode){
+  <div class="element-name">
+    {{data.type + " - " + data.id}}
+  </div>
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">⋮⋮</div>
   }
-  <div id="core" [style]="internalStyle()">
+  <div id="core" [style]="internalStyle()" [attr.data-id]="data.id">
   <p  #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" 
     [class.editable-content]="editMode" [class.element]="editMode" [class]="'element ' + dynamicHeader()"></p>
   <!-- <br> -->

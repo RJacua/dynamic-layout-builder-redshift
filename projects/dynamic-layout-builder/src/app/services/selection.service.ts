@@ -2,6 +2,7 @@ import { computed, effect, inject, Injectable, Signal, signal, WritableSignal } 
 import { BehaviorSubject } from 'rxjs';
 import { AtomicElementData, ContainerData, LayoutElement } from '../interfaces/layout-elements';
 import { ModelService } from './model.service';
+import { PanningService } from './panning.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +10,14 @@ import { ModelService } from './model.service';
 export class SelectionService {
 
   readonly modelSvc = inject(ModelService);
+  readonly panningSvc = inject(PanningService);
 
   private _selectedId = signal<string>('canvas');
   
-  isPanning = signal(false);
+  isPanning = this.panningSvc.isPanning;
   selectedElementId = computed(() => { 
     if (!this.isPanning()) return this._selectedId()
-    else return 'canvas'});
+    else return ''});
   selectedNode = computed(() => this.modelSvc.getNodeById(this.selectedElementId(), this.modelSvc.canvasModel()));
 
   height = signal(0);
@@ -60,7 +62,7 @@ export class SelectionService {
 
   hover(element: ContainerData | AtomicElementData): void {
     if (this.isPanning()) {
-      this.unhover()
+      this._hoveredId.set('');
       return
     }
     if (element.type === 'canvas') {
@@ -82,10 +84,6 @@ export class SelectionService {
 
   unhover() {
     this._hoveredId.set('canvas');
-  }
-
-  togglePanning(){
-    this.isPanning.update(() => !this.isPanning());
   }
 
   // findDeepestElementByDataIdAndTag(

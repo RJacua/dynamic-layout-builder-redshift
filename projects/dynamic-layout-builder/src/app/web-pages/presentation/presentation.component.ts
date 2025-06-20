@@ -33,7 +33,7 @@ export class PresentationComponent {
   }
 
   renderFromModel(model: Canvas<CanvasData>) {
-    this.modelSvc.setCanvasModel2(model);
+    this.modelSvc.setCanvasModel(model);
   }
 
   loadPresentation() {

@@ -38,6 +38,13 @@ export interface IframeData extends LayoutData {
   
 }
 
+export interface ImageData extends LayoutData {
+  url: string;
+  alt: string;
+  tooltip: string;
+  
+}
+
 export interface Canvas<T> {
   data: T;
 
@@ -71,6 +78,9 @@ export interface Styles { //vai crescer
   ["background-color"]?: string;
   opacity?: string;
   ["flex-direction"]?: string;
+   ["background-image"]?: string;
+   ["background-repeat"]?: string;
+   ["background-size"]?: string;
 
   // Border Styles
   ['border-color']?: string;

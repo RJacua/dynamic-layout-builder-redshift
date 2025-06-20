@@ -1,6 +1,8 @@
 <!-- <div class="canvas" [ngStyle]="dynamicStyles$ | async"  -->
   <div
     [class.canvas-edit]="editMode"
+    [class.canvas]="editMode"
+    [class.noDropZone]="noDrop()"
     class="canvas"
     (click)="onElementClick($event)"
     cdkDropList
@@ -8,10 +10,14 @@
     [cdkDropListData]="onlyContainers()"
     (cdkDropListEntered)="onEnter($event)"
     [attr.data-id]="data.id"
-    [class.noDropZone]="noDrop()"
    
   >
   <div  [style]="internalStyle()">
+    @if (editMode && onlyContainers().length === 0){
+      <div [class]="'container-flex'">
+        <p class="default-text align-center">No elements added yet. Design something!</p>
+      </div>
+    }
     <div id="core" class="align-center">
       @for (node of onlyContainers(); track node.data.id) { 
         <!-- @switch
@@ -19,12 +25,14 @@
       <app-container [data]="node.data" [editMode]="editMode" />
       } @default { } }  -->
       <app-container [data]="node.data" [editMode]="editMode" />
+
     }
 
       <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
     </div>
 
-    @if (editMode) {
+
+    @if (editMode && false) {
     <div class="align-center">
       <app-menu
         [trigger]="'+'"
@@ -33,8 +41,10 @@
         matTooltip="New Container"
         (click)="onPlusClick()"
       ></app-menu>
-      <!-- <button class="round-button" (click)="addContainer()">A</button>-->
+      <button class="round-button" (click)="addContainer()">A</button>
       <!-- <button class="round-button" (click)="renderFromModel()">M</button> -->
+      <button class="round-button" (click)="openExportDialog()">E</button>
+      <!-- <button class="round-button" (click)="importModel()">I</button> -->
       <button class="round-button" (click)="goToRender()">Preview</button>
     </div>
     }
@@ -44,5 +54,5 @@
 <!-- <pre>--------------------</pre> -->
 <!-- <pre>{{decoded()}}</pre> -->
 <!-- <pre>--------------------</pre> -->
-<!-- <pre>{{ canvasString() }}</pre> -->
-<pre>{{ canvasCustomString() }}</pre>
+<!-- <pre>{{ canvasModelsString() }}</pre> -->
+<!-- <pre>{{ canvasCustomString() }}</pre> -->

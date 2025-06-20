@@ -20,19 +20,21 @@ export class ModelService {
 
   canvasStyle = signal<(Styles)>({});
 
-  canvasEnabler= signal<(Enablers)>({});
+  canvasEnabler = signal<(Enablers)>({});
 
   expandedNodes = signal<Set<String>>(new Set());
 
-  canvas:Signal<Canvas<CanvasData>> = computed(() => {
-    return {data: {
-      id: 'canvas',
-      type: 'canvas',
-      children: this.canvasModel(),
-      expandedNodes: this.expandedNodes(),
-      style: this.canvasStyle(),
-      enabler: this.canvasEnabler(),
-    }};
+  canvas: Signal<Canvas<CanvasData>> = computed(() => {
+    return {
+      data: {
+        id: 'canvas',
+        type: 'canvas',
+        children: this.canvasModel(),
+        expandedNodes: this.expandedNodes(),
+        style: this.canvasStyle(),
+        enabler: this.canvasEnabler(),
+      }
+    };
   });
 
   hasCanvasModelChanged = signal(false);
@@ -88,7 +90,7 @@ export class ModelService {
     let enabler = {};
     let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
     let src = '';
-    
+
     if (componentData?.style) {
       style = componentData.style;
     }
@@ -104,7 +106,7 @@ export class ModelService {
         data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, children: children }
       }
     }
-    else if(componentType.toLowerCase() === 'iframe'){
+    else if (componentType.toLowerCase() === 'iframe') {
       return {
         data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, src: src }
       }
@@ -166,13 +168,13 @@ export class ModelService {
     model: LayoutElement<ContainerData> | LayoutElement<AtomicElementData>,
     branch?: (LayoutElement<ContainerData>)[]
   ) {
-    
-    if(model.data.type !== 'canvas'){
+
+    if (model.data.type !== 'canvas') {
       const currentBranch = branch ?? this.canvasModel();
       // console.log("entrou", currentBranch)
-      
+
       const updated = this._recursiveUpdateModel(id, model, currentBranch);
-      
+
       if (updated) {
         this.canvasModel.set([...currentBranch]);
       }
@@ -325,7 +327,7 @@ export class ModelService {
   }
 
 
-  setCanvasModel2(model: Canvas<CanvasData>) {
+  setCanvasModel(model: Canvas<CanvasData>) {
 
     this.canvasModel.set(model.data.children);
     this.expandedNodes.set(new Set());
@@ -369,5 +371,15 @@ export class ModelService {
       });
     }
     return found
+  }
+
+  setCanvasByString(canvas: string) {
+    let canvasObj = JSON.parse(canvas);
+
+    this.canvasModel.set(canvasObj.data.children);
+    this.expandedNodes.set(canvasObj.data.expandedNodes);
+    this.canvasStyle.set(canvasObj.data.style);
+    this.canvasEnabler.set(canvasObj.data.enabler);
+
   }
 }

@@ -31,6 +31,7 @@ export class LayersTreeComponent {
     effect(() => {
       const data = this.data;
       const lastAddedId = this.modelSvc.lastAddedNodeId();
+      const selectedElementId = this.selectionSvc.selectedElementId();
 
       untracked(() => {
         this.expandNewNodeParents(lastAddedId);

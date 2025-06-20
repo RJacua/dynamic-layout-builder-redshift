@@ -46,6 +46,9 @@ import {
 } from '@angular/cdk/drag-drop';
 import { DragDropService } from '../../services/dragdrop.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportModelDialogComponent } from '../export-model-dialog/export-model-dialog.component';
+import { EncodeService } from '../../services/encode.service';
 
 @Component({
   selector: 'app-canvas',
@@ -114,6 +117,8 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
   readonly router = inject(Router);
   readonly componentsSvc = inject(ComponentsService);
   readonly dragDropSvc = inject(DragDropService);
+  readonly dialog = inject(MatDialog);
+  readonly encodeSvc = inject(EncodeService);
 
   id: string = '0';
   canvas = computed(() => this.modelSvc.canvas());
@@ -148,18 +153,18 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
   private resizeObserver?: ResizeObserver;
 
-  utf8Str: Signal<string> = computed(() =>
-    encodeURIComponent(this.canvasString())
-  );
-  btoa: Signal<string> = computed(() => btoa(this.utf8Str()));
-  atob: Signal<string> = computed(() => atob(this.btoa()));
-  decoded: Signal<string> = computed(() => decodeURIComponent(this.atob()));
 
+  encoded = computed(() => this.encodeSvc.encodedStr());
+  decoded = computed(() => this.encodeSvc.decodedStr());
+
+  isPanning = this.selectionSvc.isPanning;
   isHovered = computed(() => {
     return this.selectionSvc.hoveredElementId() === 'canvas';
   });
 
   addContainer() {
+    if (this.isPanning()) return;
+
     const newLayoutElement = this.modelSvc.writeElementModel(
       'container',
       'canvas'
@@ -177,6 +182,17 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
   // renderFromModel() {
   //   this.modelSvc.setCanvasModel([layoutModels[0][0]]);
   // }
+
+  openExportDialog() {
+    const dialogRef = this.dialog.open(ExportModelDialogComponent, {
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
 
   private selectionService = inject(SelectionService);
   initialData: string[];
@@ -206,13 +222,16 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
     let el = event.target as HTMLElement;
+    let originalEl = event.target as HTMLElement;
 
     while (
       el &&
       el.tagName &&
       !el.tagName.startsWith('APP-') &&
+      // el.id !== "core" &&
       el.parentElement
     ) {
+      console.log(el.classList)
       el = el.parentElement;
     }
 
@@ -220,7 +239,15 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
       const componentInstance = (window as any).ng?.getComponent?.(el);
 
       if (componentInstance) {
-        this.selectionService.select(componentInstance.data);
+        let data = componentInstance.data;
+
+        if (originalEl.classList.contains("external")) {
+          this.selectionService.selectById(data.parentId, true);
+        }
+        else {
+          this.selectionService.select(componentInstance.data);
+        }
+
       } else {
         console.warn('ng.getComponent não disponível (modo produção?).');
       }
@@ -233,7 +260,7 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
   goToRender() {
     this.router.navigate(['/preview'], {
-      queryParams: { encoded: this.btoa() },
+      queryParams: { encoded: this.encoded() },
     });
   }
 
@@ -251,6 +278,6 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
     console.log('Canvas entered:', event)
   }
 
-  noDrop = computed(() => this.isHovered() && this.dragDropSvc.isDragging() && this.selectionSvc.selectedNode().data.type !== 'container')
+  noDrop = computed(() => this.isHovered() && this.dragDropSvc.isDragging() && this.selectionSvc.selectedNode().data.type !== 'container');
 
 }

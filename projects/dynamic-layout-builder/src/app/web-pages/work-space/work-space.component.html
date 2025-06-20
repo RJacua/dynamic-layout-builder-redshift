@@ -1,13 +1,12 @@
 <div class="container">
   <as-split direction="horizontal" unit="percent" [gutterSize]="1">
-    <!-- Painel esquerdo -->
     <as-split-area class="side-panel" [size]="14" minSize="10" maxSize="20">
       <app-left-panel></app-left-panel>
     </as-split-area>
 
-    <!-- Área central -->
     <as-split-area class="center-area" [size]="72" minSize="40">
       <div
+      #viewport 
         class="viewport"
         [class.movable]="isPanning()"
         [class.dragging]="isPanning() && isMoving"
@@ -23,17 +22,13 @@
           [style.transform]="transformStyle()"
           [style.transform-origin]="'0 0'"
         >
-          <div class="canvas-wrapper">
+          <div #canvasWrapper class="canvas-wrapper">
             <app-canvas [editMode]="true"></app-canvas>
           </div>
         </div>
       </div>
-
-      <!-- Botão de centralizar -->
-      <button (click)="resetView()" class="reset-button">🔄 Center</button>
     </as-split-area>
 
-    <!-- Painel direito -->
     <as-split-area class="side-panel" [size]="14" minSize="10" maxSize="20">
       <app-right-panel></app-right-panel>
     </as-split-area>

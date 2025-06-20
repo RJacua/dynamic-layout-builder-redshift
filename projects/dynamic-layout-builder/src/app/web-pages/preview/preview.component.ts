@@ -50,7 +50,7 @@ export class PreviewComponent {
   }
 
   renderFromModel(model: Canvas<CanvasData>) {
-    this.modelSvc.setCanvasModel2(model);
+    this.modelSvc.setCanvasModel(model);
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
 }

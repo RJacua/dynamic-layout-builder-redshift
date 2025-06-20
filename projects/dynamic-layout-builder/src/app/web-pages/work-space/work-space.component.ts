@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, Signal, signal, untracked } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, OnInit, Signal, signal, untracked, ViewChild } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CanvasComponent } from "../../components/canvas/canvas.component";
 import { RightPanelComponent } from "../../right-panel/right-panel.component";
@@ -10,6 +10,8 @@ import { Canvas, CanvasData, ContainerData, LayoutElement } from '../../interfac
 import { EncodeService } from '../../services/encode.service';
 import { SelectionService } from '../../services/selection.service';
 import { HotkeyService } from '../../services/hotkey.service';
+import { PanningService } from '../../services/panning.service';
+import { UndoRedoService } from '../../services/undo-redo.service';
 
 @Component({
   selector: 'app-work-space',
@@ -24,6 +26,8 @@ export class WorkSpaceComponent implements OnInit {
   readonly modelSvc = inject(ModelService);
   readonly selectionSvc = inject(SelectionService);
   readonly hotkeySvc = inject(HotkeyService);
+  readonly panningSvc = inject(PanningService);
+  readonly undoRedoSvc = inject(UndoRedoService);
   canvas = computed(() => this.modelSvc.canvas());
   canvasString: Signal<string> = computed(
     () => JSON.stringify(this.canvas(), null)
@@ -31,20 +35,25 @@ export class WorkSpaceComponent implements OnInit {
   encodedStr = this.encodeSvc.encodedStr;
   encodedParam = signal<string>('');
   parsedJSON: Signal<Partial<Canvas<CanvasData>>> = signal('');
+
+  @ViewChild('panZoomContainer', { static: true }) panZoomContainerRef!: ElementRef;
+  @ViewChild('canvasWrapper', { static: true }) canvasWrapperRef!: ElementRef;
+  @ViewChild('viewport', { static: true }) viewportRef!: ElementRef;
+
   isPanning = this.selectionSvc.isPanning;
-  private startX = 0;
-  private startY = 0;
-  private scrollLeft = 0;
-  private scrollTop = 0;
-  translateX = 0;
-  translateY = 0;
-  scale = 1;
-  private lastX = 0;
-  private lastY = 0;
-  offsetX = 0;
-  offsetY = 0;
-  minScale = 0.3;
-  maxScale = 3;
+  startX = this.panningSvc.startX;
+  startY = this.panningSvc.startY;
+  scrollLeft = this.panningSvc.scrollLeft;
+  scrollTop = this.panningSvc.scrollTop;
+  translateX = this.panningSvc.translateX;
+  translateY = this.panningSvc.translateY;
+  scale = this.panningSvc.scale;
+  lastX = this.panningSvc.lastX;
+  lastY = this.panningSvc.lastY;
+  offsetX = this.panningSvc.offsetX;
+  offsetY = this.panningSvc.offsetY;
+  minScale = this.panningSvc.minScale;
+  maxScale = this.panningSvc.maxScale;
   isMoving = false;
 
   constructor() {
@@ -57,6 +66,17 @@ export class WorkSpaceComponent implements OnInit {
         this.updateQueryParam('encoded', this.encodeSvc.encodedStr())
       })
     });
+
+    effect(() => {
+      this.panningSvc.fullViewFlag();
+      this.fullView();
+    })
+    
+    effect(() => {
+      this.panningSvc.fitViewFlag();
+      this.fitView();
+    })
+
   }
 
   ngOnInit(): void {
@@ -83,27 +103,28 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   renderFromModel(model: Canvas<CanvasData>) {
-    this.modelSvc.setCanvasModel2(model);
+    this.modelSvc.setCanvasModel(model);
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
 
   onMouseDown(event: MouseEvent) {
+    this.selectionSvc.unselect();
     if (event.button === 0 && this.isPanning()) {
       this.isMoving = true;
-      this.lastX = event.clientX;
-      this.lastY = event.clientY;
+      this.lastX.set(event.clientX);
+      this.lastY.set(event.clientY);
       event.preventDefault();
     }
   }
 
   onMouseMove(event: MouseEvent) {
     if (event.button === 0 && this.isPanning() && this.isMoving) {
-      const dx = event.clientX - this.lastX;
-      const dy = event.clientY - this.lastY;
-      this.translateX += dx;
-      this.translateY += dy;
-      this.lastX = event.clientX;
-      this.lastY = event.clientY;
+      const dx = event.clientX - this.lastX();
+      const dy = event.clientY - this.lastY();
+      this.translateX.update(() => this.translateX() + dx);
+      this.translateY.update(() => this.translateY() + dy);
+      this.lastX.set(event.clientX);
+      this.lastY.set(event.clientY);
     }
   }
 
@@ -116,18 +137,46 @@ export class WorkSpaceComponent implements OnInit {
     event.preventDefault();
     const delta = -event.deltaY;
     const zoomFactor = 0.001;
-    const newScale = this.scale + delta * zoomFactor;
-    this.scale = Math.min(this.maxScale, Math.max(this.minScale, newScale));
+    const newScale = this.scale() + delta * zoomFactor;
+    this.scale.set(Math.min(this.maxScale(), Math.max(this.minScale(), newScale)));
+
+    console.log(this.scale());
   }
 
   transformStyle() {
-    return `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
+    return `translate(${this.translateX()}px, ${this.translateY()}px) scale(${this.scale()})`;
   }
 
-  resetView() {
-    this.scale = 1;
-    this.translateX = 0;
-    this.translateY = 0;
+  fullView() {
+    this.panningSvc.fullView();
+  }
+
+  fitView() {
+    const viewportEl = this.viewportRef.nativeElement as HTMLElement;
+    const canvasEl = this.canvasWrapperRef.nativeElement as HTMLElement;
+
+    const viewportWidth = viewportEl.clientWidth;
+    const viewportHeight = viewportEl.clientHeight;
+
+    const canvasWidth = canvasEl.scrollWidth;
+    const canvasHeight = canvasEl.scrollHeight;
+
+    if (!canvasWidth || !canvasHeight) return;
+
+    // Calcular o scale que encaixa no viewport (mantendo proporção)
+    const scaleX = viewportWidth / canvasWidth;
+    const scaleY = viewportHeight / canvasHeight;
+    const scale = Math.min(scaleX, scaleY, this.maxScale());
+
+    // Atualizar no serviço
+    this.scale.set(scale);
+
+    // Centralizar o canvas visualmente
+    const offsetX = (viewportWidth - canvasWidth * scale) / 2;
+    const offsetY = (viewportHeight - canvasHeight * scale) / 2;
+
+    this.translateX.set(offsetX);
+    this.translateY.set(offsetY);
   }
 
 }

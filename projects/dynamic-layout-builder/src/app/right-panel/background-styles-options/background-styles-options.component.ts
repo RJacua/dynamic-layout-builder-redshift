@@ -33,6 +33,12 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   flexDirections = this.bgStylesService.flexDirections;
   flexDirectionDefault = this.bgStylesService.flexDirectionDefault;
   colorOpacityDefault = this.bgStylesService.colorOpacityDefault;
+  BgRepeats = this.bgStylesService.BgRepeats;
+  BgRepeatDefault = this.bgStylesService.BgRepeatDefault;
+
+  BgSizes = this.bgStylesService.BgSizes;
+  BgSizeDefault = this.bgStylesService.BgSizeDefault;
+
   containerStyles = this.bgStylesService.containerStyles;
   allStyles = this.bgStylesService.allStyles;
 
@@ -51,9 +57,9 @@ export class BackgroundStylesOptionsComponent implements OnInit {
       let defaultStyles: Styles;
       const node = this.selectedNode();
       if (!node) return;
-  
+
       // console.log("Tipo selecionado:", this.selectedNode()?.data.type);
-  
+
       if (this.selectedNode()?.data.type === 'container') {
         defaultStyles = this.containerStyles;
       }
@@ -79,7 +85,7 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
 
   setupFormControls() {
-   
+
     const node = this.selectedNode();
 
     this.backgroundOptions.addControl('bgColor', new FormControl(''));
@@ -89,6 +95,15 @@ export class BackgroundStylesOptionsComponent implements OnInit {
     if (this.selectedNode()?.data.type === 'container') {
       if (!this.backgroundOptions.contains('flexDirection')) {
         this.backgroundOptions.addControl('flexDirection', new FormControl(''));
+      }
+      if (!this.backgroundOptions.contains('urlImage')) {
+        this.backgroundOptions.addControl('urlImage', new FormControl(''));
+      }
+      if (!this.backgroundOptions.contains('BgRepeat')) {
+        this.backgroundOptions.addControl('BgRepeat', new FormControl(''));
+      }
+      if (!this.backgroundOptions.contains('BgSize')) {
+        this.backgroundOptions.addControl('BgSize', new FormControl(''));
       }
     }
 
@@ -110,6 +125,9 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         colorOpacity: colorOpacity,
         bgOpacity: parseFloat(node.data.style["opacity"]) * 100 || (parseInt(this.containerStyles.opacity!) * 100),
         flexDirection: node.data.style["flex-direction"] || this.containerStyles['flex-direction'],
+        urlImage: node.data.style["background-image"].substring(5, node.data.style["background-image"].length - 2) || this.containerStyles["background-image"],
+        BgRepeat: node.data.style["background-repeat"] || this.containerStyles["background-repeat"],
+        BgSize: node.data.style["background-size"] || this.containerStyles["background-size"],
       }, { emitEvent: false });
     }
   }
@@ -159,8 +177,42 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         });
     }
 
+    const urlImageControl = this.backgroundOptions.get('urlImage');
+      if (urlImageControl instanceof FormControl) {
+        urlImageControl.valueChanges
+          .pipe(distinctUntilChanged())
+          .subscribe(url => {
+            // console.log('Selected url:', url);
+            if (url !== 'none') {
+              this.bgStylesService.setUrlImage(url);
+            }
+          });
+      }
+      
+      const BgRepeatControl = this.backgroundOptions.get('BgRepeat');
+      if (BgRepeatControl instanceof FormControl) {
+        BgRepeatControl.valueChanges
+          .pipe(distinctUntilChanged())
+          .subscribe(bgRepeat => {
+            // console.log('Selected bgRepeat:', bgRepeat);
+            if (bgRepeat !== 'none') {
+              this.bgStylesService.setBgRepeat(bgRepeat);
+            }
+          });
+      }
+
+      const BgSizeControl = this.backgroundOptions.get('BgSize');
+      if (BgSizeControl instanceof FormControl) {
+        BgSizeControl.valueChanges
+          .pipe(distinctUntilChanged())
+          .subscribe(bgSize => {
+            // console.log('Selected bgSize:', bgSize);
+            if (bgSize !== 'none') {
+              this.bgStylesService.setBgSize(bgSize);
+            }
+          });
+      }
+    };
+
   }
 
-
-
-}

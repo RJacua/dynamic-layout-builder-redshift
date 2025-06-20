@@ -26,6 +26,33 @@
                         flexDirection.label }}</option>
                 </select>
             </div>
+
+            <div *ngIf="backgroundOptions.contains('urlImage')">
+                <label for="urlImage">Background Image (link):</label>
+                <input
+                type="text"
+                id="urlImage"
+                name="urlImage"
+                formControlName="urlImage"
+                class="custom-input"
+                />
+            </div>
+
+            <div *ngIf="backgroundOptions.contains('BgRepeat')">
+                <label for="BgRepeat">Direction:</label>
+                <select name="BgRepeat" id="BgRepeat" formControlName="BgRepeat">
+                    <option *ngFor="let BgRepeat of BgRepeats" [ngValue]="BgRepeat.value">{{
+                        BgRepeat.label }}</option>
+                </select>
+            </div>
+
+            <div *ngIf="backgroundOptions.contains('BgSize')">
+                <label for="BgSize">Direction:</label>
+                <select name="BgSize" id="BgSize" formControlName="BgSize">
+                    <option *ngFor="let BgSize of BgSizes" [ngValue]="BgSize.value">{{
+                        BgSize.label }}</option>
+                </select>
+            </div>
         </form>
 
     </mat-list>
