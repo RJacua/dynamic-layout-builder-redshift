@@ -32,6 +32,9 @@
         @case ('image') {
         <app-image class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
         } 
+        @case ('code') {
+        <app-code class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
+        } 
         @default { } 
         }
     } 

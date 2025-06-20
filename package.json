@@ -23,6 +23,7 @@
     "@material/dialog": "^14.0.0",
     "angular-split": "^19.0.0",
     "ngx-color-picker": "^19.0.0",
+    "prismjs": "^1.30.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -32,6 +33,7 @@
     "@angular/cli": "^19.2.6",
     "@angular/compiler-cli": "^19.2.0",
     "@types/jasmine": "~5.1.0",
+    "@types/prismjs": "^1.26.5",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

@@ -1,0 +1,43 @@
+<div
+  [class]="'main ' + dropIndicatorStyle()"
+  [style]="externalStyle()"
+  tabindex="0"
+  [class.border]="editMode"
+  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
+  [cdkDragDisabled]="!editMode"
+  [attr.data-id]="data.id"
+  cdkDrag
+  (cdkDragMoved)="onDragMoved($event)"
+>
+  @if (editMode) {
+  <ng-container>
+    <div class="element-name">
+      {{ data.type + " - " + data.id }}
+    </div>
+    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+    <div
+      cdkDragHandle
+      class="drag-handle"
+      (pointerdown)="onHandleClick()"
+      (pointerup)="onMouseUp()"
+    >
+      ⋮⋮
+    </div>
+  </ng-container>
+  }
+
+  <div class="core">
+<pre class="line-numbers">
+  <code
+    #coreCode
+    class="language-{{ language() ?? 'css' }}"
+    contenteditable="true"
+    spellcheck="false"
+    (input)="updateCodeContent($event)"
+    (blur)="onCodeBlur()"
+    (focus)="onClick()"
+  ></code>
+</pre>
+
+  </div>
+</div>

@@ -335,3 +335,10 @@ mat-card {
 .test {
     background: green;
 }
+
+code[contenteditable] {
+  outline: none;
+  white-space: pre;
+  display: block; // evita bugs de inline
+  min-height: 40px; // pra facilitar clique fora
+}
