@@ -39,8 +39,12 @@ export class BackgroundStylesOptionsComponent implements OnInit {
   BgSizes = this.bgStylesService.BgSizes;
   BgSizeDefault = this.bgStylesService.BgSizeDefault;
 
+  objFits = this.bgStylesService.objFits;
+  objFitDefault = this.bgStylesService.objFitDefault;
+
   containerStyles = this.bgStylesService.containerStyles;
   allStyles = this.bgStylesService.allStyles;
+  imageStyles = this.bgStylesService.imageStyles;
 
   backgroundOptions = new FormGroup({});
   node = this.selectedNode();
@@ -62,6 +66,9 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
       if (this.selectedNode()?.data.type === 'container') {
         defaultStyles = this.containerStyles;
+      }
+      else if (this.selectedNode()?.data.type === 'image') {
+        defaultStyles = this.imageStyles;
       }
       else {
         // console.log("ELSE")
@@ -88,11 +95,15 @@ export class BackgroundStylesOptionsComponent implements OnInit {
 
     const node = this.selectedNode();
 
-    this.backgroundOptions.addControl('bgColor', new FormControl(''));
-    this.backgroundOptions.addControl('colorOpacity', new FormControl(''));
     this.backgroundOptions.addControl('bgOpacity', new FormControl(''));
 
     if (this.selectedNode()?.data.type === 'container') {
+      if (!this.backgroundOptions.contains('bgColor')) {
+        this.backgroundOptions.addControl('bgColor', new FormControl(''));
+      }
+      if (!this.backgroundOptions.contains('colorOpacity')) {
+        this.backgroundOptions.addControl('colorOpacity', new FormControl(''));
+      }
       if (!this.backgroundOptions.contains('flexDirection')) {
         this.backgroundOptions.addControl('flexDirection', new FormControl(''));
       }
@@ -106,17 +117,30 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         this.backgroundOptions.addControl('BgSize', new FormControl(''));
       }
     }
+    else if (this.selectedNode()?.data.type === 'image') {
+      if (!this.backgroundOptions.contains('objFit')) {
+        this.backgroundOptions.addControl('objFit', new FormControl(''));
+      }
+    }
+    else {
+      if (!this.backgroundOptions.contains('bgColor')) {
+        this.backgroundOptions.addControl('bgColor', new FormControl(''));
+      }
+      if (!this.backgroundOptions.contains('colorOpacity')) {
+        this.backgroundOptions.addControl('colorOpacity', new FormControl(''));
+      }
+    }
+
 
     const bgColorRgba = node.data.style["background-color"] || this.containerStyles['background-color'];
     const bgColorHex = this.generalSvc.extractHex(bgColorRgba) ?? '#ffffff';
     const colorOpacity = this.generalSvc.extractOpacity(bgColorRgba) ?? parseInt(this.colorOpacityDefault) * 100;
 
 
-    if (this.selectedNode()?.data.type !== 'container') {
+    if (this.selectedNode()?.data.type === 'image') {
       this.backgroundOptions.setValue({
-        bgColor: bgColorHex,
-        colorOpacity: colorOpacity,
-        bgOpacity: parseFloat(node.data.style["opacity"]) * 100 || (parseInt(this.allStyles.opacity!) * 100),
+        bgOpacity: parseFloat(node.data.style["opacity"]) * 100 || (parseInt(this.imageStyles.opacity!) * 100),
+        objFit: node.data.style["object-fit"] || this.objFitDefault,
       }, { emitEvent: false });
     }
     else if (this.selectedNode()?.data.type === 'container') {
@@ -130,28 +154,39 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         BgSize: node.data.style["background-size"] || this.containerStyles["background-size"],
       }, { emitEvent: false });
     }
+    else {
+      this.backgroundOptions.setValue({
+        bgColor: bgColorHex,
+        colorOpacity: colorOpacity,
+        bgOpacity: parseFloat(node.data.style["opacity"]) * 100 || (parseInt(this.allStyles.opacity!) * 100),
+      }, { emitEvent: false });
+    }
   }
 
 
   setupReactiveListeners() {
 
-    combineLatest([
-      this.backgroundOptions.get('bgColor')!.valueChanges.pipe(
-        startWith(this.bgColorHex),
-        // distinctUntilChanged()
-      ),
-      this.backgroundOptions.get('colorOpacity')!.valueChanges.pipe(
-        startWith(this.colorOpacity),
-        // distinctUntilChanged()
-      ),
-    ])
-      .pipe(distinctUntilChanged())
-      .subscribe(([hex, opacity]) => {
-        if (hex && opacity !== null) {
-          const rgba = this.generalSvc.hexToRgba(hex, opacity);
-          this.bgStylesService.setBgColor(rgba);
-        }
-      });
+    const bgColorControl = this.backgroundOptions.get('bgColor');
+    const colorOpacityControl = this.backgroundOptions.get('colorOpacity');
+    if (bgColorControl instanceof FormControl && colorOpacityControl instanceof FormControl) {
+      combineLatest([
+        this.backgroundOptions.get('bgColor')!.valueChanges.pipe(
+          startWith(this.bgColorHex),
+          // distinctUntilChanged()
+        ),
+        this.backgroundOptions.get('colorOpacity')!.valueChanges.pipe(
+          startWith(this.colorOpacity),
+          // distinctUntilChanged()
+        ),
+      ])
+        .pipe(distinctUntilChanged())
+        .subscribe(([hex, opacity]) => {
+          if (hex && opacity !== null) {
+            const rgba = this.generalSvc.hexToRgba(hex, opacity);
+            this.bgStylesService.setBgColor(rgba);
+          }
+        });
+    }
 
     const bgOpacityControl = this.backgroundOptions.get('bgOpacity');
     if (bgOpacityControl instanceof FormControl) {
@@ -178,41 +213,53 @@ export class BackgroundStylesOptionsComponent implements OnInit {
     }
 
     const urlImageControl = this.backgroundOptions.get('urlImage');
-      if (urlImageControl instanceof FormControl) {
-        urlImageControl.valueChanges
-          .pipe(distinctUntilChanged())
-          .subscribe(url => {
-            // console.log('Selected url:', url);
-            if (url !== 'none') {
-              this.bgStylesService.setUrlImage(url);
-            }
-          });
-      }
-      
-      const BgRepeatControl = this.backgroundOptions.get('BgRepeat');
-      if (BgRepeatControl instanceof FormControl) {
-        BgRepeatControl.valueChanges
-          .pipe(distinctUntilChanged())
-          .subscribe(bgRepeat => {
-            // console.log('Selected bgRepeat:', bgRepeat);
-            if (bgRepeat !== 'none') {
-              this.bgStylesService.setBgRepeat(bgRepeat);
-            }
-          });
-      }
+    if (urlImageControl instanceof FormControl) {
+      urlImageControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(url => {
+          // console.log('Selected url:', url);
+          if (url !== 'none') {
+            this.bgStylesService.setUrlImage(url);
+          }
+        });
+    }
 
-      const BgSizeControl = this.backgroundOptions.get('BgSize');
-      if (BgSizeControl instanceof FormControl) {
-        BgSizeControl.valueChanges
-          .pipe(distinctUntilChanged())
-          .subscribe(bgSize => {
-            // console.log('Selected bgSize:', bgSize);
-            if (bgSize !== 'none') {
-              this.bgStylesService.setBgSize(bgSize);
-            }
-          });
-      }
-    };
+    const BgRepeatControl = this.backgroundOptions.get('BgRepeat');
+    if (BgRepeatControl instanceof FormControl) {
+      BgRepeatControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(bgRepeat => {
+          // console.log('Selected bgRepeat:', bgRepeat);
+          if (bgRepeat !== 'none') {
+            this.bgStylesService.setBgRepeat(bgRepeat);
+          }
+        });
+    }
 
-  }
+    const BgSizeControl = this.backgroundOptions.get('BgSize');
+    if (BgSizeControl instanceof FormControl) {
+      BgSizeControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(bgSize => {
+          // console.log('Selected bgSize:', bgSize);
+          if (bgSize !== 'none') {
+            this.bgStylesService.setBgSize(bgSize);
+          }
+        });
+    }
+
+    const objFitControl = this.backgroundOptions.get('objFit');
+    if (objFitControl instanceof FormControl) {
+      objFitControl.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(objFit => {
+          console.log('Selected objFit:', objFit);
+          if (objFit !== 'none') {
+            this.bgStylesService.setObjFit(objFit);
+          }
+        });
+    }
+  };
+
+}
 

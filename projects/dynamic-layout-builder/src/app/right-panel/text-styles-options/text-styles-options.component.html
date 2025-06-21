@@ -1,8 +1,8 @@
 <mat-card>
     <mat-list>
-        <mat-divider ></mat-divider>
+        <!-- <mat-divider></mat-divider> -->
         <mat-list-item>
-            <h3 class="center subtitle">Text Options</h3>
+            <h3 class="subtitle">Text Options</h3>
         </mat-list-item>
         <form [formGroup]="fontOptions">
             <div *ngIf="fontOptions.contains('fontSize')">
@@ -35,5 +35,7 @@
                 <option *ngFor="let hOption of hOptions" [ngValue]="hOption.value">{{ hOption.label }}</option>
             </select>
         </form>
+        <br /><br />
+        <mat-divider></mat-divider>
     </mat-list>
 </mat-card>

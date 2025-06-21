@@ -9,6 +9,7 @@ import { PaddingStylesOptionsComponent } from './padding-styles-options/padding-
 import { MarginStylesOptionsComponent } from "./margin-styles-options/margin-styles-options.component";
 import { IframeBasicOptionsComponent } from './iframe-basic-options/iframe-basic-options.component';
 import { DimensionStylesOptionsComponent } from './dimension-styles-options/dimension-styles-options.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-right-panel',
@@ -21,7 +22,8 @@ import { DimensionStylesOptionsComponent } from './dimension-styles-options/dime
     PaddingStylesOptionsComponent,
     MarginStylesOptionsComponent,
     IframeBasicOptionsComponent,
-    DimensionStylesOptionsComponent
+    DimensionStylesOptionsComponent,
+    MatDividerModule,
 ],
   templateUrl: './right-panel.component.html',
   styleUrl: './right-panel.component.scss'

@@ -153,7 +153,7 @@ export class DimensionStylesOptionsComponent {
         distinctUntilChanged()
       )
       .subscribe(([height, unit]) => {
-        if ((height || height == 0) && unit && Object.values(height).every(v => v !== null)) {
+        if ((height !== null && height !== undefined) && unit) {
           // console.log(height)
           if (!this.dimensionOptions.controls.heightAuto.value) {
             this.dimensionStylesSvc.setHeight(height, unit);
@@ -170,7 +170,7 @@ export class DimensionStylesOptionsComponent {
         distinctUntilChanged()
       )
       .subscribe(([width, unit]) => {
-        if ((width || width == 0) && unit && Object.values(width).every(v => v !== null)) {
+        if ((width !== null && width !== undefined) && unit) {
           if (!this.dimensionOptions.controls.widthAuto.value) {
             this.dimensionStylesSvc.setWidth(width, unit);
           }

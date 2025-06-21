@@ -1,50 +1,22 @@
-<div
-  [class]="'main paragraph ' + dropIndicatorStyle()"
-  [style]="externalStyle()"
-  tabindex="0"
-  [class.border]="editMode"
-  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
-  [cdkDragDisabled]="!editMode"
-  [attr.data-id]="data.id"
-  cdkDrag
-  (cdkDragMoved)="onDragMoved($event)"
->
+<div [class]="'main paragraph ' + dropIndicatorStyle()" [style]="externalStyle()" tabindex="0" [class.border]="editMode"
+  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" [cdkDragDisabled]="!editMode"
+  [attr.data-id]="data.id" cdkDrag (cdkDragMoved)="onDragMoved($event)">
   <!-- (click)="onClick()" -->
   <!-- <br> -->
   @if(editMode){
+  <div class="element-name">
+    {{data.type + " - " + data.id}}
+  </div>
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div
-    cdkDragHandle
-    class="drag-handle"
-    (pointerdown)="onHandleClick()"
-    (pointerup)="onMouseUp()"
-  >
+  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">
     ⋮⋮
   </div>
+}
   @if(src() == ''){
   <p>No Image Source Available</p>
   } @else {
   <div class="main core">
-    <img
-      id="image"
-      [alt]="alt()"
-      [attr.data-id]="data.id"
-      [style]="internalStyle()"
-      [src]="src()"
-    />
+    <img id="image" [alt]="alt()" matTooltip="{{tooltip()}}" [attr.data-id]="data.id" [style]="internalStyle()" [src]="src()" />
   </div>
-  } } @else { @if(src() == ''){
-  <p>No Image Source Available</p>
-  } @else {
-  <div class="main core">
-    <img
-      id="player"
-      [alt]="alt()"
-      [attr.data-id]="data.id"
-      [style]="internalStyle()"
-      [src]="src()"
-    />
-  </div>
-  } }
-  <!-- <br> -->
+  } 
 </div>

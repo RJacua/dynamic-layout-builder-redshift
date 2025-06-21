@@ -1,17 +1,21 @@
 <mat-card>
   <mat-list>
     <mat-list-item>
-      <h3 class="center subtitle">IFrame Options</h3>
+      <h3 class="center subtitle">Source Options</h3>
     </mat-list-item>
 
     <label for="urlInput ">Source Address:</label><br />
-    <input
-      type="text"
-      id="urlInput "
-      name="urlInput "
-      [formControl]="urlInput"
-      class="custom-input"
-    /><br /><br />
+    <input type="text" id="urlInput " name="urlInput " [formControl]="urlInput" class="custom-input" />
+
+    @if(selectedNode().data.type == 'image'){
+    <br /><br />
+    <label for="altInput ">Alt Text:</label><br />
+    <input type="text" id="altInput " name="altInput " [formControl]="altInput" class="custom-input" />
+    <br /><br />
+    <label for="tooltipInput ">Tooltip:</label><br />
+    <input type="text" id="tooltipInput " name="tooltipInput " [formControl]="tooltipInput" class="custom-input" />
+    }
+    <br /><br />
     <mat-divider></mat-divider>
   </mat-list>
 </mat-card>

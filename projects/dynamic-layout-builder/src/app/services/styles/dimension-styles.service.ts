@@ -26,8 +26,8 @@ export class DimensionStylesService {
   };
 
   readonly defaultMaxDimensionsStyles: Styles = {
-    ['max-height']: '0' + this.defaultUnit,
-    ['max-width']: '0' + this.defaultUnit,
+    ['max-height']: '100' + this.defaultUnit,
+    ['max-width']: '100' + this.defaultUnit,
   }
 
   readonly defaultMinDimensionsStyles: Styles = {

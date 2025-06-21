@@ -33,17 +33,31 @@ export class BackgroundStylesService {
     { value: 'contain', label: 'Contain' },
   ];
   readonly BgSizeDefault = this.BgSizes[1].value;
+
+  readonly objFits = [
+    { value: 'none', label: 'None' },
+    { value: 'cover', label: 'Cover' },
+    { value: 'contain', label: 'Contain' },
+    { value: 'fill', label: 'Fill' },
+    { value: 'scale-down', label: 'Scale-Down' },
+  ];
+  readonly objFitDefault = this.objFits[0].value;
   readonly containerStyles: Styles = {
     ["background-color"]: `rgba(255, 255, 255, ${this.colorOpacityDefault})`,
     opacity: "1",
     ['flex-direction']: this.flexDirectionDefault,
     ["background-image"]: '',
-    ["background-repeat"]: 'no-repeat',
-    ["background-size"]: 'auto',
+    ["background-repeat"]: this.BgRepeatDefault,
+    ["background-size"]: this.BgSizeDefault,
   };
 
   readonly allStyles: Styles = {
     ["background-color"]: `rgba(255, 255, 255, ${this.colorOpacityDefault})`,
+    opacity: "1",
+  };
+
+  readonly imageStyles: Styles = {
+    ['object-fit']: this.objFitDefault,
     opacity: "1",
   };
 
@@ -72,6 +86,11 @@ export class BackgroundStylesService {
   setBgSize(BgSize: string) {
     this.stylesSvc.updateSelectedNodeStyle('background-size', BgSize);
   }
+
+  setObjFit(objFit: string) {
+    this.stylesSvc.updateSelectedNodeStyle('object-fit', objFit);
+  }
+
   setAllMissing(defaultStyles: Styles, currentStyles: Styles) {
     this.stylesSvc.setAllMissingStyles(defaultStyles, currentStyles)
   }
