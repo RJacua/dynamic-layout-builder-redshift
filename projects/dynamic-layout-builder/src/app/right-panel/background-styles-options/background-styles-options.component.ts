@@ -149,7 +149,9 @@ export class BackgroundStylesOptionsComponent implements OnInit {
         colorOpacity: colorOpacity,
         bgOpacity: parseFloat(node.data.style["opacity"]) * 100 || (parseInt(this.containerStyles.opacity!) * 100),
         flexDirection: node.data.style["flex-direction"] || this.containerStyles['flex-direction'],
-        urlImage: node.data.style["background-image"].substring(5, node.data.style["background-image"].length - 2) || this.containerStyles["background-image"],
+        urlImage: node.data.style["background-image"]
+          ? node.data.style["background-image"].substring(5, node.data.style["background-image"].length - 2)
+          : this.containerStyles["background-image"],
         BgRepeat: node.data.style["background-repeat"] || this.containerStyles["background-repeat"],
         BgSize: node.data.style["background-size"] || this.containerStyles["background-size"],
       }, { emitEvent: false });
