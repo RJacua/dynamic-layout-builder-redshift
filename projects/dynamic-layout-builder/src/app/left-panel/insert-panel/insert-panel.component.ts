@@ -14,6 +14,7 @@ import { ExportModelDialogComponent } from '../../components/export-model-dialog
 import { Router } from '@angular/router';
 import { EncodeService } from '../../services/encode.service';
 import { PanningService } from '../../services/panning.service';
+import { TextEditorService } from '../../services/text-editor.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class InsertPanelComponent {
   readonly router = inject(Router);
   readonly encodeSvc = inject(EncodeService);
   readonly panningSvc = inject(PanningService);
+  readonly textEditorSvc = inject(TextEditorService);
 
 
   selectedId = this.selectionSvc.selectedElementId;
@@ -98,6 +100,12 @@ export class InsertPanelComponent {
 
   fitView(){
     this.panningSvc.emitFitViewFlag();
+  }
+
+  createLink(){
+    console.log("create link clicado");
+    this.textEditorSvc.createLink(this.selectionSvc.selectedElementId());
+    this.selectionSvc.selectCanvas();
   }
 
 }

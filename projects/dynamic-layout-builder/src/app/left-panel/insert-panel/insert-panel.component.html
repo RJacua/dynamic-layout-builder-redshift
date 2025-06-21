@@ -1,49 +1,76 @@
 <div>
-    <h3 class="align-center">Tools</h3>
+  <h3 class="align-center">Tools</h3>
 </div>
 
 <div class="buttons-list">
-    <button mat-icon-button [matMenuTriggerFor]="handMenu" aria-label="Example icon-button with a menu">
-        @if(isPanning()){
-            <mat-icon matTooltip="Move">back_hand</mat-icon>
-        }
-        @else {
-            <mat-icon matTooltip="Edit">border_color</mat-icon>
-        }
-        <!-- <p>move</p> -->
-    </button>
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="handMenu"
+    aria-label="Example icon-button with a menu"
+  >
+    @if(isPanning()){
+    <mat-icon matTooltip="Move">back_hand</mat-icon>
+    } @else {
+    <mat-icon matTooltip="Edit">border_color</mat-icon>
+    }
+    <!-- <p>move</p> -->
+  </button>
 
-    <button mat-icon-button aria-label="Example icon-button with a menu" (click)="addLayoutElement('container')"
-    *ngIf="selectedElementType() == 'container' || selectedElementType() == 'canvas'">
-        <!-- [matMenuTriggerFor]="containerMenu" -->
-        <mat-icon matTooltip="Add Container">add_box</mat-icon>
-        <!-- <p>container</p> -->
-    </button>
+  <button
+    mat-icon-button
+    aria-label="Example icon-button with a menu"
+    (click)="addLayoutElement('container')"
+    *ngIf="
+      selectedElementType() == 'container' || selectedElementType() == 'canvas'
+    "
+  >
+    <!-- [matMenuTriggerFor]="containerMenu" -->
+    <mat-icon matTooltip="Add Container">add_box</mat-icon>
+    <!-- <p>container</p> -->
+  </button>
 
-    <button mat-icon-button [matMenuTriggerFor]="componentMenu" aria-label="Example icon-button with a menu"
-        *ngIf="selectedElementType() == 'container'">
-        <mat-icon matTooltip="Add Component">description</mat-icon>
-        <!-- <p>component</p> -->
-    </button>
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="componentMenu"
+    aria-label="Example icon-button with a menu"
+    *ngIf="selectedElementType() == 'container'"
+  >
+    <mat-icon matTooltip="Add Component">description</mat-icon>
+    <!-- <p>component</p> -->
+  </button>
 
-    <button mat-icon-button aria-label="Example icon-button with a menu" (click)="removeSelectedNode()">
-        <!-- [matMenuTriggerFor]="containerMenu" -->
-        <mat-icon matTooltip="Delete">delete</mat-icon>
-        <!-- <p>container</p> -->
-    </button>
+  <button
+    mat-icon-button
+    (click)="createLink()"
+    *ngIf="
+      selectedElementType() == 'paragraph' || selectedElementType() == 'header'
+    "
+  >
+    <mat-icon matTooltip="Make Link">link</mat-icon>
+  </button>
+  
+  <button
+    mat-icon-button
+    aria-label="Example icon-button with a menu"
+    (click)="removeSelectedNode()"
+  >
+    <!-- [matMenuTriggerFor]="containerMenu" -->
+    <mat-icon matTooltip="Delete">delete</mat-icon>
+    <!-- <p>container</p> -->
+  </button>
 </div>
 
 <mat-menu #handMenu="matMenu">
-    <button mat-menu-item (click)="panningOn()">
-        <mat-icon>back_hand</mat-icon>
-        <span>Move</span>
-    </button>
-    <!-- <button mat-menu-item>Move</button> -->
-    <button mat-menu-item (click)="panningOff()">
-        <mat-icon>border_color</mat-icon>
-        <span>Edit</span>
-    </button>
-    <!-- <button mat-menu-item>Scale</button> -->
+  <button mat-menu-item (click)="panningOn()">
+    <mat-icon>back_hand</mat-icon>
+    <span>Move</span>
+  </button>
+  <!-- <button mat-menu-item>Move</button> -->
+  <button mat-menu-item (click)="panningOff()">
+    <mat-icon>border_color</mat-icon>
+    <span>Edit</span>
+  </button>
+  <!-- <button mat-menu-item>Scale</button> -->
 </mat-menu>
 
 <!-- <mat-menu #containerMenu="matMenu">
@@ -60,55 +87,60 @@
 </mat-menu> -->
 
 <mat-menu #componentMenu="matMenu">
-    <button mat-menu-item (click)="addLayoutElement('header')">
-        <mat-icon>title</mat-icon>
-        <span>Header</span>
-    </button>
-    <button mat-menu-item (click)="addLayoutElement('paragraph')">
-        <mat-icon>subtitles</mat-icon>
-        <span>Paragraph</span>
-    </button>
-    <button mat-menu-item (click)="addLayoutElement('container')">
-        <mat-icon>add_box</mat-icon>
-        <span>Container</span>
-    </button>
-    <button mat-menu-item (click)="addLayoutElement('iframe')">
-        <mat-icon>computer</mat-icon>
-        <span>Iframe</span>
-    </button>
-    <button mat-menu-item (click)="addLayoutElement('image')">
-        <mat-icon>image</mat-icon>
-        <span>Image</span>
-    </button>
-        <button mat-menu-item (click)="addLayoutElement('code')">
-        <mat-icon>code</mat-icon>
-        <span>Code Viewer</span>
-    </button>
+  <button mat-menu-item (click)="addLayoutElement('header')">
+    <mat-icon>title</mat-icon>
+    <span>Header</span>
+  </button>
+  <button mat-menu-item (click)="addLayoutElement('paragraph')">
+    <mat-icon>subtitles</mat-icon>
+    <span>Paragraph</span>
+  </button>
+  <button mat-menu-item (click)="addLayoutElement('container')">
+    <mat-icon>add_box</mat-icon>
+    <span>Container</span>
+  </button>
+  <button mat-menu-item (click)="addLayoutElement('iframe')">
+    <mat-icon>computer</mat-icon>
+    <span>Iframe</span>
+  </button>
+  <button mat-menu-item (click)="addLayoutElement('image')">
+    <mat-icon>image</mat-icon>
+    <span>Image</span>
+  </button>
+  <button mat-menu-item (click)="addLayoutElement('code')">
+    <mat-icon>code</mat-icon>
+    <span>Code Viewer</span>
+  </button>
+  <!-- <button mat-menu-item (click)="createLink()">
+    <mat-icon>link</mat-icon>
+    <span>Link</span>
+  </button> -->
+  <!-- </button>
         <button mat-menu-item (click)="addLayoutElement('link')">
         <mat-icon>link</mat-icon>
         <span>Link</span>
-    </button>
+    </button> -->
 </mat-menu>
 
 <div>
-    <h3 class="align-center">Actions</h3>
+  <h3 class="align-center">Actions</h3>
 </div>
 <div class="buttons-list">
-    <button mat-icon-button (click)="fullView()">
-            <mat-icon matTooltip="Full Scale">fullscreen</mat-icon>
-    </button>
-    <button mat-icon-button (click)="fitView()">
-            <mat-icon matTooltip="Fit to Screen">fullscreen_exit</mat-icon>
-    </button>
+  <button mat-icon-button (click)="fullView()">
+    <mat-icon matTooltip="Full Scale">fullscreen</mat-icon>
+  </button>
+  <button mat-icon-button (click)="fitView()">
+    <mat-icon matTooltip="Fit to Screen">fullscreen_exit</mat-icon>
+  </button>
 </div>
 <div class="buttons-list">
-    <button mat-icon-button (click)="openExportDialog()">
-            <mat-icon matTooltip="Export">unarchive</mat-icon>
-    </button>
-    <button mat-icon-button (click)="import()">
-            <mat-icon matTooltip="Import">archive</mat-icon>
-    </button>
-    <button mat-icon-button (click)="preview()">
-            <mat-icon matTooltip="Preview Final Project">remove_red_eye</mat-icon>
-    </button>
+  <button mat-icon-button (click)="openExportDialog()">
+    <mat-icon matTooltip="Export">unarchive</mat-icon>
+  </button>
+  <button mat-icon-button (click)="import()">
+    <mat-icon matTooltip="Import">archive</mat-icon>
+  </button>
+  <button mat-icon-button (click)="preview()">
+    <mat-icon matTooltip="Preview Final Project">remove_red_eye</mat-icon>
+  </button>
 </div>

@@ -53,6 +53,11 @@ export class SelectionService {
 
   unselect() {
     // console.log('unselect');
+    this._selectedId.set('');
+  }
+
+  selectCanvas() {
+    // console.log('unselect');
     this._selectedId.set('canvas');
   }
 

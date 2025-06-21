@@ -11,14 +11,14 @@
     cdkDropList
     (cdkDropListDropped)="onDrop($event)"
     [cdkDropListData]="[data]"
-    [attr.data-id]="node.data.id"
+    [attr.data-id]="'tree-' + node.data.id"
   >
     <div
     class="node-line" 
     [class.selected]="isSelected()"
       cdkDrag
       (cdkDragMoved)="onDragMoved($event)"
-      [attr.data-id]="node.data.id"
+      [attr.data-id]="'tree-' + node.data.id"
       [class.tree-node]="node.data.type == 'container'"
       [class.node-item]="node.data.type !== 'container' || !node.data.children.length"
     >

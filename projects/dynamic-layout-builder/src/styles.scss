@@ -389,3 +389,23 @@ code[contenteditable] {
   &.dark .code-lang { background:#222; }
   &.dark .copy-btn { background:#2563eb; }
 }
+
+.link-icon-button {
+  margin-right: 4px;
+  user-select: none;
+  text-decoration: none;
+  //black border 1px
+  border: 1px solid #000;
+  border-radius: 5px;
+//   background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+
+  outline: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
