@@ -5,7 +5,7 @@
         </mat-list-item>
 
         <form [formGroup]="backgroundOptions">
-            <div *ngIf="backgroundOptions.contains('flexDirection')">
+            <div *ngIf="backgroundOptions.contains('bgColor')">
                 <label for="bgColor">Background Color:</label>
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                     <input type="color" id="bgColor" name="bgColor" formControlName="bgColor" />

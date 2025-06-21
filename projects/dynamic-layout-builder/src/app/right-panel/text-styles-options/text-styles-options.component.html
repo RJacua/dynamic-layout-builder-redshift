@@ -28,7 +28,13 @@
             </div>
 
             <label for="fontColor">Font Color:</label>
-            <input type="color" id="fontColor" name="fontColor" formControlName="fontColor">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <input type="color" id="fontColor" name="fontColor" formControlName="fontColor">
+
+                <input type="number" id="colorOpacity" name="colorOpacity" formControlName="colorOpacity" min="0"
+                    max="100" />
+                <span>%</span>
+            </div>
 
             <label for="hAlign">Horizontal Alignment:</label>
             <select name="hAlign" id="hAlign" formControlName="horizontalAlign">

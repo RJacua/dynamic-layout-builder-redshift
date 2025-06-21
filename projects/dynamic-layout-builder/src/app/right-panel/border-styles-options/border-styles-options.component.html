@@ -13,7 +13,13 @@
             <div>
                 <form [formGroup]="strokeOptions">
                     <label for="strokeClor">Color:</label>
-                    <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <input type="color" id="strokeColor" name="strokeColor" formControlName="strokeColor">
+    
+                        <input type="number" id="colorOpacity" name="colorOpacity" formControlName="colorOpacity" min="0"
+                            max="100" />
+                        <span>%</span>
+                    </div>
 
                     <label for="strokeStyle">Style:</label>
                     <select name="strokeStyle" id="strokeStyle" formControlName="strokeStyle">
