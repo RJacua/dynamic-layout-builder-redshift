@@ -12,6 +12,7 @@ import Prism from 'prismjs';
 (window as any).Prism = Prism;
 
 import 'prismjs/themes/prism.css'
+
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-typescript';
@@ -126,8 +127,26 @@ export class CodeComponent {
 
   isCodeFocused = signal(false);
 
+language    = signal('css'); 
+copied      = signal(false);
 
-  language = computed(() => this.nodeSignal().data.language);
+theme = signal('');
+
+copyCode() {
+  navigator.clipboard.writeText(this.codeContent())
+    .then(() => {
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 2000);
+    })
+    .catch(() => alert('⚠️ Falha ao copiar'));
+}
+
+langLabel = computed(() => {
+  const map: Record<string,string> = {
+    css:'CSS', javascript:'JS', typescript:'TS', python:'PY'
+  };
+  return map[this.language()] ?? this.language().toUpperCase();
+});
 
   updateCodeContent(event: Event) {
     const value = (event.target as HTMLElement).textContent;
@@ -166,6 +185,7 @@ export class CodeComponent {
 
     this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
     this.codeContent.set(this.data.codeContent ?? 'body {\n  background: black;\n  color: white;\n}');
+    this.theme.set(this.data.theme ?? 'okaidia');
 
   }
 

@@ -26,18 +26,28 @@
   </ng-container>
   }
 
-  <div class="core">
-<pre class="line-numbers">
-  <code
-    #coreCode
-    class="language-{{ language() ?? 'css' }}"
-    contenteditable="true"
-    spellcheck="false"
-    (input)="updateCodeContent($event)"
-    (blur)="onCodeBlur()"
-    (focus)="onClick()"
-  ></code>
-</pre>
+  <div class="">
+
+<div class="code-wrapper" [class]="'theme-' + theme()">
+  <div class="code-header">
+    <span class="code-lang">{{ langLabel() }}</span>
+    <button class="copy-btn" (click)="copyCode()" [disabled]="copied()">
+      {{ copied() ? "Copied ✓" : "Copy" }}
+    </button>
+  </div>
+
+  <pre class="line-numbers">
+    <code
+      #coreCode
+      contenteditable="true"
+      spellcheck="false"
+      [class]="'language-' + language()"
+      (input)="updateCodeContent($event)"
+      (blur)="onCodeBlur()"
+      (focus)="onCodeFocus()"
+    ></code>
+  </pre>
+</div>
 
   </div>
 </div>

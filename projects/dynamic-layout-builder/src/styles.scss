@@ -1,3 +1,5 @@
+// @import './app/components/code/code.component.scss';
+
 body,
 html {
     height: 100%;
@@ -273,7 +275,6 @@ mat-card {
   overflow: auto;
 }
 
-/* Área do meio */
 .center-area {
   position: relative;
   overflow: hidden;
@@ -339,6 +340,52 @@ mat-card {
 code[contenteditable] {
   outline: none;
   white-space: pre;
-  display: block; // evita bugs de inline
-  min-height: 40px; // pra facilitar clique fora
+  display: block;
+  min-height: 40px;
+}
+
+.code-wrapper {
+  position: relative;
+  margin: 1rem 0;
+  font-family: 'Source Code Pro', monospace;
+
+  .code-lang {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    background: #444;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #3b82f6;
+    color: #fff;
+    transition: opacity .2s;
+  }
+  .copy-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  pre {
+    padding-top: 2.2rem;
+    overflow-x: auto;
+    border-radius: 8px;
+  }
+
+  &.dark .code-lang { background:#222; }
+  &.dark .copy-btn { background:#2563eb; }
 }
