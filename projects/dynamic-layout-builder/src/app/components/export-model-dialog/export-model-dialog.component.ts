@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { EncodeService } from '../../services/encode.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { ExportImportService } from '../../services/export-import.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-export-model-dialog',
@@ -19,7 +20,9 @@ import { ExportImportService } from '../../services/export-import.service';
     MatInputModule,
     MatButtonModule,
     MatDialogContent,
-    MatDialogActions],
+    MatDialogActions,
+    MatIconModule
+  ],
   templateUrl: './export-model-dialog.component.html',
   styleUrl: './export-model-dialog.component.css'
 })

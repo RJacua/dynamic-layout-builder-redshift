@@ -1,12 +1,25 @@
-<h2 mat-dialog-title>Your Model</h2>
-<mat-dialog-content>
+<h2 mat-dialog-title class="dialog-title">Your Model</h2>
+<mat-dialog-content class="dialog-content"> 
     <!-- <div *ngFor="let item of data">
         <p>{{item.product.product_name}} - x{{item.quantity}}{{item.product.amount_unit}}</p>
     </div> -->
-    <textarea [formControl]="modelArea" name="modelArea" rows="25" cols="50" ngValue=""></textarea>
+    <textarea class="model-viewer" [formControl]="modelArea" name="modelArea" rows="25" cols="50" ngValue=""></textarea>
 </mat-dialog-content>
-<mat-dialog-actions>
-    <button (click)="closeListDialog()">Back</button>
-    <button cdkFocusInitial (click)="copyListToClipboard()" id="copyButton">Copy</button>
-    <button (click)="downloadModel()" id="downloadButton">Download</button>
+
+<mat-dialog-actions class="dialog-actions"> 
+    <!-- <button (click)="closeListDialog()">Back</button> -->
+    <button mat-button (click)="closeListDialog()">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </button>
+    <!-- <button cdkFocusInitial (click)="copyListToClipboard()" id="copyButton">Copy</button> -->
+    <button mat-button  (click)="copyListToClipboard()" id="copyButton">
+        <mat-icon>content_copy</mat-icon>
+        Copy
+      </button>
+    <!-- <button (click)="downloadModel()" id="downloadButton">Download</button> -->
+    <button mat-button  (click)="downloadModel()" id="downloadButton">
+        <mat-icon>download</mat-icon>
+        Download
+    </button>
 </mat-dialog-actions>
