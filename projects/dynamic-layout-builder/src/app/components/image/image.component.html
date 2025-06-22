@@ -21,9 +21,11 @@
   >
     ⋮⋮
   </div>
+  }
   @if(src() == ''){
   <p>No Image Source Available</p>
-  } @else {
+  }
+  @else {
   <div class="main core">
     <img
       id="image"
@@ -33,18 +35,5 @@
       [src]="src()"
     />
   </div>
-  } } @else { @if(src() == ''){
-  <p>No Image Source Available</p>
-  } @else {
-  <div class="main core">
-    <img
-      id="player"
-      [alt]="alt()"
-      [attr.data-id]="data.id"
-      [style]="internalStyle()"
-      [src]="src()"
-    />
-  </div>
-  } }
-  <!-- <br> -->
+  }
 </div>

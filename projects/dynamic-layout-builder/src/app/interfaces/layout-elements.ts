@@ -45,6 +45,13 @@ export interface ImageData extends LayoutData {
   
 }
 
+export interface CodeData extends LayoutData {
+  codeContent: string;
+  language: string;
+  title: string;
+  theme: string;
+}
+
 export interface Canvas<T> {
   data: T;
 

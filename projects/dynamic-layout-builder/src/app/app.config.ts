@@ -8,6 +8,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { ParagraphComponent } from './components/paragraph/paragraph.component';
 import { IframeComponent } from './components/iframe/iframe.component';
 import { ImageComponent } from './components/image/image.component';
+import { CodeComponent } from './components/code/code.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
       registry.register('container', ContainerComponent);
       registry.register('iframe', IframeComponent);
       registry.register('image', ImageComponent);
+      registry.register('code', CodeComponent);
     })
   ]
 };

@@ -49,6 +49,7 @@ import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { ImageComponent } from '../image/image.component';
+import { CodeComponent } from "../code/code.component";
 
 @Component({
   selector: 'app-container',
@@ -67,7 +68,8 @@ import { ImageComponent } from '../image/image.component';
     MatTooltipModule,
     CdkDrag,
     DragDropModule,
-  ],
+    CodeComponent
+],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss',
 })
