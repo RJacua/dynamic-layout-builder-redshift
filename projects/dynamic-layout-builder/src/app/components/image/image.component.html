@@ -11,12 +11,13 @@
   <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">
     ⋮⋮
   </div>
-}
+  }
   @if(src() == ''){
   <p>No Image Source Available</p>
-  } @else {
+  }
+  @else {
   <div class="main core">
     <img id="image" [alt]="alt()" matTooltip="{{tooltip()}}" [attr.data-id]="data.id" [style]="internalStyle()" [src]="src()" />
   </div>
-  } 
+  }
 </div>

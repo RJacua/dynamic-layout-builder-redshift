@@ -284,7 +284,6 @@ mat-card {
     overflow: auto;
 }
 
-/* Área do meio */
 .center-area {
     position: relative;
     overflow: hidden;
@@ -345,4 +344,77 @@ mat-card {
 
 .test {
     background: green;
+}
+
+code[contenteditable] {
+  outline: none;
+  white-space: pre;
+  display: block;
+  min-height: 40px;
+}
+
+.code-wrapper {
+  position: relative;
+  margin: 1rem 0;
+  font-family: 'Source Code Pro', monospace;
+
+  .code-lang {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    background: #444;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #3b82f6;
+    color: #fff;
+    transition: opacity .2s;
+  }
+  .copy-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  pre {
+    padding-top: 2.2rem;
+    overflow-x: auto;
+    border-radius: 8px;
+  }
+
+  &.dark .code-lang { background:#222; }
+  &.dark .copy-btn { background:#2563eb; }
+}
+
+.link-icon-button {
+  margin-right: 4px;
+  user-select: none;
+  text-decoration: none;
+  //black border 1px
+  border: 1px solid #000;
+  border-radius: 5px;
+//   background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+
+  outline: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
 }

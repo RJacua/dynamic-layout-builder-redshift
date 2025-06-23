@@ -108,13 +108,17 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   onMouseDown(event: MouseEvent) {
-    this.selectionSvc.unselect();
     if (event.button === 0 && this.isPanning()) {
+      this.selectionSvc.unselect();
       this.isMoving = true;
       this.lastX.set(event.clientX);
       this.lastY.set(event.clientY);
       event.preventDefault();
     }
+  }
+
+  onClick() {
+    this.selectionSvc.selectCanvas();
   }
 
   onMouseMove(event: MouseEvent) {

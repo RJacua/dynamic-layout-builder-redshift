@@ -9,6 +9,7 @@ import { CdkDrag, CdkDragEnter, CdkDragMove, CdkDragStart, DragDropModule } from
 import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
+import { TextEditorService } from '../../services/text-editor.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -29,10 +30,12 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
 
   constructor() {
     effect(() => {
-      const text = this.text();
+      let text = this.text();
+      text = text.replaceAll('<button type=\"button\" class=\"link-icon-button\" data-link-icon=\"true\" data-id=\"link-0\" contenteditable=\"false\" tabindex=\"-1\" style=\"user-select: none; pointer-events: auto;\">🔗</button>', '');
+
+      console.log(text)
 
       untracked(() => {
-        // const nodeModel = this.nodeSignal();
         if (!this.nodeSignal()) return;
 
         const updatedModel = {
@@ -44,6 +47,11 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
         };
 
         this.modelSvc.updateModel(this.id, updatedModel as LayoutElement<any>);
+
+        if (this.editMode && this.selectionSvc.selectedElementId() !== '' && this.selectionSvc.selectedElementId() !== this.nodeSignal().data.id) {
+          this.target().nativeElement.innerHTML = this.textEditorSvc.insertLinkIcons(this.nodeSignal().data.text) ?? 'Lorem ipsum dolor sit amet consectetur...';
+          this.textEditorSvc.attachLinkHandlers(this.target().nativeElement, this.nodeSignal().data.id);
+        }
       });
     });
     effect(() => {
@@ -77,6 +85,18 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
       // console.log("on effect style:", this.dynamicStyle());
     });
 
+    effect(() => {
+
+      let currentId = this.selectionSvc.selectedElementId();
+      untracked(() => {
+        if (this.editMode && this.selectionSvc.selectedElementId() !== '' && this.selectionSvc.selectedElementId() !== this.nodeSignal().data.id) {
+          this.target().nativeElement.innerHTML = this.textEditorSvc.insertLinkIcons(this.nodeSignal().data.text) ?? 'Lorem ipsum dolor sit amet consectetur...';
+          this.textEditorSvc.attachLinkHandlers(this.target().nativeElement, this.nodeSignal().data.id);
+        }
+      })
+
+    })
+
   }
 
   readonly componentsSvc = inject(ComponentsService);
@@ -86,6 +106,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
   readonly enablerSvc = inject(EnablerService);
   readonly dragDropSvc = inject(DragDropService);
   readonly generalSvc = inject(GeneralFunctionsService);
+  readonly textEditorSvc = inject(TextEditorService);
 
   private _elementRef = inject(ElementRef);
 
@@ -93,6 +114,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
   parentId = signal('-1');
   alignment = signal('align-center ');
   text = signal<string>('');
+  processedText = signal<string>('');
   size = signal<number>(1);
   target = viewChild.required<ElementRef<HTMLParagraphElement>>('target');
   nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
@@ -107,15 +129,19 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
   height = signal(0);
 
   private resizeObserver?: ResizeObserver;
-  
+
   ngOnInit(): void {
-    this.text.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
-    
+
+
+    this.processedText.set(this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...');
+
+    this.text.set(this.processedText());
+
     this.id = this.data.id;
     this.parentId.set(this.data.parentId);
 
     this.nodeSignal = computed(() => this.modelSvc.getNodeById(this.id));
-    
+
     // this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     // this.alignment.set(this.data.style.alignment ?? 'align-center ');
 
@@ -133,7 +159,13 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
 
     this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
 
-    this.target().nativeElement.innerText = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
+    if (this.editMode) {
+      this.target().nativeElement.innerHTML = this.textEditorSvc.insertLinkIcons(this.nodeSignal().data.text) ?? 'Lorem ipsum dolor sit amet consectetur...';
+      this.textEditorSvc.attachLinkHandlers(this.target().nativeElement, this.nodeSignal().data.id);
+    }
+    else {
+      this.target().nativeElement.innerHTML = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
+    }
 
   }
 
@@ -147,7 +179,7 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
   isDragging = this.dragDropSvc.isDragging;
 
   updateTextContent(event: Event) {
-    const value = (event.target as HTMLElement).innerText;
+    const value = (event.target as HTMLElement).innerHTML;
     this.text.set(value);
   }
 
@@ -172,5 +204,6 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
   }
 
   dropIndicatorStyle = computed(() => (!this.isFocused() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
+
 
 }

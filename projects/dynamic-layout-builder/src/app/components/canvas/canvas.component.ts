@@ -231,11 +231,14 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
       // el.id !== "core" &&
       el.parentElement
     ) {
-      console.log(el.classList)
+      // console.log(el.classList)
       el = el.parentElement;
     }
-
-    if (el && el.tagName.startsWith('APP-')) {
+    
+    if(el && el.tagName.startsWith('APP-CANVAS')) {
+      this.selectionSvc.selectCanvas();
+    }
+    else if (el && el.tagName.startsWith('APP-')) {
       const componentInstance = (window as any).ng?.getComponent?.(el);
 
       if (componentInstance) {

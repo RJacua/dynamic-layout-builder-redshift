@@ -20,11 +20,11 @@ export class LayersTreeComponent {
   readonly modelSvc = inject(ModelService);
   readonly dragDropSvc = inject(DragDropService);
 
-  isSelected = computed(() => { return this.data === this.selectionSvc.selectedElementId() })
+  isSelected = computed(() => { return this.data.replace('tree-','') === this.selectionSvc.selectedElementId() })
   isDragging = this.dragDropSvc.isDragging;
 
   isFocused = computed(() => {
-    return this.data === this.selectionSvc.selectedElementId();
+    return this.data.replace('tree-','') === this.selectionSvc.selectedElementId();
   });
 
   constructor() {
@@ -44,12 +44,12 @@ export class LayersTreeComponent {
   }
 
   ngOnInit(): void {
-    if (this.data === "canvas") {
-      this.nodeModel = computed(() => this.modelSvc.getNodeById(this.data));
+    if (this.data.replace('tree-','') === "canvas") {
+      this.nodeModel = computed(() => this.modelSvc.getNodeById(this.data.replace('tree-','')));
 
     }
     else {
-      this.nodeModel = computed(() => [this.modelSvc.getNodeById(this.data)])
+      this.nodeModel = computed(() => [this.modelSvc.getNodeById(this.data.replace('tree-',''))])
     }
   }
 

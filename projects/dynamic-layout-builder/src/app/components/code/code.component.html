@@ -1,0 +1,53 @@
+<div
+  [class]="'main ' + dropIndicatorStyle()"
+  [style]="externalStyle()"
+  tabindex="0"
+  [class.border]="editMode"
+  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
+  [cdkDragDisabled]="!editMode"
+  [attr.data-id]="data.id"
+  cdkDrag
+  (cdkDragMoved)="onDragMoved($event)"
+>
+  @if (editMode) {
+  <ng-container>
+    <div class="element-name">
+      {{ data.type + " - " + data.id }}
+    </div>
+    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+    <div
+      cdkDragHandle
+      class="drag-handle"
+      (pointerdown)="onHandleClick()"
+      (pointerup)="onMouseUp()"
+    >
+      ⋮⋮
+    </div>
+  </ng-container>
+  }
+
+  <div class="">
+
+<div class="code-wrapper" [class]="'theme-' + theme()">
+  <div class="code-header">
+    <span class="code-lang">{{ langLabel() }}</span>
+    <button class="copy-btn" (click)="copyCode()" [disabled]="copied()">
+      {{ copied() ? "Copied ✓" : "Copy" }}
+    </button>
+  </div>
+
+  <pre class="line-numbers">
+    <code
+      #coreCode
+      contenteditable="true"
+      spellcheck="false"
+      [class]="'language-' + language()"
+      (input)="updateCodeContent($event)"
+      (blur)="onCodeBlur()"
+      (focus)="onCodeFocus()"
+    ></code>
+  </pre>
+</div>
+
+  </div>
+</div>
