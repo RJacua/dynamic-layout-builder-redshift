@@ -59,19 +59,17 @@ export class WorkSpaceComponent implements OnInit {
   constructor() {
 
     effect(() => {
-      // console.log("canvas ws: ", this.canvas());
-      // console.log("decoded ws: ", this.encodeSvc.decodedStr());
       this.canvas();
       untracked(() => {
-        this.updateQueryParam('encoded', this.encodeSvc.encodedStr())
-      })
+        this.updateFragment(this.encodeSvc.encodedStr());
+      });
     });
 
     effect(() => {
       this.panningSvc.fullViewFlag();
       this.fullView();
     })
-    
+
     effect(() => {
       this.panningSvc.fitViewFlag();
       this.fitView();
@@ -80,27 +78,42 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activeRoute.queryParams.subscribe(params => {
-      if (params['encoded']) {
-        this.encodedParam.set(params['encoded']);
-        this.parsedJSON = computed(() => JSON.parse(this.encodeSvc.decoder(this.encodedParam)));
-        // console.log("parsed: ", this.parsedJSON())
-        this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
+    this.activeRoute.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.encodedParam.set(fragment);
+        try {
+          this.parsedJSON = computed(() =>
+            JSON.parse(this.encodeSvc.decoder(this.encodedParam))
+          );
+          this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
+        } catch (error) {
+          console.error("Erro ao decodificar fragmento", error);
+        }
       }
     });
   }
 
-  updateQueryParam(key: string, value: string | null) {
-    // console.log("to funcionando sim")
+
+  // updateQueryParam(key: string, value: string | null) {
+  //   // console.log("to funcionando sim")
+  //   this.router.navigate([], {
+  //     relativeTo: this.activeRoute,
+  //     queryParams: {
+  //       [key]: value
+  //     },
+  //     queryParamsHandling: 'merge',
+  //     replaceUrl: true
+  //   });
+  // }
+
+  updateFragment(value: string | null) {
     this.router.navigate([], {
       relativeTo: this.activeRoute,
-      queryParams: {
-        [key]: value
-      },
-      queryParamsHandling: 'merge',
+      fragment: value ?? undefined,
       replaceUrl: true
     });
   }
+
 
   renderFromModel(model: Canvas<CanvasData>) {
     this.modelSvc.setCanvasModel(model);

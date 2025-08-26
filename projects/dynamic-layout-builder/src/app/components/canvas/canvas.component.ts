@@ -263,9 +263,10 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
   goToRender() {
     this.router.navigate(['/preview'], {
-      queryParams: { encoded: this.encoded() },
+      fragment: this.encoded()
     });
   }
+
 
   onDrop(event: CdkDragDrop<any>) {
     this.dragDropSvc.onDrop(event);
