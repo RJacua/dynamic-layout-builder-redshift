@@ -7,14 +7,16 @@ import { SelectionService } from '../../services/selection.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 import { ImageData } from '../../interfaces/layout-elements';
-import { sanitizeUrl } from "@braintree/sanitize-url"
+import { sanitizeUrl } from "@braintree/sanitize-url";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-image',
   imports: [
     CommonModule,
     CdkDrag,
-    DragDropModule
+    DragDropModule,
+    MatTooltipModule
   ],
   templateUrl: './image.component.html',
   styleUrl: './image.component.scss'
@@ -79,6 +81,7 @@ export class ImageComponent {
   isDragging = this.dragDropSvc.isDragging;
 
   alt = computed(() => this.nodeSignal().data.alt);
+  tooltip = computed(() => this.nodeSignal().data.tooltip);
 
   ngAfterViewInit() {
 
@@ -119,21 +122,6 @@ export class ImageComponent {
     this.internalStyle.set(inner);
     this.externalStyle.set(outer);
   }
-
-  // getEmbedUrl(url: string): string {
-  //   console.log(url);
-  //   url = url.split("&ab_channel")[0];
-  //   console.log(url);
-  //   if (url.includes("youtu.be")) {
-  //     url = url.replace("youtu.be/", "www.youtube.com/watch?v=")
-  //     console.log(url);
-  //   }
-  //   url = url.replace("watch?v=", "embed/");
-  //   console.log(url);
-
-  //   return url;
-  // }
-
 
 
 }

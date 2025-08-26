@@ -32,6 +32,8 @@ export class IframeBasicOptionsComponent {
   selectedNode = this.selectionSvc.selectedNode;
 
   urlInput = new FormControl();
+  altInput = new FormControl();
+  tooltipInput = new FormControl();
 
     constructor() {
     
@@ -40,6 +42,8 @@ export class IframeBasicOptionsComponent {
       if (!node) return;
 
       this.urlInput.setValue(node.data.src  ?? '');
+      this.altInput.setValue(node.data.alt  ?? '');
+      this.tooltipInput.setValue(node.data.tooltip  ?? '');
 
 
     });
@@ -54,6 +58,22 @@ export class IframeBasicOptionsComponent {
         if (url !== null)
           this.iframeBasicSvc.setUrl(url);
       });
+      
+      this.altInput.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(alt => {
+          // console.log('Add alt:', alt);
+          if (alt !== null)
+            this.iframeBasicSvc.setAlt(alt);
+        });
+
+        this.tooltipInput.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(tooltip => {
+          // console.log('Add tooltip:', tooltip);
+          if (tooltip !== null)
+            this.iframeBasicSvc.setTooltip(tooltip);
+        });
 
   }
 

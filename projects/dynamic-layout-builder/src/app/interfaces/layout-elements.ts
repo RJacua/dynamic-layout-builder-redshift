@@ -88,6 +88,7 @@ export interface Styles { //vai crescer
    ["background-image"]?: string;
    ["background-repeat"]?: string;
    ["background-size"]?: string;
+   ["object-fit"]?: string;
 
   // Border Styles
   ['border-color']?: string;

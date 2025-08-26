@@ -23,14 +23,15 @@ export class TextStylesService {
   readonly headerOptions = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
   readonly headerOptionDefault = this.headerOptions[0];
 
+  readonly colorOpacityDefault = "1";
   readonly defaultHeaderStyles: Styles = {
-    color: '#000000',
+    color: `rgba(0, 0, 0, ${this.colorOpacityDefault})`,
     ['text-align']: this.hOptionDefault,
   };
   readonly defaultParagraphStyles: Styles = {
     ['font-size']: '16px',
     ['font-weight']: '400',
-    color: '#000000',
+    color: `rgba(0, 0, 0, ${this.colorOpacityDefault})`,
     ['text-align']: this.hOptionDefault,
   };
 

@@ -1,4 +1,13 @@
-// @import './app/components/code/code.component.scss';
+@use '@angular/material' as mat;
+
+
+:root {
+    @include mat.dialog-overrides((
+        container-color: #2c2c2c,
+        container-shape: 10px, // <--- controls the border-radius
+        ));
+}
+
 
 body,
 html {
@@ -6,7 +15,7 @@ html {
     width: 100%;
     margin: 0 !important;
     padding: 0 !important;
-    // background-color: #202020;
+    background-color: #202020;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -262,71 +271,71 @@ mat-card {
     width: calc(100% + 2rem);
     margin-left: -1rem;
     margin-right: -1rem;
-  }
+}
 
 .container {
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
 }
 
 .side-panel {
-  background-color: #f5f5f5;
-  overflow: auto;
+    background-color: #f5f5f5;
+    overflow: auto;
 }
 
 .center-area {
-  position: relative;
-  overflow: hidden;
+    position: relative;
+    overflow: hidden;
 
 }
 
 .viewport {
-  height: 100%;
-  width: 100%;
-  cursor: default;
-  overflow: hidden;
-  position: relative;
+    height: 100%;
+    width: 100%;
+    cursor: default;
+    overflow: hidden;
+    position: relative;
 
 }
 
 .viewport.movable {
-  cursor: grab;
+    cursor: grab;
 }
 
 .viewport.movable.dragging {
-  cursor: grabbing;
+    cursor: grabbing;
 }
 
 .pan-zoom-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1); 
-  transform-origin: 0 0;
-  transition: transform 0.05s ease-out;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transform-origin: 0 0;
+    transition: transform 0.05s ease-out;
 }
 
 
 .canvas-wrapper {
-  width: 100vw;
-  height: 100vh;
-  transform: translate(-50%, -50%);
-  position: relative;
-  
+    width: 100vw;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+    position: relative;
+
 }
 
 .reset-button {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  z-index: 10;
-  pointer-events: auto;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 5px 10px;
-  cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 10;
+    pointer-events: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
 .canvas {

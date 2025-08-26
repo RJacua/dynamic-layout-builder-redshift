@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,11 +17,12 @@ import { PanningService } from '../../services/panning.service';
 import { TextEditorService } from '../../services/text-editor.service';
 
 
+
 @Component({
   selector: 'app-insert-panel',
   imports: [MatButtonModule, MatMenuModule, MatIconModule, CommonModule, MatTooltipModule],
   templateUrl: './insert-panel.component.html',
-  styleUrl: './insert-panel.component.scss'
+  styleUrl: './insert-panel.component.scss',
 })
 export class InsertPanelComponent {
   readonly modelSvc = inject(ModelService);
@@ -76,7 +77,7 @@ export class InsertPanelComponent {
 
   openExportDialog() {
     const dialogRef = this.dialog.open(ExportModelDialogComponent, {
-
+      
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -94,11 +95,11 @@ export class InsertPanelComponent {
     });
   }
 
-  fullView(){
+  fullView() {
     this.panningSvc.emitFullViewFlag();
   }
 
-  fitView(){
+  fitView() {
     this.panningSvc.emitFitViewFlag();
   }
 

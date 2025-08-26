@@ -1,12 +1,13 @@
 <ng-container *ngIf="selectedNode() as selected">
-  <p>
+  <h2 class="align-center">
     {{
       selectedNode().data.type +
         (selectedNode().data.id !== "canvas"
           ? " - " + selectedNode().data.id
           : "")
     }}
-  </p>
+  </h2>
+  <mat-divider ></mat-divider>
   <ng-container [ngSwitch]="selected.data?.type">
     <!-- <div *ngSwitchCase="'canvas'">
             <app-background-styles-options></app-background-styles-options>

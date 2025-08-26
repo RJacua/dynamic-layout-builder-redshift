@@ -1,8 +1,8 @@
 <mat-card>
     <mat-list>
-        <mat-divider ></mat-divider>
+        <!-- <mat-divider></mat-divider> -->
         <mat-list-item>
-            <h3 class="center subtitle">Text Options</h3>
+            <h3 class="subtitle">Text Options</h3>
         </mat-list-item>
         <form [formGroup]="fontOptions">
             <div *ngIf="fontOptions.contains('fontSize')">
@@ -28,12 +28,20 @@
             </div>
 
             <label for="fontColor">Font Color:</label>
-            <input type="color" id="fontColor" name="fontColor" formControlName="fontColor">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <input type="color" id="fontColor" name="fontColor" formControlName="fontColor">
+
+                <input type="number" id="colorOpacity" name="colorOpacity" formControlName="colorOpacity" min="0"
+                    max="100" />
+                <span>%</span>
+            </div>
 
             <label for="hAlign">Horizontal Alignment:</label>
             <select name="hAlign" id="hAlign" formControlName="horizontalAlign">
                 <option *ngFor="let hOption of hOptions" [ngValue]="hOption.value">{{ hOption.label }}</option>
             </select>
         </form>
+        <br /><br />
+        <mat-divider></mat-divider>
     </mat-list>
 </mat-card>

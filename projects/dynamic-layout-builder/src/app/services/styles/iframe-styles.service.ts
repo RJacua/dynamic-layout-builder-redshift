@@ -14,4 +14,13 @@ export class IframeStylesService {
   setUrl(url: string) {
     this.stylesSvc.updateSelectedNodeSpecificAttribute('src', url);
   }
+
+  setAlt(alt: string) {
+    this.stylesSvc.updateSelectedNodeSpecificAttribute('alt', alt);
+  }
+
+  setTooltip(tooltip: string) {
+    this.stylesSvc.updateSelectedNodeSpecificAttribute('tooltip', tooltip);
+  }
+
 }

@@ -16,17 +16,20 @@ export class BorderStylesService {
     enableStroke: false,
   }
 
+  readonly colorOpacityDefault = "1";
+
   readonly defaultContainerStyles: Styles = {
-    ['border-color']: '#81828',
+    ['border-color']: `rgba(0, 0, 0, ${this.colorOpacityDefault})`,
     ['border-style']: 'solid',
     ['border-width']: '0px',
   };
 
   readonly defaultComponentStyles: Styles = {
-    ['border-color']: '#000000',
+    ['border-color']: `rgba(0, 0, 0, ${this.colorOpacityDefault})`,
     ['border-style']: 'solid',
     ['border-width']: '0px',
   };
+
 
   setAddStroke(enableStroke: boolean) {
     // this.enableStrokeSubject.next(enableStroke);
