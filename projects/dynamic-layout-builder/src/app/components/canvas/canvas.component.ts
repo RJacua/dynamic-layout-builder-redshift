@@ -71,6 +71,8 @@ import { EncodeService } from '../../services/encode.service';
 })
 export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, AfterViewInit {
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
+  @ViewChild('core', { static: true }) coreRef!: ElementRef<HTMLDivElement>;
+
   private _elementRef = inject(ElementRef);
 
   @Input() data: CanvasData = { id: 'canvas', type: 'canvas', children: [], expandedNodes: new Set([]), style: {}, enabler: {} };
@@ -263,9 +265,10 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
   goToRender() {
     this.router.navigate(['/preview'], {
-      queryParams: { encoded: this.encoded() },
+      fragment: this.encoded()
     });
   }
+
 
   onDrop(event: CdkDragDrop<any>) {
     this.dragDropSvc.onDrop(event);

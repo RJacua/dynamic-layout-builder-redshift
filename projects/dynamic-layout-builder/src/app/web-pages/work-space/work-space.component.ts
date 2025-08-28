@@ -59,48 +59,69 @@ export class WorkSpaceComponent implements OnInit {
   constructor() {
 
     effect(() => {
-      // console.log("canvas ws: ", this.canvas());
-      // console.log("decoded ws: ", this.encodeSvc.decodedStr());
       this.canvas();
       untracked(() => {
-        this.updateQueryParam('encoded', this.encodeSvc.encodedStr())
-      })
+        this.updateFragment(this.encodeSvc.encodedStr());
+      });
     });
 
     effect(() => {
       this.panningSvc.fullViewFlag();
       this.fullView();
-    })
-    
+    });
+
     effect(() => {
       this.panningSvc.fitViewFlag();
-      this.fitView();
-    })
+      if (this.viewportRef?.nativeElement) {
+        const coreEl = this.canvasWrapperRef.nativeElement.querySelector('#core');
+        if (coreEl) {
+          this.panningSvc.fitView(this.viewportRef.nativeElement, coreEl);
+        }
+
+      }
+    });
+
+
 
   }
 
   ngOnInit(): void {
-    this.activeRoute.queryParams.subscribe(params => {
-      if (params['encoded']) {
-        this.encodedParam.set(params['encoded']);
-        this.parsedJSON = computed(() => JSON.parse(this.encodeSvc.decoder(this.encodedParam)));
-        // console.log("parsed: ", this.parsedJSON())
-        this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
+    this.activeRoute.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.encodedParam.set(fragment);
+        try {
+          this.parsedJSON = computed(() =>
+            JSON.parse(this.encodeSvc.decoder(this.encodedParam))
+          );
+          this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
+        } catch (error) {
+          console.error("Erro ao decodificar fragmento", error);
+        }
       }
     });
   }
 
-  updateQueryParam(key: string, value: string | null) {
-    // console.log("to funcionando sim")
+
+  // updateQueryParam(key: string, value: string | null) {
+  //   // console.log("to funcionando sim")
+  //   this.router.navigate([], {
+  //     relativeTo: this.activeRoute,
+  //     queryParams: {
+  //       [key]: value
+  //     },
+  //     queryParamsHandling: 'merge',
+  //     replaceUrl: true
+  //   });
+  // }
+
+  updateFragment(value: string | null) {
     this.router.navigate([], {
       relativeTo: this.activeRoute,
-      queryParams: {
-        [key]: value
-      },
-      queryParamsHandling: 'merge',
+      fragment: value ?? undefined,
       replaceUrl: true
     });
   }
+
 
   renderFromModel(model: Canvas<CanvasData>) {
     this.modelSvc.setCanvasModel(model);
@@ -153,34 +174,6 @@ export class WorkSpaceComponent implements OnInit {
 
   fullView() {
     this.panningSvc.fullView();
-  }
-
-  fitView() {
-    const viewportEl = this.viewportRef.nativeElement as HTMLElement;
-    const canvasEl = this.canvasWrapperRef.nativeElement as HTMLElement;
-
-    const viewportWidth = viewportEl.clientWidth;
-    const viewportHeight = viewportEl.clientHeight;
-
-    const canvasWidth = canvasEl.scrollWidth;
-    const canvasHeight = canvasEl.scrollHeight;
-
-    if (!canvasWidth || !canvasHeight) return;
-
-    // Calcular o scale que encaixa no viewport (mantendo proporção)
-    const scaleX = viewportWidth / canvasWidth;
-    const scaleY = viewportHeight / canvasHeight;
-    const scale = Math.min(scaleX, scaleY, this.maxScale());
-
-    // Atualizar no serviço
-    this.scale.set(scale);
-
-    // Centralizar o canvas visualmente
-    const offsetX = (viewportWidth - canvasWidth * scale) / 2;
-    const offsetY = (viewportHeight - canvasHeight * scale) / 2;
-
-    this.translateX.set(offsetX);
-    this.translateY.set(offsetY);
   }
 
 }

@@ -31,23 +31,21 @@ export class PreviewComponent {
   }
 
   ngOnInit() {
-    this.activeRoute.queryParams.subscribe(params => {
-      this.encodedStr.set(params['encoded']);
-    });
-
-    if (this.encodedStr()) {
-      try {
-        this.decodedStr.set(this.encodeSvc.decodedStr());
-        // console.log("INIT: ", this.decodedStr())
-        this.parsedJSON = computed(() => JSON.parse(this.decodedStr()));
-        this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
-      } catch (error) {
-        console.error("Can not decode url", error)
+    this.activeRoute.fragment.subscribe(fragment => {
+      if (fragment) {
+        try {
+          this.encodedStr.set(fragment);
+          this.decodedStr.set(this.encodeSvc.decoder(this.encodedStr));
+          this.parsedJSON = computed(() => JSON.parse(this.decodedStr()));
+          this.renderFromModel(this.parsedJSON() as Canvas<CanvasData>);
+        } catch (error) {
+          console.error("Não foi possível decodificar o fragmento da URL", error);
+        }
       }
-    }
-
-
+    });
   }
+
+
 
   renderFromModel(model: Canvas<CanvasData>) {
     this.modelSvc.setCanvasModel(model);

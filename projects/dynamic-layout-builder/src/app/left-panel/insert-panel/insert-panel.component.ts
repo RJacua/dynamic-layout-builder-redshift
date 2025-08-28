@@ -91,7 +91,7 @@ export class InsertPanelComponent {
 
   preview() {
     this.router.navigate(['/preview'], {
-      queryParams: { encoded: this.encodedStr() },
+      fragment: this.encodedStr() ,
     });
   }
 
