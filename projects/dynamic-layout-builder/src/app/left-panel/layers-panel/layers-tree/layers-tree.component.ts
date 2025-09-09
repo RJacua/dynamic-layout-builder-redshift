@@ -123,28 +123,52 @@ export class LayersTreeComponent {
     return this.isExpanded().has(nodeId);
   }
 
-  onElementClick(event: MouseEvent) {
-    event.stopPropagation();
-    let el = event.target as HTMLElement;
+  // onElementClick(event: MouseEvent) {
+  //   event.stopPropagation();
+  //   let el = event.target as HTMLElement;
 
-    if (el.tagName === 'MAT-ICON') {
-      return;
-    }
+  //   if (el.tagName === 'MAT-ICON') {
+  //     return;
+  //   }
 
-    while (el && el.tagName && !el.tagName.startsWith('APP-') && el.parentElement) {
-      el = el.parentElement;
-    }
+  //   while (el && el.tagName && !el.tagName.startsWith('APP-') && el.parentElement) {
+  //     el = el.parentElement;
+  //   }
 
-    if (el && el.tagName.startsWith('APP-')) {
-      const componentInstance = (window as any).ng?.getComponent?.(el);
+  //   if (el && el.tagName.startsWith('APP-')) {
+  //     const componentInstance = (window as any).ng?.getComponent?.(el);
 
-      if (componentInstance) {
-        this.selectionSvc.selectById(componentInstance.data);
-      } else {
-        console.warn('ng.getComponent não disponível (modo produção?).');
-      }
-    }
-  }
+  //     if (componentInstance) {
+  //       this.selectionSvc.selectById(componentInstance.data);
+  //     } else {
+  //       console.warn('ng.getComponent não disponível (modo produção?).');
+  //     }
+  //   }
+  // }
+
+
+  // Seleciona diretamente a linha clicada
+selectRow(id: string, ev?: MouseEvent) {
+  if (ev) ev.stopPropagation();
+  this.selectionSvc.selectById(id, true);
+}
+
+// Fallback: delegação por data-id (SEM window.ng)
+onElementClick(event: MouseEvent) {
+  event.stopPropagation();
+
+  // Ignora clique no ícone de expandir/colapsar
+  const target = event.target as HTMLElement;
+  if (target.tagName === 'MAT-ICON') return;
+
+  const hit = target.closest('[data-id]') as HTMLElement | null;
+  if (!hit) return;
+
+  const id = hit.getAttribute('data-id');
+  if (!id) return;
+
+  this.selectionSvc.selectById(id, true);
+}
 
   onElementHover(event: MouseEvent) {
     let el = event.target as HTMLElement;

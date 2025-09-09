@@ -305,42 +305,74 @@ export class CanvasComponent implements LayoutElement<CanvasData>, OnInit, After
 
 
   }
+  // onElementClick(event: MouseEvent) {
+  //   event.stopPropagation();
+  //   let el = event.target as HTMLElement;
+  //   let originalEl = event.target as HTMLElement;
+
+  //   while (
+  //     el &&
+  //     el.tagName &&
+  //     !el.tagName.startsWith('APP-') &&
+  //     // el.id !== "core" &&
+  //     el.parentElement
+  //   ) {
+  //     // console.log(el.classList)
+  //     el = el.parentElement;
+  //   }
+
+  //   if (el && el.tagName.startsWith('APP-CANVAS')) {
+  //     this.selectionSvc.selectCanvas();
+  //   }
+  //   else if (el && el.tagName.startsWith('APP-')) {
+  //     const componentInstance = (window as any).ng?.getComponent?.(el);
+
+  //     if (componentInstance) {
+  //       let data = componentInstance.data;
+
+  //       if (originalEl.classList.contains("external")) {
+  //         this.selectionService.selectById(data.parentId, true);
+  //       }
+  //       else {
+  //         this.selectionService.select(componentInstance.data);
+  //       }
+
+  //     } else {
+  //       console.warn('ng.getComponent não disponível (modo produção?).');
+  //     }
+  //   }
+  // }
+
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
-    let el = event.target as HTMLElement;
-    let originalEl = event.target as HTMLElement;
 
-    while (
-      el &&
-      el.tagName &&
-      !el.tagName.startsWith('APP-') &&
-      // el.id !== "core" &&
-      el.parentElement
-    ) {
-      // console.log(el.classList)
-      el = el.parentElement;
-    }
+    // sobe na árvore até achar algo com [data-id]
+    const hit = (event.target as HTMLElement).closest('[data-id]') as HTMLElement | null;
 
-    if (el && el.tagName.startsWith('APP-CANVAS')) {
+    // clique “no vazio” → seleciona canvas
+    if (!hit) {
       this.selectionSvc.selectCanvas();
+      return;
     }
-    else if (el && el.tagName.startsWith('APP-')) {
-      const componentInstance = (window as any).ng?.getComponent?.(el);
 
-      if (componentInstance) {
-        let data = componentInstance.data;
+    const id = hit.dataset['id'];
+    if (!id) {
+      this.selectionSvc.selectCanvas();
+      return;
+    }
 
-        if (originalEl.classList.contains("external")) {
-          this.selectionService.selectById(data.parentId, true);
-        }
-        else {
-          this.selectionService.select(componentInstance.data);
-        }
-
-      } else {
-        console.warn('ng.getComponent não disponível (modo produção?).');
+    // regra especial: se clicou numa borda externa, selecione o pai
+    const original = event.target as HTMLElement;
+    if (original.classList.contains('external')) {
+      const node = this.modelSvc.getNodeById(id);
+      const parentId = node?.data?.parentId;
+      if (parentId) {
+        this.selectionSvc.selectById(parentId, true);
+        return;
       }
     }
+
+    this.selectionSvc.selectById(id, true);
   }
 
   onPlusClick() {

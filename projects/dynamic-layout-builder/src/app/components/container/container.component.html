@@ -34,7 +34,7 @@
   <!-- Conteúdo interno -->
   <div id="core" class="container-flex" [style]="internalStyle()">
     @for (node of nodeSignal().data.children; track node.data.id) {
-      @switch (node.data.type) {
+      <!-- @switch (node.data.type) {
         @case ('container') {
           <app-container class="external" [data]="node.data" [editMode]="editMode"/>
         }
@@ -53,7 +53,47 @@
         @case ('code') {
           <app-code class="external canvas-item" [data]="node.data" [editMode]="editMode"/>
         }
-      }
+      } -->
+        @switch (node.data.type) {
+
+  @case ('container') {
+    <!-- container já é drop target; ainda assim damos um wrapper neutro com data-id -->
+    <div class="canvas-item" [attr.data-id]="node.data.id">
+      <app-container class="external" [data]="node.data" [editMode]="editMode"></app-container>
+    </div>
+  }
+
+  @case ('header') {
+    <div class="canvas-item" [attr.data-id]="node.data.id">
+      <app-header class="external" [data]="node.data" [editMode]="editMode"></app-header>
+    </div>
+  }
+
+  @case ('paragraph') {
+    <div class="canvas-item" [attr.data-id]="node.data.id">
+      <app-paragraph class="external" [data]="node.data" [editMode]="editMode"></app-paragraph>
+    </div>
+  }
+
+  @case ('iframe') {
+    <!-- wrapper com data-id garante clique; o componente pode ter click-catcher internamente -->
+    <div class="canvas-item" [attr.data-id]="node.data.id">
+      <app-iframe class="external" [data]="node.data" [editMode]="editMode"></app-iframe>
+    </div>
+  }
+
+  @case ('image') {
+    <div class="canvas-item" [attr.data-id]="node.data.id">
+      <app-image class="external" [data]="node.data" [editMode]="editMode"></app-image>
+    </div>
+  }
+
+  @case ('code') {
+    <div class="canvas-item" [attr.data-id]="node.data.id">
+      <app-code class="external" [data]="node.data" [editMode]="editMode"></app-code>
+    </div>
+  }
+}
     }
 
     @if (editMode && nodeSignal().data.children.length === 0) {

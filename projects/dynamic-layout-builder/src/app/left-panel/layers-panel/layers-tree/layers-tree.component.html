@@ -14,7 +14,7 @@
     [cdkDropListData]="node.data.children || []"
     (cdkDropListDropped)="onDrop($event)"
   >
-    <div
+    <!-- <div
       class="node-line"
       cdkDrag
       (cdkDragStarted)="dragDropSvc.startTreeDrag(node.data.id)"
@@ -38,6 +38,53 @@
         {{ isNodeExpanded(node.data.id) ? "expand_more" : "chevron_right" }}
       </mat-icon>
 
+      <mat-icon class="drag-handle">drag_indicator</mat-icon>
+
+      <p
+        class="node-name"
+        contenteditable="true"
+        spellcheck="false"
+        (mousedown)="$event.stopPropagation()"
+        (click)="$event.stopPropagation()"
+        (focus)="startEdit(node)"
+        (blur)="endEdit(node, $event)"
+        (keydown.enter)="commitEdit($event)"
+        (keydown.escape)="cancelEdit($event)"
+      >
+        {{ node.data.name }}
+      </p>
+
+      <ng-template cdkDragPreview>
+        <div class="drag-preview">{{ node.data.name }}</div>
+      </ng-template>
+      <ng-template cdkDragPlaceholder>
+        <div class="drag-placeholder"></div>
+      </ng-template>
+    </div> -->
+    <div
+      class="node-line"
+      cdkDrag
+      (click)="selectRow(node.data.id, $event)"
+      (cdkDragStarted)="dragDropSvc.startTreeDrag(node.data.id)"
+      (cdkDragMoved)="dragDropSvc.onDragMoved($event)"
+      [attr.data-id]="node.data.id"
+      [style.padding-left.px]="depth * indentPx"
+      [class.selected]="isSelected()"
+      [ngClass]="dragDropSvc.dropIndicator(nodeSignal)"
+      [cdkDragData]="node.data.id"
+      [class.tree-node]="node.data.type == 'container'"
+      [class.node-item]="
+        node.data.type !== 'container' || !node.data.children?.length
+      "
+    >
+      <mat-icon
+        class="expand-icon"
+        (click)="toggleNode(node.data.id)"
+        [attr.aria-label]="'toggle ' + node.data.type"
+        *ngIf="node.data.children?.length > 0"
+      >
+        {{ isNodeExpanded(node.data.id) ? "expand_more" : "chevron_right" }}
+      </mat-icon>
       <mat-icon class="drag-handle">drag_indicator</mat-icon>
 
       <p
