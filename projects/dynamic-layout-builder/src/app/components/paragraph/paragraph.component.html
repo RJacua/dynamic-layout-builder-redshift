@@ -1,26 +1,44 @@
-<div [class]="'main paragraph ' + dropIndicatorStyle()" [style]="externalStyle()" tabindex="0" [class.border]="editMode"
-    [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" [cdkDragDisabled]="!editMode"
-    [attr.data-id]="data.id" cdkDrag
-    (cdkDragMoved)="onDragMoved($event)"
-    >
-    <!-- <br> -->
-    @if(editMode){
-    <div class="element-name">
-        {{data.type + " - " + data.id}}
-    </div>
-    <div class="drag-placeholder" *cdkDragPlaceholder></div>
-    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()" >⋮⋮</div>
-    }
-    <div id="core" [style]="internalStyle()" [attr.data-id]="data.id">
-        <p
-            #target
-            id="core"
-            class="paragraph"
-            [contentEditable]="editMode"
-            [class.editable-content]="editMode"
-            [class.element]="editMode"
-            (input)="updateTextContent($event)">
-        </p>
-    </div>
-    <!-- <br> -->
+<div
+  class="main paragraph canvas-item"
+  [style]="externalStyle()"
+  tabindex="0"
+  [class.border]="editMode"
+  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
+  [cdkDragDisabled]="!editMode"
+  cdkDrag
+  [cdkDragData]="data.id"
+  (cdkDragStarted)="dragDropSvc.startCanvasDrag(data.id)"
+  (cdkDragMoved)="onDragMoved($event)"
+  [attr.data-id]="data.id"
+  [ngClass]="dragDropSvc.dropIndicator(nodeSignal)"
+>
+  @if (editMode) {
+  <div class="element-name">
+    {{ data.name }}
+  </div>
+  <div class="drag-placeholder" *cdkDragPlaceholder></div>
+  <div
+    cdkDragHandle
+    class="drag-handle"
+    (pointerdown)="onHandleClick()"
+    (pointerup)="onMouseUp()"
+  >
+    ⋮⋮
+  </div>
+  }
+
+  <div id="core" [style]="internalStyle()" [attr.data-id]="data.id">
+    <p
+      #target
+      class="paragraph"
+      [contentEditable]="editMode"
+      [class.editable-content]="editMode"
+      [class.element]="editMode"
+      (mousedown)="$event.stopPropagation()"
+      (click)="onTextClick($event)"
+      (focus)="onEditorFocus()"
+      (blur)="onEditorBlur()"
+      (input)="updateTextContent($event)"
+    ></p>
+  </div>
 </div>

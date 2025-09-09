@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EncodeService } from '../../services/encode.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
-import { ExportImportService } from '../../services/export-import.service';
+import { ExportImportService } from '../../services/functionalities/export-import.service';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

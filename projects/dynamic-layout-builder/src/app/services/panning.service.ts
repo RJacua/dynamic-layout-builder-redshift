@@ -74,16 +74,13 @@ export class PanningService {
 
     if (contentWidth <= 0 || contentHeight <= 0) return;
 
-    // Escala proporcional
     const scaleX = (viewportWidth / contentWidth);
     const scaleY = (viewportHeight / contentHeight);
     const scale = Math.min(scaleX, scaleY, this.maxScale());
     this.scale.set(scale);
 
-    // 👇 X pode resetar (ancorar na esquerda funciona)
     this.translateX.set(0);
 
-    // 👇 Y precisa compensar para centralizar verticalmente
     const viewportCenterY = viewportHeight * scale / 2;
     const contentCenterY = (minY + contentHeight / 2) * scale;
     this.translateY.set(viewportCenterY - contentCenterY);

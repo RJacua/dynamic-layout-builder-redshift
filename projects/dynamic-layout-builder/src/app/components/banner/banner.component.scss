@@ -1,0 +1,80 @@
+.banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 280px;
+  max-width: 600px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  cursor: default;
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  z-index: 9999;
+
+  &.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+    pointer-events: none;
+  }
+
+  &.info {
+    background: #2c2c2c;
+  }
+
+  &.success {
+    background: #2c2c2c;
+  }
+
+  &.warning {
+    background: #2c2c2c;
+    color: rgb(255, 255, 255);
+  }
+
+  &.error {
+    background: #2c2c2c;
+  }
+
+  .message {
+    flex: 1;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: 500;
+
+      &.primary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      &.danger {
+        background: #c0392b;
+        color: white;
+      }
+
+      &.default {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+    }
+  }
+}

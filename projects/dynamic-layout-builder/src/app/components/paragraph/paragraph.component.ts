@@ -10,6 +10,7 @@ import { DragDropService } from '../../services/dragdrop.service';
 import { EnablerService } from '../../services/styles/enabler.service';
 import { GeneralFunctionsService } from '../../services/general-functions.service';
 import { TextEditorService } from '../../services/text-editor.service';
+import { CopyPasteService } from '../../services/functionalities/copy-paste.service';
 
 @Component({
   selector: 'app-paragraph',
@@ -25,7 +26,7 @@ import { TextEditorService } from '../../services/text-editor.service';
 
 export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit, AfterViewInit {
   type = 'paragraph';
-  @Input() data: ParagraphData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
+  @Input() data: ParagraphData = { id: 'n-' + crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', name: "Paragraph", style: {}, enabler: {}, text: 'Lorem ipsum dolor sit amet consectetur...' };
   @Input() editMode: boolean = true;
 
   constructor() {
@@ -35,24 +36,31 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
 
       console.log(text)
 
-      untracked(() => {
-        if (!this.nodeSignal()) return;
+      // untracked(() => {
+      //   if (!this.nodeSignal()) return;
 
-        const updatedModel = {
-          ...this.nodeSignal(),
-          data: {
-            ...this.nodeSignal()?.data,
-            text
-          }
-        };
+      //   const updatedModel = {
+      //     ...this.nodeSignal(),
+      //     data: {
+      //       ...this.nodeSignal()?.data,
+      //       text
+      //     }
+      //   };
 
-        this.modelSvc.updateModel(this.id, updatedModel as LayoutElement<any>);
+      //   this.modelSvc.updateModel(this.id, updatedModel as LayoutElement<any>);
 
-        if (this.editMode && this.selectionSvc.selectedElementId() !== '' && this.selectionSvc.selectedElementId() !== this.nodeSignal().data.id) {
-          this.target().nativeElement.innerHTML = this.textEditorSvc.insertLinkIcons(this.nodeSignal().data.text) ?? 'Lorem ipsum dolor sit amet consectetur...';
-          this.textEditorSvc.attachLinkHandlers(this.target().nativeElement, this.nodeSignal().data.id);
-        }
-      });
+      //   if (this.editMode) {
+      //     const el = this.target().nativeElement;
+
+      //     // Só atualiza se o usuário NÃO estiver com foco no elemento
+      //     if (document.activeElement !== el) {
+      //       el.innerHTML = this.textEditorSvc.insertLinkIcons(this.nodeSignal().data.text)
+      //         ?? 'Lorem ipsum dolor sit amet consectetur...';
+      //       this.textEditorSvc.attachLinkHandlers(el, this.nodeSignal().data.id);
+      //     }
+      //   }
+
+      // });
     });
     effect(() => {
 
@@ -110,6 +118,10 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
 
   private _elementRef = inject(ElementRef);
 
+  private copyPasteSvc = inject(CopyPasteService);
+
+
+
   id = '0';
   parentId = signal('-1');
   alignment = signal('align-center ');
@@ -160,9 +172,16 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
     this.componentsSvc.processComponentStyle(this.nodeSignal(), this.dynamicStyle, this.internalStyle, this.externalStyle, this.width(), this.height());
 
     if (this.editMode) {
-      this.target().nativeElement.innerHTML = this.textEditorSvc.insertLinkIcons(this.nodeSignal().data.text) ?? 'Lorem ipsum dolor sit amet consectetur...';
-      this.textEditorSvc.attachLinkHandlers(this.target().nativeElement, this.nodeSignal().data.id);
+      const el = this.target().nativeElement;
+
+      // Só atualiza se o usuário NÃO estiver com foco no elemento
+      if (document.activeElement !== el) {
+        el.innerHTML = this.textEditorSvc.insertLinkIcons(this.nodeSignal().data.text)
+          ?? 'Lorem ipsum dolor sit amet consectetur...';
+        this.textEditorSvc.attachLinkHandlers(el, this.nodeSignal().data.id);
+      }
     }
+
     else {
       this.target().nativeElement.innerHTML = this.data.text ?? 'Lorem ipsum dolor sit amet consectetur...';
     }
@@ -178,9 +197,37 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
 
   isDragging = this.dragDropSvc.isDragging;
 
+  isEditing = signal(false);
+  // updateTextContent(event: Event) {
+  //   const value = (event.target as HTMLElement).innerHTML;
+  //   this.text.set(value);
+  // }
+
   updateTextContent(event: Event) {
     const value = (event.target as HTMLElement).innerHTML;
     this.text.set(value);
+  }
+
+  onEditorFocus() {
+    this.isEditing.set(true);
+  }
+
+  onEditorBlur() {
+    const value = this.target().nativeElement.innerHTML;
+
+    // garante que o draft está sincronizado
+    this.text.set(value);
+
+    const updatedModel = {
+      ...this.nodeSignal(),
+      data: {
+        ...this.nodeSignal()?.data,
+        text: value
+      }
+    };
+
+    this.modelSvc.updateModel(this.id, updatedModel); // <-- só aqui salva no modelo
+    this.isEditing.set(false);
   }
 
   deleteParagraph() {
@@ -202,6 +249,27 @@ export class ParagraphComponent implements LayoutElement<ParagraphData>, OnInit,
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);
   }
+
+  onTextClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.selectionSvc.selectById(this.id, true);
+  }
+
+  @HostListener('paste', ['$event'])
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+
+    const clipboardData = event.clipboardData;
+    if (!clipboardData) return;
+
+    // Força pegar apenas texto cru
+    const text = clipboardData.getData('text/plain');
+
+    // Cola sem estilo no ponto atual
+    document.execCommand('insertText', false, text);
+  }
+
+
 
   dropIndicatorStyle = computed(() => (!this.isFocused() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');
 

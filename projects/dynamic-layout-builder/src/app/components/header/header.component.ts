@@ -24,38 +24,32 @@ import { GeneralFunctionsService } from '../../services/general-functions.servic
 
 export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, AfterViewInit {
   type = 'header';
-  @Input() data: HeaderData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', text: 'Your Title Here', style: {}, enabler: {}, headerSize: 'h1' };
+  @Input() data: HeaderData = { id: 'n-' + crypto.randomUUID().split("-")[0], parentId: '-1', type: 'header', name: "Header", text: 'Your Title Here', style: {}, enabler: {}, headerSize: 'h1' };
   @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
 
   constructor() {
     // effect(() => {
-    //   const model = this.layoutModel();
-    //   untracked(() =>
-    //     this.modelSvc.updateModel(this.id, model)
-    //   )
+    //   const node = this.nodeSignal();
+    //   const text = this.text();
+    //   const headerSize = this.headerSize();
+
+    //   untracked(() => {
+    //     const nodeModel = this.modelSvc.getNodeById(this.id);
+    //     if (!nodeModel) return;
+
+    //     const updatedModel = {
+    //       ...nodeModel,
+    //       data: {
+    //         ...nodeModel.data,
+    //         text
+    //       }
+    //     };
+
+    //     this.modelSvc.updateModel(this.id, updatedModel);
+
+    //   });
     // });
-    effect(() => {
-      const node = this.nodeSignal();
-      const text = this.text();
-      const headerSize = this.headerSize();
-
-      untracked(() => {
-        const nodeModel = this.modelSvc.getNodeById(this.id);
-        if (!nodeModel) return;
-
-        const updatedModel = {
-          ...nodeModel,
-          data: {
-            ...nodeModel.data,
-            text
-          }
-        };
-
-        this.modelSvc.updateModel(this.id, updatedModel);
-
-      });
-    });
     effect(() => {
 
       const element = this._elementRef.nativeElement.querySelector('#core');
@@ -117,6 +111,8 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   width = signal(0);
   height = signal(0);
 
+  isEditing = signal(false);
+
   private resizeObserver?: ResizeObserver;
 
   ngOnInit(): void {
@@ -158,10 +154,33 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
 
   isDragging = this.dragDropSvc.isDragging;
 
-  textSyncOnBlur(event: Event) {
-    const element = event.target as HTMLElement;
+  onTextInput(event: Event) {
     const value = (event.target as HTMLElement).innerText;
     this.text.set(value);
+  }
+
+  onEditorFocus() {
+    this.isEditing.set(true);
+  }
+
+  // Salva UMA vez por sessão de edição (bom pro Ctrl+Z)
+  onEditorBlur() {
+    const value = this.target().nativeElement.innerText;
+    this.text.set(value);
+
+    const nodeModel = this.modelSvc.getNodeById(this.id);
+    if (!nodeModel) return;
+
+    const updatedModel = {
+      ...nodeModel,
+      data: {
+        ...nodeModel.data,
+        text: value
+      }
+    };
+
+    this.modelSvc.updateModel(this.id, updatedModel);
+    this.isEditing.set(false);
   }
 
   onHandleClick() {
@@ -176,6 +195,12 @@ export class HeaderComponent implements LayoutElement<HeaderData>, OnInit, After
   onDragMoved(event: CdkDragMove<any>) {
     this.dragDropSvc.onDragMoved(event);
   }
+
+  onTextClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.selectionSvc.selectById(this.id, true);
+  }
+
 
   // dropIndicator = computed(() => (this.isDragging() && this.isHovered()) ? this.dropIndicatorMap : '');
   dropIndicatorStyle = computed(() => (!this.isFocused() && this.isHovered()) ? this.dragDropSvc.dropIndicator(this.nodeSignal) : '');

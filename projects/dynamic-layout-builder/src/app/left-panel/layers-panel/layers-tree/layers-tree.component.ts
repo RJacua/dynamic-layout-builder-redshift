@@ -5,27 +5,48 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { ModelService } from '../../../services/model.service';
 import { SelectionService } from '../../../services/selection.service';
-import { CdkDrag, CdkDragDrop, CdkDragMove, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragMove, DragDropModule } from '@angular/cdk/drag-drop';
 import { DragDropService as DragDropService } from '../../../services/dragdrop.service';
 
 @Component({
   selector: 'app-layers-tree',
-  imports: [MatTreeModule, MatIconModule, MatButtonModule, CommonModule, CdkDrag, DragDropModule],
+  imports: [
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule,
+    CommonModule,
+    CdkDrag,
+    DragDropModule
+  ],
   templateUrl: './layers-tree.component.html',
   styleUrl: './layers-tree.component.scss'
 })
 export class LayersTreeComponent {
   @Input() data: string = '0';
+  @Input() depth = 0;              // <-- novo
+  indentPx = 16;                   // <-- controla quanto indenta por nível
+
   readonly selectionSvc = inject(SelectionService);
   readonly modelSvc = inject(ModelService);
   readonly dragDropSvc = inject(DragDropService);
 
-  isSelected = computed(() => { return this.data.replace('tree-','') === this.selectionSvc.selectedElementId() })
+  isSelected = computed(() => {
+    return this.data.replace('tree-', '') === this.selectionSvc.selectedElementId();
+  });
+
   isDragging = this.dragDropSvc.isDragging;
 
   isFocused = computed(() => {
-    return this.data.replace('tree-','') === this.selectionSvc.selectedElementId();
+    return this.data.replace('tree-', '') === this.selectionSvc.selectedElementId();
   });
+
+  nodeModel: any;
+  childrenAccessor = (node: any) => node?.data.children || [];
+  isExpanded = this.modelSvc.expandedNodes;
+
+  // --- Controle de edição ---
+  editingId = signal<string | null>(null);
+  originalName = '';
 
   constructor() {
     effect(() => {
@@ -36,28 +57,49 @@ export class LayersTreeComponent {
       untracked(() => {
         this.expandNewNodeParents(lastAddedId);
         this.expandNewNodeParents(this.selectionSvc.selectedElementId());
-      }
-      )
-      // this.modelSvc.unsetLastAddedId()
-    }
-    )
+      });
+    });
   }
+
+  
+  nodeSignal = this.modelSvc.getNodeSignalById('canvas'); // init; set no ngOnInit
 
   ngOnInit(): void {
-    if (this.data.replace('tree-','') === "canvas") {
-      this.nodeModel = computed(() => this.modelSvc.getNodeById(this.data.replace('tree-','')));
+    const id = this.data.replace('tree-', ''); // garantia
+    this.nodeSignal = this.modelSvc.getNodeSignalById(id);
 
-    }
-    else {
-      this.nodeModel = computed(() => [this.modelSvc.getNodeById(this.data.replace('tree-',''))])
+    if (id === 'canvas') {
+      this.nodeModel = computed(() => this.modelSvc.getNodeById(id));
+    } else {
+      this.nodeModel = computed(() => [this.modelSvc.getNodeById(id)]);
     }
   }
 
-  nodeModel: any;
+  onDragStart(node: any) {
+    this.dragDropSvc.isDragging.set(true);
+    this.selectionSvc.selectById(node.data.id, true);
+  }
 
-  childrenAccessor = (node: any) => node?.data.children || [];
+  onDragMoved(event: CdkDragMove<any>) {
+    // seleciona quem está sendo arrastado
+    const draggedId = event.source.element.nativeElement.getAttribute('data-id');
+    if (draggedId) this.selectionSvc.selectById(draggedId, true);
 
-  isExpanded = this.modelSvc.expandedNodes;
+    // atualiza qual nó está sob o ponteiro (hover)
+    const { x, y } = event.pointerPosition;
+    let el = document.elementFromPoint(x, y) as HTMLElement | null;
+    while (el && !el.hasAttribute('data-id') && el.parentElement) el = el.parentElement;
+    const hoveredId = el?.getAttribute('data-id');
+    if (hoveredId) this.selectionSvc.hoverById(hoveredId);
+
+    // alimenta o serviço (calcula dropTarget, dropIndex e indicadores)
+    this.dragDropSvc.onDragMoved(event);
+  }
+
+  onDrop(event: CdkDragDrop<any>) {
+    this.dragDropSvc.onDrop(event);
+  }
+
   toggleNode(nodeId: string) {
     const expanded = this.isExpanded();
     if (expanded.has(nodeId)) {
@@ -66,7 +108,6 @@ export class LayersTreeComponent {
       expanded.add(nodeId);
     }
     this.isExpanded.set(new Set(expanded));
-    // console.log("isExpanded List: ", this.isExpanded())
   }
 
   expandNewNodeParents(nodeId: string) {
@@ -74,21 +115,20 @@ export class LayersTreeComponent {
 
     const parentsId = this.modelSvc.getGenealogicalTreeIdsById(nodeId);
     const expanded = this.isExpanded();
-    parentsId.forEach(id => {
-      expanded.add(id);
-    });
+    parentsId.forEach((id) => expanded.add(id));
     this.isExpanded.set(new Set(expanded));
   }
 
   isNodeExpanded(nodeId: string): boolean {
     return this.isExpanded().has(nodeId);
   }
+
   onElementClick(event: MouseEvent) {
     event.stopPropagation();
     let el = event.target as HTMLElement;
 
-    if (el.tagName === "MAT-ICON") {
-      return
+    if (el.tagName === 'MAT-ICON') {
+      return;
     }
 
     while (el && el.tagName && !el.tagName.startsWith('APP-') && el.parentElement) {
@@ -101,7 +141,7 @@ export class LayersTreeComponent {
       if (componentInstance) {
         this.selectionSvc.selectById(componentInstance.data);
       } else {
-        console.warn("ng.getComponent não disponível (modo produção?).");
+        console.warn('ng.getComponent não disponível (modo produção?).');
       }
     }
   }
@@ -119,11 +159,10 @@ export class LayersTreeComponent {
         this.selectionSvc.hoverById(id);
       }
     }
-    // console.log("hovered: ", this.selectionSvc.hoveredElementId());
 
     const dataId = el.getAttribute('data-id');
     if (this.isDragging() && dataId) {
-      this.expandNewNodeParents(dataId)
+      this.expandNewNodeParents(dataId);
     }
   }
 
@@ -141,13 +180,49 @@ export class LayersTreeComponent {
     this.selectionSvc.unhover();
   }
 
-  onDragMoved(event: CdkDragMove<any>) {
-    this.selectionSvc.selectById(event.source.element.nativeElement.getAttribute('data-id')!, true);
-    this.dragDropSvc.onDragMoved(event);
+  // onDragMoved(event: CdkDragMove<any>) {
+  //   this.selectionSvc.selectById(
+  //     event.source.element.nativeElement.getAttribute('data-id')!,
+  //     true
+  //   );
+  //   this.dragDropSvc.onDragMoved(event);
+  // }
+
+  // onDrop(event: CdkDragDrop<any>) {
+  //   this.dragDropSvc.onDrop(event);
+  // }
+
+  // --- Métodos de edição ---
+  startEdit(node: any) {
+    this.editingId.set(node.data.id);
+    this.originalName = node.data.name ?? '';
   }
 
-  onDrop(event: CdkDragDrop<any>) {
-    this.dragDropSvc.onDrop(event);
+  endEdit(node: any, ev: FocusEvent) {
+    const el = ev.target as HTMLElement;
+    const newName = el.innerText.replace(/\n/g, '').trim();
+
+    if (newName && newName !== node.data.name) {
+      // Atualiza o modelo global (implemente este método no ModelService)
+      this.modelSvc.renameNode(node.data.id, newName);
+      node.data.name = newName; // garante sincronização local
+    } else {
+      el.innerText = node.data.name ?? '';
+    }
+
+    this.editingId.set(null);
   }
+
+  commitEdit(ev: Event) {
+    ev.preventDefault();
+    (ev.target as HTMLElement).blur();
+  }
+
+  cancelEdit(ev: Event) {
+    ev.preventDefault();
+    (ev.target as HTMLElement).innerText = this.originalName;
+    (ev.target as HTMLElement).blur();
+  }
+
 
 }

@@ -1,40 +1,73 @@
 <mat-tree
   class="main"
+  cdkDropListGroup
   [dataSource]="nodeModel()"
   [childrenAccessor]="childrenAccessor"
   (click)="onElementClick($event)"
   (mouseover)="onElementHover($event)"
   (mouseleave)="onElementMouseLeave($event)"
 >
-  <mat-nested-tree-node 
+  <mat-nested-tree-node
     *matTreeNodeDef="let node"
+    [attr.data-id]="node.data.id"
     cdkDropList
+    [cdkDropListData]="node.data.children || []"
     (cdkDropListDropped)="onDrop($event)"
-    [cdkDropListData]="[data]"
-    [attr.data-id]="'tree-' + node.data.id"
   >
     <div
-    class="node-line" 
-    [class.selected]="isSelected()"
+      class="node-line"
       cdkDrag
-      (cdkDragMoved)="onDragMoved($event)"
-      [attr.data-id]="'tree-' + node.data.id"
+      (cdkDragStarted)="dragDropSvc.startTreeDrag(node.data.id)"
+      (cdkDragMoved)="dragDropSvc.onDragMoved($event)"
+      [attr.data-id]="node.data.id"
+      [style.padding-left.px]="depth * indentPx"
+      [class.selected]="isSelected()"
+      [ngClass]="dragDropSvc.dropIndicator(nodeSignal)"
+      [cdkDragData]="node.data.id"
       [class.tree-node]="node.data.type == 'container'"
-      [class.node-item]="node.data.type !== 'container' || !node.data.children.length"
+      [class.node-item]="
+        node.data.type !== 'container' || !node.data.children?.length
+      "
     >
-        <mat-icon  class="expand-icon"
+      <mat-icon
+        class="expand-icon"
         (click)="toggleNode(node.data.id)"
         [attr.aria-label]="'toggle ' + node.data.type"
-        *ngIf="node.data.children?.length > 0">
-          {{ isNodeExpanded(node.data.id) ? 'expand_more' : 'chevron_right' }}
-        </mat-icon>
- 
-      {{ node.data.type }} {{ node.data.id }}
+        *ngIf="node.data.children?.length > 0"
+      >
+        {{ isNodeExpanded(node.data.id) ? "expand_more" : "chevron_right" }}
+      </mat-icon>
+
+      <mat-icon class="drag-handle">drag_indicator</mat-icon>
+
+      <p
+        class="node-name"
+        contenteditable="true"
+        spellcheck="false"
+        (mousedown)="$event.stopPropagation()"
+        (click)="$event.stopPropagation()"
+        (focus)="startEdit(node)"
+        (blur)="endEdit(node, $event)"
+        (keydown.enter)="commitEdit($event)"
+        (keydown.escape)="cancelEdit($event)"
+      >
+        {{ node.data.name }}
+      </p>
+
+      <ng-template cdkDragPreview>
+        <div class="drag-preview">{{ node.data.name }}</div>
+      </ng-template>
+      <ng-template cdkDragPlaceholder>
+        <div class="drag-placeholder"></div>
+      </ng-template>
     </div>
 
-    <div *ngIf="isNodeExpanded(node.data.id)" class="new-node">
+    <div *ngIf="isNodeExpanded(node.data.id)" class="children-list">
       <div *ngFor="let child of node.data.children">
-        <app-layers-tree [data]="child.data.id"></app-layers-tree>
+        <app-layers-tree
+          [data]="child.data.id"
+          [depth]="depth + 1"
+        ></app-layers-tree>
       </div>
     </div>
   </mat-nested-tree-node>

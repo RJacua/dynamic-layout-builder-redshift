@@ -85,7 +85,7 @@ export class ModelService {
 
 
   writeElementModel(componentType: string, parentId: string, componentData?: LayoutData, defaultStyle?: Styles): LayoutElement<any> {
-    const id = crypto.randomUUID().split('-')[0];
+    const id = 'n-' + crypto.randomUUID().split('-')[0];
     let style = defaultStyle || {};
     let enabler = {};
     let children: (LayoutElement<ContainerData> | LayoutElement<AtomicElementData>)[] = [];
@@ -101,20 +101,73 @@ export class ModelService {
       children = (componentData as ContainerData).children!;
     }
 
+    // Nome padrão se não vier no componentData
+    const defaultName = componentType.charAt(0).toUpperCase() + componentType.slice(1);
+
     if (componentType.toLowerCase() === 'container') {
       return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, children: children }
-      }
+        data: {
+          id,
+          parentId,
+          type: 'container',
+          enabler,
+          style,
+          children,
+          name: componentData?.name ?? defaultName
+        }
+      };
     }
     else if (componentType.toLowerCase() === 'iframe') {
       return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style, src: src }
-      }
+        data: {
+          id,
+          parentId,
+          type: 'iframe',
+          enabler,
+          style,
+          src,
+          name: componentData?.name ?? defaultName
+        }
+      };
+    }
+    else if (componentType.toLowerCase() === 'header') {
+      return {
+        data: {
+          id,
+          parentId,
+          type: 'header',
+          enabler,
+          style,
+          name: componentData?.name ?? defaultName,
+          text: (componentData as any)?.text ?? 'Your Title Here',
+          headerSize: (componentData as any)?.headerSize ?? 'h1'
+        }
+      };
+    }
+    else if (componentType.toLowerCase() === 'paragraph') {
+      return {
+        data: {
+          id,
+          parentId,
+          type: 'paragraph',
+          enabler,
+          style,
+          name: componentData?.name ?? defaultName,
+          text: (componentData as any)?.text ?? 'Lorem ipsum dolor sit amet consectetur...'
+        }
+      };
     }
     else {
       return {
-        data: { id: id, parentId: parentId, type: componentType.toLowerCase(), enabler: enabler, style: style }
-      }
+        data: {
+          id,
+          parentId,
+          type: componentType.toLowerCase(),
+          enabler,
+          style,
+          name: componentData?.name ?? defaultName
+        }
+      };
     }
   }
 
@@ -171,12 +224,11 @@ export class ModelService {
 
     if (model.data.type !== 'canvas') {
       const currentBranch = branch ?? this.canvasModel();
-      // console.log("entrou", currentBranch)
-
       const updated = this._recursiveUpdateModel(id, model, currentBranch);
 
       if (updated) {
         this.canvasModel.set([...currentBranch]);
+
       }
     } else {
       this.canvasStyle.set(model.data.style);
@@ -382,4 +434,26 @@ export class ModelService {
     this.canvasEnabler.set(canvasObj.data.enabler);
 
   }
+
+  renameNode(id: string, newName: string): void {
+    const node = this.getNodeById(id);
+
+    if (!node) {
+      console.warn(`renameNode: node ${id} não encontrado`);
+      return;
+    }
+
+    // Atualiza o nome
+    node.data.name = newName;
+
+    // Se for canvas, não tem parent, só dispara update
+    if (node.data.type === 'canvas') {
+      this.canvasStyle.set({ ...this.canvasStyle() }); // força sinal do canvas
+      return;
+    }
+
+    // Atualiza o branch
+    this.updateModel(id, node);
+  }
+
 }

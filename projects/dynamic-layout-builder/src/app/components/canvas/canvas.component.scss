@@ -8,3 +8,69 @@
 .canvas:hover {
     border: 1px solid #818285;
 }
+
+:root { --accent: #3f51b5; --danger: #e53935; }
+
+/* Linhas/contornos de indicação */
+.topHalf::before,
+.bottomHalf::after {
+  content: '';
+  position: absolute;
+  left: 8px; right: 8px;
+  height: 2px;
+  background: var(--accent);
+}
+.topHalf::before   { top: -1px; }
+.bottomHalf::after { bottom: -1px; }
+
+.leftHalf::before,
+.rightHalf::after {
+  content: '';
+  position: absolute;
+  top: 4px; bottom: 4px;
+  width: 2px;
+  background: var(--accent);
+}
+.leftHalf::before  { left: -1px; }
+.rightHalf::after  { right: -1px; }
+
+.insideDrop,
+.insideTopDrop,
+.insideBottomDrop,
+.insideLeftDrop,
+.insideRightDrop {
+  outline: 2px dashed var(--accent);
+  outline-offset: -2px;
+  background: rgba(63,81,181,0.06);
+  border-radius: 6px;
+}
+
+/* Se quiser “vermelho” para zonas inválidas */
+.noDropZone {
+  outline: 2px dashed var(--danger);
+  outline-offset: -2px;
+  background: rgba(229,57,53,0.06);
+  opacity: .7;
+}
+
+
+
+
+
+.canvas-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #202020; // combine com seu tema
+}
+
+/* Preview: tem scroll para ver tudo */
+.canvas-viewport.preview { overflow: auto; }
+
+/* Edit mode: sem scroll; panning move o canvas */
+.canvas-viewport.edit    { overflow: visible !important; }
+
+.canvas-spacer { pointer-events: none; }
+.artboard      { transform-origin: top left; }
+.content-root  { position: relative; }
+

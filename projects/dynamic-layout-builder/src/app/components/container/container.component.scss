@@ -16,3 +16,6 @@
 .default-text {
 color:rgba(152, 152, 152, 0.5);
 }
+
+.cdk-drag-preview { pointer-events: none; }
+.canvas-item { position: relative; }

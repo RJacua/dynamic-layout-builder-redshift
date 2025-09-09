@@ -13,6 +13,7 @@ export interface LayoutData {
   id: string;
   parentId: string;
   type: string;
+  name: string;
   style: Styles;
   enabler: Enablers;
 }

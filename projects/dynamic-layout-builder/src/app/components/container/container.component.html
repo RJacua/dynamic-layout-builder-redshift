@@ -1,54 +1,75 @@
-<div [class]="'main external' + dropIndicatorStyle()" [class.active]="editMode && (isFocused() || isHovered())" [style]="externalStyle()"
-  (mouseover)="onElementHover($event)" (mouseleave)="onElementMouseLeave($event)" cdkDropList
-  (cdkDropListDropped)="onDrop($event)" [cdkDropListData]="data.children" [class.border]="editMode" cdkDrag
-  [cdkDragDisabled]="!editMode" [attr.data-id]="data.id" (cdkDragMoved)="onDragMoved($event)"
-  (cdkDropListSortingDisabled)="(true)">
-  @if(editMode){
-  <div class="element-name">
-    {{data.type + " - " + data.id}}
-  </div>
-  <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">
-    ⋮⋮
-  </div>
+<div
+  class="main external"
+  [ngClass]="dragDropSvc.dropIndicator(nodeSignal)"
+  [class.active]="editMode && (isFocused() || isHovered())"
+  [style]="externalStyle()"
+  (mouseover)="onElementHover($event)"
+  (mouseleave)="onElementMouseLeave($event)"
+  cdkDropList
+  [cdkDropListData]="data.children"
+  [cdkDropListSortingDisabled]="true"
+  (cdkDropListDropped)="onDrop($event)"
+  [attr.data-id]="data.id"
+>
+  @if (editMode) {
+    <div class="element-name">{{ data.name }}</div>
+    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+
+    <!-- 🔹 Único lugar draggable -->
+    <div
+      class="drag-handle"
+      cdkDrag
+      [cdkDragData]="data.id"
+      [cdkDragRootElement]="'[data-id='+data.id+']'"
+      [cdkDragDisabled]="!editMode"
+      (cdkDragStarted)="dragDropSvc.startCanvasDrag(data.id)"
+      (cdkDragMoved)="onDragMoved($event)"
+      (pointerdown)="onHandleClick()"
+      (pointerup)="onMouseUp()"
+    >
+      ⋮⋮
+    </div>
   }
-  <div id="core" [class]="'container-flex'" [style]="internalStyle()" [attr.data-id]="data.id" >
-    <!-- [class]="'container-border container-flex ' + direction()" -->
-    <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
+
+  <!-- Conteúdo interno -->
+  <div id="core" class="container-flex" [style]="internalStyle()">
     @for (node of nodeSignal().data.children; track node.data.id) {
-      @switch (node.data.type) { 
+      @switch (node.data.type) {
         @case ('container') {
-        <app-container class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-        } 
-        @case ('header') {
-        <app-header class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-        } 
-        @case ('paragraph') {
-        <app-paragraph class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-        } 
-        @case ('iframe') {
-        <app-iframe class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-        } 
-        @case ('image') {
-        <app-image class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-        } 
-        @case ('code') {
-        <app-code class="external" [data]="node.data" [editMode]="editMode" [attr.data-id]="data.id" />
-        } 
-        @default { } 
+          <app-container class="external" [data]="node.data" [editMode]="editMode"/>
         }
-    } 
-    
-    @if (editMode && nodeSignal().data.children.length ===0) {
-    <p class="default-text">This Container is Empty</p>
+        @case ('header') {
+          <app-header class="external canvas-item" [data]="node.data" [editMode]="editMode"/>
+        }
+        @case ('paragraph') {
+          <app-paragraph class="external canvas-item" [data]="node.data" [editMode]="editMode"/>
+        }
+        @case ('iframe') {
+          <app-iframe class="external canvas-item" [data]="node.data" [editMode]="editMode"/>
+        }
+        @case ('image') {
+          <app-image class="external canvas-item" [data]="node.data" [editMode]="editMode"/>
+        }
+        @case ('code') {
+          <app-code class="external canvas-item" [data]="node.data" [editMode]="editMode"/>
+        }
+      }
+    }
+
+    @if (editMode && nodeSignal().data.children.length === 0) {
+      <p class="default-text">This Container is Empty</p>
     }
   </div>
 
-  @if(editMode){
-
-  <div class="align-center add-sign" [class.active]="isFocused() || isHovered()">
-    <app-menu [trigger]="'+'" [data]="initialData" [isRootNode]="true" matTooltip="Add"
-      (click)="forceSelection()"></app-menu>
-  </div>
+  @if (editMode) {
+    <div class="align-center add-sign" [class.active]="isFocused() || isHovered()">
+      <app-menu
+        [trigger]="'+'"
+        [data]="initialData"
+        [isRootNode]="true"
+        matTooltip="Add"
+        (click)="forceSelection()"
+      />
+    </div>
   }
 </div>

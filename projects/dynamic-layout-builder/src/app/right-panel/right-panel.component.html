@@ -1,10 +1,7 @@
 <ng-container *ngIf="selectedNode() as selected">
   <h2 class="align-center">
     {{
-      selectedNode().data.type +
-        (selectedNode().data.id !== "canvas"
-          ? " - " + selectedNode().data.id
-          : "")
+      selectedNode().data.type == "canvas" ? "canvas" : selectedNode().data.name
     }}
   </h2>
   <mat-divider ></mat-divider>

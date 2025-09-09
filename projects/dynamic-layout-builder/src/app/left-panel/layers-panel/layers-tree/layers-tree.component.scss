@@ -1,76 +1,161 @@
-// .node-item {
-//     width: 100%;
-//     display:inline;
-//     overflow: hidden;
-// }
+/* ====== ÁRVORE / BASE ====== */
 
-// .tree-node {
-//     width: calc(100% - 2px);
-//     border: solid 1px;
-
-//     // background: red;
-
-//     white-space: nowrap;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-// }
-
-// .new-node {
-//     padding-left: 20px;
-//     border-left: solid 1px;
-// }
-
-// .main.active {
-//     background-color: blanchedalmond;
-//     outline: none;
-//     transition: background-color 0.2s ease;
-//   }
-
-
-/* Estilo base da árvore */
 mat-tree.main {
-    background-color: rgba(255, 255, 255, 0);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 /* Linha de cada nó */
 .node-line {
-    color: #c8c8c8;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    border-radius: 3px;
-    // margin: 2px 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
+  position: relative;               /* necessário p/ indicadores com ::before/::after */
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .25rem .5rem;            /* padding-left dinâmico vem do [style] no template */
+  color: #c8c8c8;
+  font-size: 13px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 
-.node-line:hover {
+  &:hover {
     background-color: #383838;
-}
+  }
 
-/* Nó selecionado */
-.node-line.selected {
+  &.selected {
     background-color: #9c9c9c;
     font-weight: 500;
     color: #000000;
+  }
 }
-
 
 /* Ícone de expandir/recolher */
 .expand-icon {
-    font-size: 20px;
-    margin-right: 3px;
-    color: #666666;
-    transition: transform 0.2s ease;
-}
+  font-size: 20px;
+  margin-right: 3px;
+  color: #666666;
+  transition: color 0.2s ease;
 
-.expand-icon:hover {
+  &:hover {
     color: #000000;
+  }
 }
 
+/* Bloco que envolve os filhos (guia pontilhada à esquerda) */
 .new-node {
-    margin-left: 20px;
-    padding-left: 10px;
-    border-left: 2px dashed #939393;
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 2px dashed #939393;
 }
+
+/* Texto do nome */
+.node-name {
+  line-height: 0; /* mantém como estava */
+}
+
+/* Opcional: “linha guia” vertical baseada na profundidade (CSS var) */
+.node-line::before {
+  content: '';
+  position: absolute;
+  left: calc((var(--depth, 0) * 16px) - 8px); /* precisa setar [style.--depth]="depth" no template p/ funcionar */
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0,0,0,.06);
+}
+
+/* ====== DRAG & DROP (visuais) ====== */
+
+.drag-handle {
+  cursor: grab;
+}
+
+.drag-placeholder {
+  height: 1.5rem;
+  border: 1px dashed rgba(0,0,0,.3);
+  margin: .25rem 0;
+  border-radius: 4px;
+}
+
+.drag-preview {
+  opacity: .9;
+  padding: .25rem .5rem;
+  border-radius: .25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  background: #2d2d2d;
+  color: #fff;
+}
+
+/* Cor de destaque (pode sobrepor via :root { --accent: ... }) */
+:root {
+  --accent: #3f51b5;
+}
+
+/* Inserção “acima/abaixo” (layout column) */
+.topHalf::before,
+.bottomHalf::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: var(--accent);
+}
+.topHalf::before   { top: -1px; }
+.bottomHalf::after { bottom: -1px; }
+
+/* Inserção “esquerda/direita” (layout row) */
+.leftHalf::before,
+.rightHalf::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--accent);
+}
+.leftHalf::before  { left: -1px; }
+.rightHalf::after  { right: -1px; }
+
+/* Drop DENTRO do container (centro) */
+.insideDrop,
+.insideTopDrop,
+.insideBottomDrop,
+.insideLeftDrop,
+.insideRightDrop {
+  outline: 2px dashed var(--accent);
+  outline-offset: -2px;
+  background: rgba(63,81,181,0.06);
+  border-radius: 6px;
+}
+
+/* Zonas desativadas (ex.: no canvas p/ itens não-container) */
+.noDropZone {
+  opacity: .45;
+  filter: grayscale(0.3);
+}
+
+.cdk-drag-preview { pointer-events: none; }
+
+/* ====== (mantidos do teu arquivo, reorganizados) ====== */
+
+/* Classes utilitárias antigas (mantidas caso use em outros lugares)
+.node-item {
+  width: 100%;
+  display:inline;
+  overflow: hidden;
+}
+
+.tree-node {
+  width: calc(100% - 2px);
+  border: solid 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.main.active {
+  background-color: blanchedalmond;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+*/

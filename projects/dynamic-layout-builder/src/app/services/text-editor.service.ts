@@ -1,128 +1,117 @@
 import { inject, Injectable } from '@angular/core';
 import { ModelService } from './model.service';
-import { SelectionService } from './selection.service';
 
 @Injectable({ providedIn: 'root' })
 export class TextEditorService {
-  constructor() { }
   private modelSvc = inject(ModelService);
-  private selectionSvc = inject(SelectionService);
 
-  createLink(nodeId: string, url: string = 'https://[YOU URL HERE]') {
-  const node = this.modelSvc.getNodeById(nodeId);
-  if (!node || node.data.type !== 'paragraph') return;
+  // guarda a última seleção válida por nodeId
+  private armedRangeByNode = new Map<string, Range>();
 
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return;
-
-  const range = selection.getRangeAt(0);
-  const selectedText = range.toString();
-  if (!selectedText) return;
-
-  const container = document.querySelector(`[data-id="${nodeId}"]`) as HTMLElement;
-  if (!container) {
-    console.log("div nao encontrado");
-    return;
+  armSelection(nodeId: string) {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    this.armedRangeByNode.set(nodeId, sel.getRangeAt(0).cloneRange());
   }
 
-  const paragraph = container.querySelector('p');
-  if (!paragraph) {
-    console.log("p nao encontrado");
-    return;
+  private findParagraphFromRange(r: Range, nodeId: string): HTMLParagraphElement | null {
+    const startEl = (r.startContainer.nodeType === 3
+      ? (r.startContainer.parentElement as Element)
+      : (r.startContainer as Element)
+    );
+    // sobe até o root do componente Paragraph específico
+    const host = startEl.closest(`.main.paragraph.canvas-item[data-id="${nodeId}"]`);
+    if (!host) return null;
+    return host.querySelector('p');
   }
 
-  // Cria o link
-  const linkEl = document.createElement('a');
-  linkEl.href = url;
-  linkEl.target = '_blank';
-  linkEl.textContent = selectedText;
+  createLink(nodeId: string, urlSeed = 'https://[YOU URL HERE]') {
+    const node = this.modelSvc.getNodeById(nodeId);
+    if (!node || node.data.type !== 'paragraph') return;
 
-  // Substitui o conteúdo da seleção pelo link
-  range.deleteContents();
-  range.insertNode(linkEl);
-
-  // Atualiza o modelo (removendo ícones de botão, se houver)
-  const cloned = paragraph.cloneNode(true) as HTMLElement;
-  cloned.querySelectorAll('button[data-link-icon="true"]').forEach(btn => btn.remove());
-  const updatedHTML = cloned.innerHTML;
-
-  const updatedNode = {
-    ...node,
-    data: {
-      ...node.data,
-      text: updatedHTML
+    // 1) usa a seleção "armada" primeiro; se não houver, tenta a atual
+    let range: Range | null = this.armedRangeByNode.get(nodeId) ?? null;
+    if (!range) {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      range = sel.getRangeAt(0).cloneRange();
     }
-  };
-  this.modelSvc.updateModel(nodeId, updatedNode);
 
-  // Limpa a seleção
-  selection.removeAllRanges();
-}
+    // 2) valida que a range está dentro do <p> correto
+    const p = this.findParagraphFromRange(range, nodeId);
+    if (!p) return;
 
+    const selectedText = range.toString();
+    if (!selectedText) return;
+
+    const finalUrl = prompt('Enter link URL:', urlSeed);
+    if (!finalUrl) return;
+
+    // 3) cria o link preservando a estrutura da seleção
+    const frag = range.extractContents();
+    const a = document.createElement('a');
+    a.href = finalUrl;
+    a.target = '_blank';
+    a.appendChild(frag);
+    range.insertNode(a);
+
+    // 4) salva no modelo (limpando ícones)
+    const cloned = p.cloneNode(true) as HTMLElement;
+    cloned.querySelectorAll('button[data-link-icon="true"]').forEach(b => b.remove());
+    const updatedHTML = cloned.innerHTML;
+
+    const updatedNode = { ...node, data: { ...node.data, text: updatedHTML } };
+    this.modelSvc.updateModel(nodeId, updatedNode);
+
+    // 5) re-renderiza com ícones e handlers
+    p.innerHTML = this.insertLinkIcons(updatedHTML);
+    this.attachLinkHandlers(p, nodeId);
+
+    // limpa seleções
+    this.armedRangeByNode.delete(nodeId);
+    const sel = window.getSelection();
+    sel?.removeAllRanges();
+  }
 
   insertLinkIcons(html: string): string {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-
-    const links = doc.querySelectorAll('a');
-
-    links.forEach((link, index) => {
-      const prev = link.nextSibling;
-      if (prev && (prev as HTMLElement).dataset?.['linkIcon'] === 'true') return;
-
-      const button = doc.createElement('button');
-      button.type = 'button';
-      button.innerText = '🔗';
-      button.classList.add('link-icon-button');
-      button.dataset['linkIcon'] = 'true';
-      button.dataset['id'] = `link`;
-
-      button.setAttribute('contenteditable', 'false');
-      button.setAttribute('tabindex', '-1');
-      button.style.userSelect = 'none';
-      button.style.pointerEvents = 'auto';
-
-      link.parentElement?.insertBefore(button, link.nextSibling);
+    doc.querySelectorAll('a').forEach(link => {
+      const btn = doc.createElement('button');
+      btn.type = 'button';
+      btn.innerText = '🔗';
+      btn.classList.add('link-icon-button');
+      btn.dataset['linkIcon'] = 'true';
+      btn.setAttribute('contenteditable', 'false');
+      btn.setAttribute('tabindex', '-1');
+      btn.style.userSelect = 'none';
+      btn.style.pointerEvents = 'auto';
+      link.parentElement?.insertBefore(btn, link.nextSibling);
     });
-
     return doc.body.innerHTML;
   }
 
   attachLinkHandlers(container: HTMLElement, nodeId: string) {
-    const buttons = container.querySelectorAll('button[data-link-icon="true"]');
-
-    buttons.forEach(button => {
-      const link = button.previousElementSibling as HTMLAnchorElement;
+    container.querySelectorAll('button[data-link-icon="true"]').forEach(button => {
+      const link = button.previousElementSibling as HTMLAnchorElement | null;
       if (!link || link.tagName.toLowerCase() !== 'a') return;
 
       (button as HTMLElement).onclick = () => {
         const currentUrl = link.getAttribute('href') ?? '';
-        const newUrl = prompt('Editar URL do link:', currentUrl);
+        const newUrl = prompt('Edit link URL:', currentUrl);
+        if (!newUrl || !newUrl.trim()) return;
 
-        if (newUrl && newUrl.trim()) {
-          link.setAttribute('href', newUrl.trim());
+        link.setAttribute('href', newUrl.trim());
 
-          const cloned = container.cloneNode(true) as HTMLElement;
-          cloned.querySelectorAll('button[data-link-icon="true"]')?.forEach(btn => btn.remove());
+        const cloned = container.cloneNode(true) as HTMLElement;
+        cloned.querySelectorAll('button[data-link-icon="true"]').forEach(b => b.remove());
+        const updated = cloned.innerHTML;
 
-          const updatedText = cloned.innerHTML;
-
-          const node = this.modelSvc.getNodeById(nodeId);
-          if (!node) return;
-
-          const updatedModel = {
-            ...node,
-            data: {
-              ...node.data,
-              text: updatedText
-            }
-          };
-
-          this.modelSvc.updateModel(nodeId, updatedModel);
-        }
+        const n = this.modelSvc.getNodeById(nodeId);
+        if (!n) return;
+        const updatedNode = { ...n, data: { ...n.data, text: updated } };
+        this.modelSvc.updateModel(nodeId, updatedNode);
       };
     });
   }
-
-
 }

@@ -23,7 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class ImageComponent {
   type = 'image';
-  @Input() data: ImageData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, url: '', tooltip: 'this is an image', alt: 'Image' };
+  @Input() data: ImageData = { id: 'n-' + crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', name: "Image", style: {}, enabler: {}, url: '', tooltip: 'this is an image', alt: 'Image' };
   @Input() editMode: boolean = true;
 
   constructor() {

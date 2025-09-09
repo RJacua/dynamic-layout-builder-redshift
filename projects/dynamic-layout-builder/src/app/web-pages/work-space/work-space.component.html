@@ -6,24 +6,27 @@
 
     <as-split-area class="center-area" [size]="72" minSize="40">
       <div
-      #viewport 
-        class="viewport"
-        [class.movable]="isPanning()"
-        [class.dragging]="isPanning() && isMoving"
-        (mousedown)="onMouseDown($event)"
-        (mouseup)="onMouseUp()"
-        (mouseleave)="onMouseUp()"
-        (mousemove)="onMouseMove($event)"
-        (click)="onClick()"
-        (wheel)="onWheel($event)"
+      #viewport
+      class="viewport"
+      [class.movable]="isPanning()"
+      [class.dragging]="isPanning() && isMoving"
+      (mousedown)="onMouseDown($event)"
+      (mouseup)="onMouseUp()"
+      (mouseleave)="onMouseUp()"
+      (mousemove)="onMouseMove($event)"
+      (click)="onClick()"
+      (wheel)="onWheel($event)"
       >
-        <div
-          #panZoomContainer
-          class="pan-zoom-container"
-          [style.transform]="transformStyle()"
-          [style.transform-origin]="'0 0'"
-        >
-          <div #canvasWrapper class="canvas-wrapper">
+      <!-- resto da sua UI -->
+      
+      <app-banner *ngIf="bannerSvc.current()" [config]="bannerSvc.current()!"></app-banner>
+      <div
+      #panZoomContainer
+      class="pan-zoom-container"
+      [style.transform]="transformStyle()"
+      [style.transform-origin]="'0 0'"
+      >
+      <div #canvasWrapper class="canvas-wrapper">
             <app-canvas [editMode]="true"></app-canvas>
           </div>
         </div>

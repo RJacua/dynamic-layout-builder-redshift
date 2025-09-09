@@ -7,14 +7,15 @@ import { SelectionService } from '../../services/selection.service';
 import { ComponentsService } from '../../services/components.service';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UndoRedoService } from '../../services/undo-redo.service';
-import { ExportImportService } from '../../services/export-import.service';
+import { UndoRedoService } from '../../services/functionalities/undo-redo.service';
+import { ExportImportService } from '../../services/functionalities/export-import.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ExportModelDialogComponent } from '../../components/export-model-dialog/export-model-dialog.component';
 import { Router } from '@angular/router';
 import { EncodeService } from '../../services/encode.service';
 import { PanningService } from '../../services/panning.service';
 import { TextEditorService } from '../../services/text-editor.service';
+import { BannerService } from '../../services/banner.service';
 
 
 
@@ -34,6 +35,7 @@ export class InsertPanelComponent {
   readonly encodeSvc = inject(EncodeService);
   readonly panningSvc = inject(PanningService);
   readonly textEditorSvc = inject(TextEditorService);
+  readonly bannerSvc = inject(BannerService);
 
 
   selectedId = this.selectionSvc.selectedElementId;
@@ -52,9 +54,24 @@ export class InsertPanelComponent {
   encodedStr = computed(() => this.encodeSvc.encodedStr());
 
   removeSelectedNode() {
-    this.modelSvc.removeNodeById(this.selectionSvc.selectedElementId());
-    this.selectionSvc.unselect();
-
+    // this.modelSvc.removeNodeById(this.selectionSvc.selectedElementId());
+    // this.selectionSvc.unselect();
+    const id = this.selectionSvc.selectedElementId();
+    if (id && id !== 'canvas') {
+      this.bannerSvc.show({
+        message: 'Are you sure you want to delete this element?',
+        variant: 'warning',
+        actions: [
+          { id: 'yes', label: 'Yes', kind: 'danger' },
+          { id: 'no', label: 'No', kind: 'default' },
+        ]
+      }).then(result => {
+        if (result === 'yes') {
+          this.modelSvc.removeNodeById(id);
+          this.selectionSvc.unselect();
+        }
+      });
+    }
   }
 
   addLayoutElement(componentType: string) {
@@ -77,7 +94,7 @@ export class InsertPanelComponent {
 
   openExportDialog() {
     const dialogRef = this.dialog.open(ExportModelDialogComponent, {
-      
+
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -91,7 +108,7 @@ export class InsertPanelComponent {
 
   preview() {
     this.router.navigate(['/preview'], {
-      fragment: this.encodedStr() ,
+      fragment: this.encodedStr(),
     });
   }
 
@@ -103,10 +120,10 @@ export class InsertPanelComponent {
     this.panningSvc.emitFitViewFlag();
   }
 
-  createLink(){
-    console.log("create link clicado");
+  createLink() {
+    console.log("create link clicado: ", this.selectionSvc.selectedElementId());
     this.textEditorSvc.createLink(this.selectionSvc.selectedElementId());
-    this.selectionSvc.selectCanvas();
+    // this.selectionSvc.selectCanvas();
   }
 
 }

@@ -1,36 +1,86 @@
-<!-- <div class="canvas" [ngStyle]="dynamicStyles$ | async"  -->
-  <div
-    [class.canvas-edit]="editMode"
-    [class.canvas]="editMode"
-    [class.noDropZone]="noDrop()"
-    class="canvas"
-    (click)="onElementClick($event)"
-    cdkDropList
-    (cdkDropListDropped)="onDrop($event)"
-    [cdkDropListData]="onlyContainers()"
-    (cdkDropListEntered)="onEnter($event)"
-    [attr.data-id]="data.id"
-  >
-  
-  <div  [style]="internalStyle()">
+<div
+  [class.canvas-edit]="editMode"
+  [class.canvas]="editMode"
+  [class.noDropZone]="noDrop()"
+  class="canvas"
+  (click)="onElementClick($event)"
+  cdkDropList
+  (cdkDropListDropped)="onDrop($event)"
+  [cdkDropListData]="onlyContainers()"
+  (cdkDropListEntered)="onEnter($event)"
+  [attr.data-id]="data.id"
+>
+  <div class="panning-overlay" *ngIf="panningSvc.isPanning()"></div>
+
+  <div [style]="internalStyle()">
     @if (editMode && onlyContainers().length === 0){
-      <div [class]="'container-flex'">
-        <p class="default-text align-center">No elements added yet. Design something!</p>
-      </div>
-    }
-    <div id="core" #core class="align-center">
-      @for (node of onlyContainers(); track node.data.id) { 
-        <!-- @switch
-      (node.data.type) { @case ('container') {
-      <app-container [data]="node.data" [editMode]="editMode" />
-      } @default { } }  -->
-      <app-container [data]="node.data" [editMode]="editMode" />
-
-    }
-
-      <!-- <ng-template #containerDiv [class]="'container-border'"></ng-template> -->
+    <div [class]="'container-flex'">
+      <p class="default-text align-center">
+        No elements added yet. Design something!
+      </p>
     </div>
+    }
 
+    <!-- NOVO: viewport que calcula a escala -->
+    <div
+      #viewport
+      class="canvas-viewport"
+      [style.overflow]="editMode ? 'visible' : 'auto'"
+      [class.preview]="!editMode"
+      [class.edit]="editMode"
+    >
+      <!-- PREVIEW: spacer dá a área de scroll do conteúdo escalado -->
+      <div
+        *ngIf="!editMode"
+        class="canvas-spacer"
+        [style.width.px]="spacerW()"
+        [style.height.px]="spacerH()"
+      ></div>
+
+      <!-- Artboard (transform = base + pan (se editMode)) -->
+      <div
+        id="core"
+        #core
+        class="artboard"
+        [style.width.px]="baseWidth"
+        [style.height.px]="baseHeight"
+        [style.transform]="
+          'translate(' +
+          (baseX() + panX()) +
+          'px,' +
+          (baseY() + panY()) +
+          'px) scale(' +
+          scale() +
+          ')'
+        "
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform-origin: top left;
+          z-index: 1;
+        "
+      >
+        <div #contentRoot class="content-root">
+          @for (node of onlyContainers(); track node.data.id) {
+          <app-container
+            [data]="node.data"
+            [editMode]="editMode"
+            cdkDrag
+            [cdkDragData]="node.data.id"
+            (cdkDragStarted)="dragDropSvc.startCanvasDrag(node.data.id)"
+            (cdkDragMoved)="dragDropSvc.onDragMoved($event)"
+            [attr.data-id]="node.data.id"
+            [ngClass]="
+              dragDropSvc.dropIndicator(
+                modelSvc.getNodeSignalById(node.data.id)
+              )
+            "
+          />
+          }
+        </div>
+      </div>
+    </div>
 
     @if (editMode && false) {
     <div class="align-center">
@@ -42,14 +92,13 @@
         (click)="onPlusClick()"
       ></app-menu>
       <button class="round-button" (click)="addContainer()">A</button>
-      <!-- <button class="round-button" (click)="renderFromModel()">M</button> -->
       <button class="round-button" (click)="openExportDialog()">E</button>
-      <!-- <button class="round-button" (click)="importModel()">I</button> -->
       <button class="round-button" (click)="goToRender()">Preview</button>
     </div>
     }
   </div>
 </div>
+
 <!-- <pre>{{btoa()}}</pre> -->
 <!-- <pre>--------------------</pre> -->
 <!-- <pre>{{decoded()}}</pre> -->

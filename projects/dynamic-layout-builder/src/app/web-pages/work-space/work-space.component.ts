@@ -9,13 +9,17 @@ import { ModelService } from '../../services/model.service';
 import { Canvas, CanvasData, ContainerData, LayoutElement } from '../../interfaces/layout-elements';
 import { EncodeService } from '../../services/encode.service';
 import { SelectionService } from '../../services/selection.service';
-import { HotkeyService } from '../../services/hotkey.service';
+import { HotkeyService } from '../../services/functionalities/hotkey.service';
 import { PanningService } from '../../services/panning.service';
-import { UndoRedoService } from '../../services/undo-redo.service';
+import { UndoRedoService } from '../../services/functionalities/undo-redo.service';
+import { BannerComponent } from "../../components/banner/banner.component";
+import { BannerService } from '../../services/banner.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-work-space',
-  imports: [MatSidenavModule, CanvasComponent, RightPanelComponent, LeftPanelComponent, AngularSplitModule],
+  imports: [MatSidenavModule, CanvasComponent, RightPanelComponent, LeftPanelComponent, AngularSplitModule, BannerComponent, CommonModule],
   templateUrl: './work-space.component.html',
   styleUrl: './work-space.component.scss'
 })
@@ -28,6 +32,7 @@ export class WorkSpaceComponent implements OnInit {
   readonly hotkeySvc = inject(HotkeyService);
   readonly panningSvc = inject(PanningService);
   readonly undoRedoSvc = inject(UndoRedoService);
+  readonly bannerSvc = inject(BannerService);
   canvas = computed(() => this.modelSvc.canvas());
   canvasString: Signal<string> = computed(
     () => JSON.stringify(this.canvas(), null)
@@ -128,22 +133,29 @@ export class WorkSpaceComponent implements OnInit {
     // this.modelSvc.setCanvasModel([layoutModels[0]]);
   }
 
+  onClick() {
+    this.selectionSvc.selectCanvas();
+  }
   onMouseDown(event: MouseEvent) {
-    if (event.button === 0 && this.isPanning()) {
+    console.log("aaa");
+    if ((event.button === 0 && this.isPanning()) || event.button === 1) {
       this.selectionSvc.unselect();
-      this.isMoving = true;
+      // this.isPanning.set(true);
       this.lastX.set(event.clientX);
       this.lastY.set(event.clientY);
+
+      console.log("X: ", this.lastX(), "; Y: ", this.lastY());
       event.preventDefault();
     }
   }
 
-  onClick() {
-    this.selectionSvc.selectCanvas();
-  }
+  
 
   onMouseMove(event: MouseEvent) {
-    if (event.button === 0 && this.isPanning() && this.isMoving) {
+    const isLeftWithPanning = (event.buttons & 1) && this.isPanning();
+    const isMiddle = event.buttons & 4;
+
+    if ((isLeftWithPanning || isMiddle) && this.isPanning()) {
       const dx = event.clientX - this.lastX();
       const dy = event.clientY - this.lastY();
       this.translateX.update(() => this.translateX() + dx);
@@ -154,7 +166,7 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   onMouseUp() {
-    this.isMoving = false;
+    // this.isPanning.set(false);
   }
 
   onWheel(event: WheelEvent) {

@@ -69,7 +69,7 @@ import { CodeComponent } from "../code/code.component";
     CdkDrag,
     DragDropModule,
     CodeComponent
-],
+  ],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss',
 })
@@ -80,7 +80,7 @@ export class ContainerComponent
   model = layoutModels[0]; //mock model para testes, tirar depois;
   type = 'container';
   // @ViewChild('containerDiv', { read: ViewContainerRef }) containerDiv!: ViewContainerRef;
-  @Input() data: ContainerData = { id: crypto.randomUUID().split("-")[0], parentId: 'canvas', type: 'container', style: {}, enabler: {}, children: [] };
+  @Input() data: ContainerData = { id: 'n-' + crypto.randomUUID().split("-")[0], parentId: 'canvas', type: 'container', name: "Container", style: {}, enabler: {}, children: [] };
   @Input() editMode: boolean = true;
   // @Output() modelChange = new EventEmitter<LayoutModel<any>>();
   constructor() {
@@ -190,6 +190,17 @@ export class ContainerComponent
   }
 
   ngAfterViewInit() {
+
+    const el = this._elementRef.nativeElement.querySelector('.main.external');
+    if (el) {
+      el.addEventListener('mousedown', (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (!target.closest('.drag-handle')) {
+          e.stopPropagation();
+        }
+      }, true);
+    }
+
     this.width.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().width);
     this.height.set(this._elementRef.nativeElement.querySelector('#core').getBoundingClientRect().height);
 

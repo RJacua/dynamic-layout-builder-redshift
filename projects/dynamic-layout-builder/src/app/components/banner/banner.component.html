@@ -1,0 +1,21 @@
+<div
+  *ngIf="config"
+  class="banner"
+  [ngClass]="[config.variant, visible ? 'show' : 'hide']"
+>
+  <span class="message">{{ config.message }}</span>
+
+  <div class="actions" *ngIf="config.actions?.length">
+    <button
+      *ngFor="let action of config.actions"
+      [ngClass]="{
+        primary: action.kind === 'primary',
+        danger: action.kind === 'danger',
+        default: !action.kind || action.kind === 'default'
+      }"
+      (click)="onAction(action.id)"
+    >
+      {{ action.label }}
+    </button>
+  </div>
+</div>

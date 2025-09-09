@@ -1,57 +1,36 @@
 <div
-  [class]="'main paragraph ' + dropIndicatorStyle()"
+  class="main iframe canvas-item"
   [style]="externalStyle()"
   tabindex="0"
   [class.border]="editMode"
   [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
   [cdkDragDisabled]="!editMode"
-  [attr.data-id]="data.id"
   cdkDrag
+  [cdkDragData]="data.id"
+  (cdkDragStarted)="dragDropSvc.startCanvasDrag(data.id)"
   (cdkDragMoved)="onDragMoved($event)"
+  [attr.data-id]="data.id"
+  [ngClass]="dragDropSvc.dropIndicator(nodeSignal)"
 >
-  <!-- (click)="onClick()" -->
-  <!-- <br> -->
-  @if(editMode){
-  <div class="element-name" [class]>
-    {{data.type + " - " + data.id}}
-  </div>
-  <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div
-    cdkDragHandle
-    class="drag-handle"
-    (pointerdown)="onHandleClick()"
-    (pointerup)="onMouseUp()"
-  >
-    ⋮⋮
-  </div>
-  @if(src() == ''){
-  <p>No Source Available</p>
+  @if (editMode) {
+    <div class="element-name">{{ data.name }}</div>
+    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">⋮⋮</div>
+  }
+
+  @if (src() === '') {
+    <p>No Source Available</p>
   } @else {
-  <div class="main core">
-    <iframe
-      id="player"
-      [attr.data-id]="data.id"
-      [style]="internalStyle()"
-      scrolling="no"
-      frameborder="no"
-      allow="autoplay"
-      [src]="src()"
-    ></iframe>
-  </div>
-  } } @else { @if(src() == ''){
-  <p>No Source Available</p>
-  } @else {
-  <div class="main core">
-    <iframe
-      id="player"
-      [attr.data-id]="data.id"
-      [style]="internalStyle()"
-      scrolling="no"
-      frameborder="no"
-      allow="autoplay"
-      [src]="src()"
-    ></iframe>
-  </div>
-  } }
-  <!-- <br> -->
+    <div id="core" class="main core" [attr.data-id]="data.id">
+      <iframe
+        id="player"
+        [style]="internalStyle()"
+        scrolling="no"
+        frameborder="no"
+        allow="autoplay"
+        [src]="src()"
+        [style.pointer-events]="editMode ? 'none' : 'auto'"   
+      ></iframe>
+    </div>
+  }
 </div>

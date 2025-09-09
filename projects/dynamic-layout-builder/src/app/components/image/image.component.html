@@ -1,23 +1,38 @@
-<div [class]="'main paragraph ' + dropIndicatorStyle()" [style]="externalStyle()" tabindex="0" [class.border]="editMode"
-  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))" [cdkDragDisabled]="!editMode"
-  [attr.data-id]="data.id" cdkDrag (cdkDragMoved)="onDragMoved($event)">
-  <!-- (click)="onClick()" -->
-  <!-- <br> -->
-  @if(editMode){
-  <div class="element-name">
-    {{data.type + " - " + data.id}}
-  </div>
-  <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">
-    ⋮⋮
-  </div>
+<div
+  class="main image canvas-item"
+  [style]="externalStyle()"
+  tabindex="0"
+  [class.border]="editMode"
+  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
+  [cdkDragDisabled]="!editMode"
+  cdkDrag
+  [cdkDragData]="data.id"
+  (cdkDragStarted)="dragDropSvc.startCanvasDrag(data.id)"
+  (cdkDragMoved)="onDragMoved($event)"
+  [attr.data-id]="data.id"
+  [ngClass]="dragDropSvc.dropIndicator(modelSvc.getNodeSignalById(data.id))"
+>
+  @if (editMode) {
+    <div class="element-name">
+      {{ data.name }}
+    </div>
+    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+    <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">⋮⋮</div>
   }
-  @if(src() == ''){
-  <p>No Image Source Available</p>
-  }
-  @else {
-  <div class="main core">
-    <img id="image" [alt]="alt()" matTooltip="{{tooltip()}}" [attr.data-id]="data.id" [style]="internalStyle()" [src]="src()" />
-  </div>
+
+  @if (src() === '') {
+    <p>No Image Source Available</p>
+  } @else {
+    <div id="core" class="main core" [attr.data-id]="data.id">
+      <img
+        id="image"
+        [alt]="alt()"
+        matTooltip="{{ tooltip() }}"
+        [style]="internalStyle()"
+        [src]="src()"
+        [attr.draggable]="false"                     
+        [style.pointer-events]="editMode ? 'none' : 'auto'"  
+      />
+    </div>
   }
 </div>

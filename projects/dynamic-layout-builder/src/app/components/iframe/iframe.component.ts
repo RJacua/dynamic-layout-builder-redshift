@@ -23,7 +23,7 @@ import { sanitizeUrl } from "@braintree/sanitize-url"
 export class IframeComponent {
   private _sanitizer = inject(DomSanitizer)
   type = 'iframe';
-  @Input() data: IframeData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, src: '' };
+  @Input() data: IframeData = { id: 'n-' + crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', name: "Iframe", style: {}, enabler: {}, src: '' };
   @Input() editMode: boolean = true;
 
   constructor() {

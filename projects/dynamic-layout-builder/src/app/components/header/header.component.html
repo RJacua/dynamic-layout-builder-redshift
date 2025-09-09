@@ -1,18 +1,43 @@
-<div [class]="'main header ' + dropIndicatorStyle()" [style]="externalStyle()" [class.border]="editMode"
-  [class.active]="editMode && (isFocused() || isHovered() && !isDragging())" [cdkDragDisabled]="!editMode"
-  [attr.data-id]="data.id" cdkDrag (cdkDragMoved)="onDragMoved($event)">
-  <!-- <br> -->
-  @if(editMode){
+<div
+  class="main header canvas-item"
+  [style]="externalStyle()"
+  [class.border]="editMode"
+  [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
+  [cdkDragDisabled]="!editMode"
+  cdkDrag
+  [cdkDragData]="data.id"
+  (cdkDragStarted)="dragDropSvc.startCanvasDrag(data.id)"
+  (cdkDragMoved)="onDragMoved($event)"
+  [attr.data-id]="data.id"
+  [ngClass]="dragDropSvc.dropIndicator(nodeSignal)"
+>
+  @if (editMode) {
   <div class="element-name">
-    {{data.type + " - " + data.id}}
+    {{ data.name }}
   </div>
   <div class="drag-placeholder" *cdkDragPlaceholder></div>
-  <div cdkDragHandle class="drag-handle" (pointerdown)="onHandleClick()" (pointerup)="onMouseUp()">⋮⋮</div>
+  <div
+    cdkDragHandle
+    class="drag-handle"
+    (pointerdown)="onHandleClick()"
+    (pointerup)="onMouseUp()"
+  >
+    ⋮⋮
+  </div>
   }
+
   <div id="core" [style]="internalStyle()" [attr.data-id]="data.id">
-  <p  #target (input)="textSyncOnBlur($event)" [contentEditable]="editMode" 
-    [class.editable-content]="editMode" [class.element]="editMode" [class]="'element ' + dynamicHeader()"></p>
-  <!-- <br> -->
+    <p
+      #target
+      [contentEditable]="editMode"
+      (mousedown)="$event.stopPropagation()"
+      (click)="onTextClick($event)"
+      (focus)="onEditorFocus()"
+      (blur)="onEditorBlur()"
+      (input)="onTextInput($event)"
+      [class.editable-content]="editMode"
+      [class.element]="editMode"
+      [class]="'element ' + dynamicHeader()"
+    ></p>
+  </div>
 </div>
-</div>
-<!-- <pre style="text-align: left;">{{ layoutModelString() }}</pre> -->

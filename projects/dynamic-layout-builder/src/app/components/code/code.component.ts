@@ -31,7 +31,7 @@ import { ComponentsService } from '../../services/components.service';
 })
 export class CodeComponent {
   type = 'code';
-  @Input() data: CodeData = { id: crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', style: {}, enabler: {}, codeContent: 'body {\n  background: black;\n  color: white;\n}', language: '', title: '', theme: 'dark' };
+  @Input() data: CodeData = { id: 'n-' + crypto.randomUUID().split("-")[0], parentId: '-1', type: 'paragraph', name: "Code", style: {}, enabler: {}, codeContent: 'body {\n  background: black;\n  color: white;\n}', language: '', title: '', theme: 'dark' };
   @Input() editMode: boolean = true;
 
   constructor() {
@@ -127,26 +127,26 @@ export class CodeComponent {
 
   isCodeFocused = signal(false);
 
-language    = signal('css'); 
-copied      = signal(false);
+  language = signal('css');
+  copied = signal(false);
 
-theme = signal('');
+  theme = signal('');
 
-copyCode() {
-  navigator.clipboard.writeText(this.codeContent())
-    .then(() => {
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 2000);
-    })
-    .catch(() => alert('⚠️ Falha ao copiar'));
-}
+  copyCode() {
+    navigator.clipboard.writeText(this.codeContent())
+      .then(() => {
+        this.copied.set(true);
+        setTimeout(() => this.copied.set(false), 2000);
+      })
+      .catch(() => alert('⚠️ Falha ao copiar'));
+  }
 
-langLabel = computed(() => {
-  const map: Record<string,string> = {
-    css:'CSS', javascript:'JS', typescript:'TS', python:'PY'
-  };
-  return map[this.language()] ?? this.language().toUpperCase();
-});
+  langLabel = computed(() => {
+    const map: Record<string, string> = {
+      css: 'CSS', javascript: 'JS', typescript: 'TS', python: 'PY'
+    };
+    return map[this.language()] ?? this.language().toUpperCase();
+  });
 
   updateCodeContent(event: Event) {
     const value = (event.target as HTMLElement).textContent;
@@ -172,7 +172,7 @@ langLabel = computed(() => {
     const el = this.coreCodeRef?.nativeElement;
     if (el) {
       el.innerText = this.codeContent();
-      Prism.highlightElement(el); 
+      Prism.highlightElement(el);
     }
   }
 
@@ -217,6 +217,12 @@ langLabel = computed(() => {
     this.internalStyle.set(inner);
     this.externalStyle.set(outer);
   }
+
+  onTextClick(event: MouseEvent) {
+    event.stopPropagation(); // evita que o clique "suba"
+    this.selectionSvc.selectById(this.id, true); // força selecionar o dono
+  }
+
 
   // getEmbedUrl(url: string): string {
   //   console.log(url);

@@ -1,53 +1,59 @@
 <div
-  [class]="'main ' + dropIndicatorStyle()"
+  class="main code canvas-item"
   [style]="externalStyle()"
   tabindex="0"
   [class.border]="editMode"
   [class.active]="editMode && (isFocused() || (isHovered() && !isDragging()))"
   [cdkDragDisabled]="!editMode"
-  [attr.data-id]="data.id"
   cdkDrag
+  [cdkDragData]="data.id"
+  (cdkDragStarted)="dragDropSvc.startCanvasDrag(data.id)"
   (cdkDragMoved)="onDragMoved($event)"
+  [attr.data-id]="data.id"
+  [ngClass]="dragDropSvc.dropIndicator(modelSvc.getNodeSignalById(data.id))"
 >
   @if (editMode) {
-  <ng-container>
-    <div class="element-name">
-      {{ data.type + " - " + data.id }}
-    </div>
-    <div class="drag-placeholder" *cdkDragPlaceholder></div>
-    <div
-      cdkDragHandle
-      class="drag-handle"
-      (pointerdown)="onHandleClick()"
-      (pointerup)="onMouseUp()"
-    >
-      ⋮⋮
-    </div>
-  </ng-container>
+    <ng-container>
+      <div class="element-name">{{ data.name }}</div>
+      <div class="drag-placeholder" *cdkDragPlaceholder></div>
+      <div
+        cdkDragHandle
+        class="drag-handle"
+        (pointerdown)="onHandleClick()"
+        (pointerup)="onMouseUp()"
+      >
+        ⋮⋮
+      </div>
+    </ng-container>
   }
 
-  <div class="">
+  <div id="core" [attr.data-id]="data.id">
+    <div class="code-wrapper" [class]="'theme-' + theme()">
+      <div class="code-header">
+        <span class="code-lang">{{ langLabel() }}</span>
+        <button
+          class="copy-btn"
+          (mousedown)="$event.stopPropagation()"
+          (click)="copyCode()"
+          [disabled]="copied()"
+        >
+          {{ copied() ? "Copied ✓" : "Copy" }}
+        </button>
+      </div>
 
-<div class="code-wrapper" [class]="'theme-' + theme()">
-  <div class="code-header">
-    <span class="code-lang">{{ langLabel() }}</span>
-    <button class="copy-btn" (click)="copyCode()" [disabled]="copied()">
-      {{ copied() ? "Copied ✓" : "Copy" }}
-    </button>
-  </div>
-
-  <pre class="line-numbers">
-    <code
-      #coreCode
-      contenteditable="true"
-      spellcheck="false"
-      [class]="'language-' + language()"
-      (input)="updateCodeContent($event)"
-      (blur)="onCodeBlur()"
-      (focus)="onCodeFocus()"
-    ></code>
-  </pre>
-</div>
-
+      <pre class="line-numbers">
+        <code
+          #coreCode
+          contenteditable="true"
+          spellcheck="false"
+          [class]="'language-' + language()"
+          (mousedown)="$event.stopPropagation()"
+          (click)="onTextClick($event)"
+          (input)="updateCodeContent($event)"
+          (blur)="onCodeBlur()"
+          (focus)="onCodeFocus()"
+        ></code>
+      </pre>
+    </div>
   </div>
 </div>
