@@ -91,6 +91,8 @@ export class WorkSpaceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+     this.panningSvc.initKeyboardShortcuts();
+
     this.activeRoute.fragment.subscribe(fragment => {
       if (fragment) {
         this.encodedParam.set(fragment);
@@ -104,6 +106,11 @@ export class WorkSpaceComponent implements OnInit {
         }
       }
     });
+  }
+
+    ngOnDestroy(): void {
+    // remove listeners globais com segurança
+    this.panningSvc.destroyKeyboardShortcuts();
   }
 
 

@@ -6,7 +6,7 @@ import { PresentationComponent } from './web-pages/presentation/presentation.com
 
 export const routes: Routes = [
     {
-        path: 'create',
+        path: '',
         component: WorkSpaceComponent
     }, {
         path:'preview',
